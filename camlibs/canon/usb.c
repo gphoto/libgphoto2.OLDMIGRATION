@@ -229,29 +229,89 @@ canon_usb_init (Camera *camera)
 }
 
 /**
- * canon_usb_keylock:
+ * canon_usb_lock_keys:
  * @camera: camera to lock keys on
  * @Returns: gphoto2 error code
  *
  * Lock the keys on the camera and turn off the display
  **/
 int
-canon_usb_keylock (Camera *camera)
+canon_usb_lock_keys (Camera *camera)
 {
 	unsigned char *c_res;
 	int bytes_read;
+	char payload[4];
 
-	GP_DEBUG ("canon_usb_keylock()");
+	GP_DEBUG ("canon_usb_lock_keys()");
 
-	c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_KEYLOCK, &bytes_read, NULL, 0);
-	if (bytes_read == 0x4) {
-		GP_DEBUG ("Got the expected number of bytes back, "
-			  "unfortuntely we don't know what they mean.");
-	} else {
-		gp_camera_set_error (camera, "canon_usb_keylock: "
-				     "Unexpected amount of data returned (%i bytes, expected %i)",
-				     bytes_read, 0x4);
-		return GP_ERROR_IO;
+	switch (camera->pl->model) {
+		case CANON_PS_S100:
+			GP_DEBUG ("canon_usb_lock_keys: Your camera model does not need the keylock.");
+			break;
+		case CANON_EOS_D30:
+			memset (payload, 0, sizeof (payload));
+			payload[0] = 0x06;
+
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_LOCK_KEYS,
+						    &bytes_read, payload, 4);
+			if (!c_res)
+				return GP_ERROR;
+
+			break;
+		default:
+			c_res = canon_usb_dialogue (camera,
+						    CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,
+						    &bytes_read, NULL, 0);
+			if (bytes_read == 0x4) {
+				GP_DEBUG ("canon_usb_lock_keys: Got the expected number of bytes back, " "unfortuntely we don't know what they mean.");
+			} else {
+				gp_camera_set_error (camera, "canon_usb_lock_keys: "
+						     "Unexpected amount of data returned (%i bytes, expected %i)",
+						     bytes_read, 0x4);
+				return GP_ERROR;
+			}
+			break;
+	}
+
+	return GP_OK;
+}
+
+/**
+ * canon_usb_unlock_keys:
+ * @camera: camera to unlock keys on
+ * @Returns: gphoto2 error code
+ *
+ * Unlocks the keys on cameras that support this
+ **/
+int
+canon_usb_unlock_keys (Camera *camera)
+{
+	unsigned char *c_res;
+	int bytes_read;
+	char payload[4];
+
+	GP_DEBUG ("canon_usb_unlock_keys()");
+
+	switch (camera->pl->model) {
+		case CANON_EOS_D30:
+			memset (payload, 0, sizeof (payload));
+			payload[0] = 0x06;
+
+			c_res = canon_usb_dialogue (camera, CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
+						    &bytes_read, NULL, 0);
+			/* Should look at the bytes returned, but I don't know what they mean */
+			if (! c_res)
+				return GP_ERROR;
+				
+			break;
+		default:
+			/* Your camera model does not need unlocking, cannot do unlocking or
+			 * we don't know how to unlock it's keys. If unlocking works when
+			 * using the Windows software with your camera, please contact
+			 * <gphoto-devel@gphoto.net>
+			 */
+			GP_DEBUG ("canon_usb_unlock_keys: Not unlocking the kind of camera you have.");
+			break;
 	}
 
 	return GP_OK;
@@ -264,6 +324,9 @@ canon_usb_keylock (Camera *camera)
  * @return_length: number of bytes to read from the camera as response
  * @payload: data we are to send to the camera
  * @payload_length: length of #payload
+ * @Returns: a char * that points to the data read from the camera (or
+ * NULL on failure), and sets what @return_length points to to the number
+ * of bytes read.
  *
  * USB version of the #canon_serial_dialogue function.
  *
@@ -674,6 +737,94 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 				     "returned %i", res);
 		return GP_ERROR;
 	}
+
+	return GP_OK;
+}
+
+/**
+ * canon_usb_ready:
+ * @camera: camera to get ready
+ * @Returns: gphoto2 error code
+ *
+ * USB part of canon_int_ready
+ **/
+int
+canon_usb_ready (Camera *camera)
+{
+	int res;
+
+	GP_DEBUG ("canon_usb_ready()");
+
+	res = canon_int_identify_camera (camera);
+	if (res != GP_OK) {
+		gp_camera_set_error (camera, "Camera not ready, "
+				     "identify camera request failed (returned %i)", res);
+		return GP_ERROR;
+	}
+	if (!strcmp ("Canon PowerShot S20", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot S20");
+		camera->pl->model = CANON_PS_S20;
+	} else if (!strcmp ("Canon PowerShot S10", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot S10");
+		camera->pl->model = CANON_PS_S10;
+	} else if (!strcmp ("Canon PowerShot S30", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot S30");
+		camera->pl->model = CANON_PS_S30;
+	} else if (!strcmp ("Canon PowerShot S40", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot S40");
+		camera->pl->model = CANON_PS_S40;
+	} else if (!strcmp ("Canon PowerShot G1", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot G1");
+		camera->pl->model = CANON_PS_G1;
+	} else if (!strcmp ("Canon PowerShot G2", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot G2");
+		camera->pl->model = CANON_PS_G2;
+	} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->ident))
+		   || (!strcmp ("Canon IXY DIGITAL", camera->pl->ident))
+		   || (!strcmp ("Canon PowerShot S110", camera->pl->ident))
+		   || (!strcmp ("Canon PowerShot S100", camera->pl->ident))
+		   || (!strcmp ("Canon DIGITAL IXUS v", camera->pl->ident))) {
+		gp_camera_status (camera,
+				  "Detected a Digital IXUS series / IXY DIGITAL / PowerShot S100 series");
+		camera->pl->model = CANON_PS_S100;
+	} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->ident))
+		   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->ident))
+		   || (!strcmp ("Canon PowerShot S300", camera->pl->ident))) {
+		gp_camera_status (camera,
+				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / PowerShot S300");
+		camera->pl->model = CANON_PS_S300;
+	} else if (!strcmp ("Canon PowerShot A10", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot A10");
+		camera->pl->model = CANON_PS_A10;
+	} else if (!strcmp ("Canon PowerShot A20", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot A20");
+		camera->pl->model = CANON_PS_A20;
+	} else if (!strcmp ("Canon EOS D30", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a EOS D30");
+		camera->pl->model = CANON_EOS_D30;
+	} else if (!strcmp ("Canon PowerShot Pro90 IS", camera->pl->ident)) {
+		gp_camera_status (camera, "Detected a PowerShot Pro90 IS");
+		camera->pl->model = CANON_PS_PRO90_IS;
+	} else {
+		gp_camera_set_error (camera, "Unknown camera! (%s)", camera->pl->ident);
+		return GP_ERROR;
+	}
+
+	res = canon_usb_lock_keys (camera);
+	if (res != GP_OK) {
+		gp_camera_set_error (camera, "Camera not ready, "
+				     "could not lock camera keys (returned %i)", res);
+		return res;
+	}
+
+	res = canon_int_get_time (camera);
+	if (res == GP_ERROR) {
+		gp_camera_set_error (camera, "Camera not ready, "
+				     "get time request failed (returned %i)", res);
+		return GP_ERROR;
+	}
+
+	gp_camera_status (camera, _("Connected to camera"));
 
 	return GP_OK;
 }

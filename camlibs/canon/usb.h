@@ -26,9 +26,11 @@ int canon_usb_long_dialogue (Camera *camera, int canon_funct, unsigned char **da
 int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int *length);
 int canon_usb_get_thumbnail (Camera *camera, const char *name, unsigned char **data,
 			     int *length);
-int canon_usb_keylock (Camera *camera);
 int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 			   unsigned int *dirents_length, const char *path);
+int canon_usb_lock_keys(Camera *camera);
+int canon_usb_unlock_keys(Camera *camera);
+int canon_usb_ready (Camera *camera);
 
 #define USB_BULK_READ_SIZE 0x3000
 
@@ -47,7 +49,9 @@ int canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 #define CANON_USB_FUNCTION_SET_ATTR		13
 /* GET_PIC_ABILITIES currently not implemented in gPhoto2 camlibs/canon driver */
 #define CANON_USB_FUNCTION_GET_PIC_ABILITIES	14
-#define CANON_USB_FUNCTION_KEYLOCK		15
+#define CANON_USB_FUNCTION_GENERIC_LOCK_KEYS	15
+#define CANON_USB_FUNCTION_EOS_LOCK_KEYS	16
+#define CANON_USB_FUNCTION_EOS_UNLOCK_KEYS	17
 
 struct canon_usb_cmdstruct
 {
@@ -59,22 +63,24 @@ struct canon_usb_cmdstruct
 };
 
 static const struct canon_usb_cmdstruct canon_usb_cmd[] = {
-	{CANON_USB_FUNCTION_GET_FILE,           "Get file",                     0x01, 0x11, 0x202,      0x40},
-	{CANON_USB_FUNCTION_IDENTIFY_CAMERA,    "Identify camera",              0x01, 0x12, 0x201,      0x9c},
-	{CANON_USB_FUNCTION_GET_TIME,           "Get time",                     0x03, 0x12, 0x201,      0x60},
-	{CANON_USB_FUNCTION_SET_TIME,           "Set time",                     0x04, 0x12, 0x201,      0x54},
-	{CANON_USB_FUNCTION_MKDIR,              "Make directory",               0x05, 0x11, 0x201,      0x54},
-	{CANON_USB_FUNCTION_CAMERA_CHOWN,       "Change camera owner",          0x05, 0x12, 0x201,      0x54},
-	{CANON_USB_FUNCTION_RMDIR,              "Remove directory",             0x06, 0x11, 0x201,      0x54},
-	{CANON_USB_FUNCTION_DISK_INFO,          "Disk info request",            0x09, 0x11, 0x201,      0x5c},
-	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT, "Flash device ident",           0x0a, 0x11, 0x202,      0x40},
-	{CANON_USB_FUNCTION_POWER_STATUS,       "Power supply status",          0x0a, 0x12, 0x201,      0x58},
-	{CANON_USB_FUNCTION_GET_DIRENT,         "Get directory entries",        0x0b, 0x11, 0x202,      0x40},
-	{CANON_USB_FUNCTION_DELETE_FILE,        "Delete file",                  0x0d, 0x11, 0x201,      0x54},
-	{CANON_USB_FUNCTION_SET_ATTR,           "Set file attribute",           0x0e, 0x11, 0x201,      0x54},
-	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,  "Get picture abilities",        0x1f, 0x12, 0x201,      0x384},
-	{CANON_USB_FUNCTION_KEYLOCK,            "Lock keys and turn off LCD",   0x20, 0x12, 0x201,      0x54},
-	{0}
+	{CANON_USB_FUNCTION_GET_FILE,		"Get file",			0x01, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_IDENTIFY_CAMERA,	"Identify camera",		0x01, 0x12, 0x201,	0x9c},
+	{CANON_USB_FUNCTION_GET_TIME,		"Get time",			0x03, 0x12, 0x201,	0x60},
+	{CANON_USB_FUNCTION_SET_TIME,		"Set time",			0x04, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_MKDIR,		"Make directory",		0x05, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_CAMERA_CHOWN,	"Change camera owner",		0x05, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_RMDIR,		"Remove directory",		0x06, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_DISK_INFO,		"Disk info request",		0x09, 0x11, 0x201,	0x5c},
+	{CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,	"Flash device ident",		0x0a, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_POWER_STATUS,	"Power supply status",		0x0a, 0x12, 0x201,	0x58},
+	{CANON_USB_FUNCTION_GET_DIRENT,		"Get directory entries",	0x0b, 0x11, 0x202,	0x40},
+	{CANON_USB_FUNCTION_DELETE_FILE,	"Delete file",			0x0d, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_SET_ATTR,		"Set file attribute",		0x0e, 0x11, 0x201,	0x54},
+	{CANON_USB_FUNCTION_EOS_LOCK_KEYS,	"EOS lock keys",		0x1b, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,	"EOS unlock keys",		0x1c, 0x12, 0x201,	0x54},
+	{CANON_USB_FUNCTION_GET_PIC_ABILITIES,	"Get picture abilities",	0x1f, 0x12, 0x201,	0x384},
+	{CANON_USB_FUNCTION_GENERIC_LOCK_KEYS,	"Lock keys and turn off LCD",	0x20, 0x12, 0x201,	0x54},
+	{ 0 }
 };
 
 
