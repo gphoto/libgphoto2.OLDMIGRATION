@@ -1,6 +1,0 @@
-libgphoto2_fuji.la
-*.lo
-.libs
-.deps
-Makefile
-Makefile.in
