@@ -1041,6 +1041,71 @@ canon_int_handle_jfif_thumb(const unsigned int total, unsigned char **data)
 }
 
 /**
+ * canon_int_handle_exif_thumb:
+ *
+ * Get information and thumbnail data from EXIF thumbnail.
+ **/
+static int
+canon_int_handle_exif_thumb (unsigned char *data, const char *name, 
+			     const unsigned int length, unsigned char **retdata) {
+	exifparser exifdat;
+
+	CHECK_PARM(data != NULL);
+        CHECK_PARM(retdata != NULL);
+
+	exifdat.header = data;
+	exifdat.data = data + 12;
+
+	GP_DEBUG ("Got thumbnail, extracting it with the " "EXIF lib.");
+	if (exif_parse_data (&exifdat) > 0) {
+		GP_DEBUG ("Parsed exif data.");
+		data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
+		if (data == NULL) {
+			int f;
+			char filename[255];
+
+			if (rindex (name, '\\') != NULL)
+				snprintf (filename, sizeof (filename) - 1,
+					  "canon-death-dump.dat-%s",
+					  rindex (name, '\\') + 1);
+			else
+				snprintf (filename, sizeof (filename) - 1,
+					  "canon-death-dump.dat-%s", name);
+			filename[sizeof (filename) - 1] = '\0';
+
+			GP_DEBUG ("canon_int_handle_exif_thumb: "
+				  "Thumbnail conversion error, saving "
+				  "%i bytes to file '%s'", 
+				  length, filename);
+			/* create with O_EXCL and 0600 for security */
+			if ((f =
+			     open (filename, 
+				   O_CREAT | O_EXCL | O_RDWR,
+				   0600)) == -1) {
+				/* XXX Is %m portable to non-glibc
+				 * systems? */
+				GP_DEBUG ("canon_int_handle_exif_thumb: "
+					  "error creating file '%s': %m",
+					  filename);
+				return GP_ERROR;
+			}
+			if (write (f, data, length) == -1) {
+				GP_DEBUG ("canon_int_handle_exif_thumb: "
+					  "error writing to file '%s': %m",
+					  filename);
+			}
+
+			close (f);
+			return GP_ERROR;
+		}
+		*retdata = data;
+		return GP_OK;
+	}
+	GP_DEBUG ("couldn't parse exif thumbnail data");
+	return GP_ERROR;
+}
+
+/**
  * canon_int_get_thumbnail:
  * @camera: camera to work with
  * @name: image to get thumbnail of
@@ -1053,7 +1118,6 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 {
 	int res;
 	unsigned char *data = NULL;
-	exifparser exifdat;
 
 	GP_DEBUG ("canon_int_get_thumbnail() called for file '%s'", name);
 	CHECK_PARM(retdata != NULL);
@@ -1076,67 +1140,24 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 	}
 
 	switch (camera->pl->model) {
+		/* We should decide this not on model base. Better use
+		 * capabilities or just have a look at the data itself
+		 */
 		case CANON_PS_A70:
-			canon_int_handle_jfif_thumb(*length, &data);
+			res = canon_int_handle_jfif_thumb(*length, &data);
 			break;
 
-		default:	/* Camera supports EXIF */
-			exifdat.header = data;
-			exifdat.data = data + 12;
-
-			GP_DEBUG ("Got thumbnail, extracting it with the " "EXIF lib.");
-			if (exif_parse_data (&exifdat) > 0) {
-				GP_DEBUG ("Parsed exif data.");
-				data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
-				if (data == NULL) {
-					int f;
-					char fn[255];
-
-					if (rindex (name, '\\') != NULL)
-						snprintf (fn, sizeof (fn) - 1,
-							  "canon-death-dump.dat-%s",
-							  rindex (name, '\\') + 1);
-					else
-						snprintf (fn, sizeof (fn) - 1,
-							  "canon-death-dump.dat-%s", name);
-					fn[sizeof (fn) - 1] = 0;
-
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "canon_int_get_thumbnail: "
-							 "Thumbnail conversion error, saving "
-							 "%i bytes to '%s'", *length, fn);
-					/* create with O_EXCL and 0600 for security */
-					if ((f =
-					     open (fn, O_CREAT | O_EXCL | O_RDWR,
-						   0600)) == -1) {
-						gp_debug_printf (GP_DEBUG_LOW, "canon",
-								 "canon_int_get_thumbnail: "
-								 "error creating '%s': %m",
-								 fn);
-						break;
-					}
-					if (write (f, data, *length) == -1) {
-						gp_debug_printf (GP_DEBUG_LOW, "canon",
-								 "canon_int_get_thumbnail: "
-								 "error writing to file '%s': %m",
-								 fn);
-					}
-
-					close (f);
-					break;
-				}
-				*retdata = data;
-				return GP_OK;
-			}
+		default:
+			res = canon_int_handle_exif_thumb (data, name, *length, retdata);
 			break;
 	}
 
 	free (data);
-	return GP_ERROR;
+	return res;
 }
 
 /**
- * canon_int_thumbnail_file_name:
+ * canon_int_filename2thumbname:
  * @filename: file name on camera
  * @Returns: file name of corresponding thumbnail if it exists, NULL else
  *
@@ -1149,28 +1170,38 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
  **/
 
 /* simulate capabilities */
-#define thumbnail_jpeg_extra_file (0 == 1)
-#define thumbnail_crw_extra_file (0 == 0)
+#define extra_file_for_thumb_of_jpeg (0 == 1)
+#define extra_file_for_thumb_of_crw (0 == 0)
 
 const char *
-canon_int_thumbnail_file_name (Camera *camera, const char *filename)
+canon_int_filename2thumbname (Camera *camera, const char *filename)
 {
 	static char buf[1024];
 	char *p;
 
-	if (!thumbnail_jpeg_extra_file && is_jpeg(filename))
+	/* First handle cases where we shouldn't try to get extra .THM
+	 * file but use the special get_thumbnail_of_xxx function.
+	 */
+	if (!extra_file_for_thumb_of_jpeg && is_jpeg (filename))
 		return NULL;
-	if (!thumbnail_crw_extra_file && is_crw(filename))
+	if (!extra_file_for_thumb_of_crw  && is_crw (filename))
 		return NULL;
+
+	/* We use the thumbnail file itself as the thumbnail of the
+	 * thumbnail file. In short thumbfile = thumbnail(thumbfile)
+	 */
 	if (is_thumbnail(filename))
 		return filename;
 
+	/* We just replace file ending by .THM and assume this is the
+	 * name of the thumbnail file.
+	 */
 	if (strncpy (buf, filename, sizeof(buf)) < 0) {
 		GP_DEBUG ("Buffer too small in %s line %i.", 
 			  __FILE__, __LINE__);
 		return NULL;
 	}
-	if ((p = strchr(buf, '.')) == NULL) {
+	if ((p = strrchr(buf, '.')) == NULL) {
 		GP_DEBUG ("No '.' found in filename '%s' in %s line %i.",
 			  filename, __FILE__, __LINE__);
 		return NULL;
