@@ -44,8 +44,6 @@
 #define CANON_ATTR_UNKNOWN_40			0x40
 #define CANON_ATTR_RECURS_ENT_DIR		0x80
 
-void clear_readiness (Camera *camera);
-
 #define GP_MODULE "canon"
 
 #endif /* _CANON_H */
