@@ -697,28 +697,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
-	/* NOOP: update file cache (if necessary) first */
-	if (!update_dir_cache (camera)) {
-		gp_camera_status (camera, _("Could not obtain directory listing"));
-		return GP_ERROR;
-	}
-
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
 			ret = canon_int_get_file (camera, canon_path, &data, &buflen);
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 			if (is_movie (canon_path)) {
+				/* XXX of if A5 or something similarly old */
 				strcpy (strrchr (canon_path, '.'), ".THM");
 				GP_DEBUG ("canon_get_picture: movie thumbnail: %s\n",
 					  canon_path);
-				ret = canon_int_get_picture (camera, canon_path,
-							     &data, &buflen);
+				ret = canon_int_get_file (camera, canon_path,
+							   &data, &buflen);
 			} else {
-				*data = canon_int_get_thumbnail (camera, canon_path, size);
-				if (*data) {
-					ret = GP_OK;
-				} else {
+				ret = canon_int_get_thumbnail (camera, canon_path, &data, &size);
+				if (ret != GP_OK) {
 					GP_DEBUG ("canon_get_picture: ",
 						  "canon_int_get_thumbnail() '%s' %d failed!",
 						  canon_path, size);
@@ -754,9 +747,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			buflen = size + 1;
 			gp_file_set_data_and_size (file, data, buflen);
 			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
-			strcpy (tempfilename, filename);
-			strcat (tempfilename, "\0");
-			strcpy (tempfilename + strlen ("IMG_XXXX"), ".JPG\0");
+			strncpy (tempfilename, filename, sizeof(tempfilename));
+			strcpy (strchr (tempfilename, '.'), ".JPG"); /* not really clean */
 			gp_file_set_name (file, tempfilename);
 			break;
 		case GP_FILE_TYPE_NORMAL:
@@ -765,6 +757,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_set_name (file, filename);
 			break;
 		default:
+			/* this case should've been caught above anyway */
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
 
