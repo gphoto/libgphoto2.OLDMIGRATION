@@ -233,12 +233,13 @@ camera_abilities (CameraAbilitiesList *list)
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_abilities()");
 
 	for (i = 0; models[i].name; i++) {
+		memset(&a,0,sizeof(a));
 		a.status = GP_DRIVER_STATUS_PRODUCTION;
 		strcpy (a.model, models[i].name);
 		a.port = 0;
-		if (models[i].idProduct) {
+		if ((models[i].idProduct != 0) && (models[i].idVendor != 0)) {
 			a.port |= GP_PORT_USB;
-			a.usb_vendor = models[i].idVendor;
+			a.usb_vendor  = models[i].idVendor;
 			a.usb_product = models[i].idProduct;
 		}
 		if (models[i].serial) {
