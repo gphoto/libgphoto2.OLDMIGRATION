@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto\n"
-"POT-Creation-Date: 2002-11-26 20:43+0100\n"
+"POT-Creation-Date: 2002-12-01 21:00+0100\n"
 "PO-Revision-Date: 2002-01-04 19:25+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -2296,7 +2296,7 @@ msgstr ""
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr ""
 
-#: camlibs/ptp/library.c:1027
+#: camlibs/ptp/library.c:1022
 msgid "PTP is implemented for USB cameras only."
 msgstr ""
 
@@ -3329,12 +3329,12 @@ msgid ""
 "gPhoto2 port by Raymond Penners <raymond@dotsphinx.com>"
 msgstr ""
 
-#: camlibs/soundvision/soundvision.c:229
+#: camlibs/soundvision/soundvision.c:230
 #, c-format
 msgid "Revision: %8s"
 msgstr ""
 
-#: camlibs/soundvision/soundvision.c:236
+#: camlibs/soundvision/soundvision.c:237
 msgid ""
 "Soundvision Driver\n"
 "Vince Weaver <vince@deater.net>\n"

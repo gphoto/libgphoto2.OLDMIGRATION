@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-11-26 20:43+0100\n"
+"POT-Creation-Date: 2002-12-01 21:00+0100\n"
 "PO-Revision-Date: 2002-11-21 11:02+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -2911,7 +2911,7 @@ msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr "由 Mariusz Woloszyn <emsi@ipartners.pl> 编写。请享用！"
 
 # camlibs/ptp/library.c:918
-#: camlibs/ptp/library.c:1027
+#: camlibs/ptp/library.c:1022
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP 仅为 USB 相机实现。"
 
@@ -4252,13 +4252,13 @@ msgstr ""
 "由 Raymond Penners <raymond@dotsphinx.com> 移植到 gphoto2"
 
 # camlibs/stv0680/library.c:529
-#: camlibs/soundvision/soundvision.c:229
+#: camlibs/soundvision/soundvision.c:230
 #, c-format
 msgid "Revision: %8s"
 msgstr "版本：%8s"
 
 # camlibs/agfa/agfa.c:228
-#: camlibs/soundvision/soundvision.c:236
+#: camlibs/soundvision/soundvision.c:237
 msgid ""
 "Soundvision Driver\n"
 "Vince Weaver <vince@deater.net>\n"
@@ -4718,6 +4718,3 @@ msgstr "未知的相机库错误"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "未知的错误"
-
-#~ msgid ":"
-#~ msgstr "："

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2002-11-26 20:43+0100\n"
+"POT-Creation-Date: 2002-12-01 21:00+0100\n"
 "PO-Revision-Date: 2002-11-21 11:01-0300\n"
 "Last-Translator: Fabian Mandelbaum <fabman@mandrakesoft.com>\n"
 "Language-Team: Castellano <traduc@traduc.org>\n"
@@ -2477,7 +2477,7 @@ msgstr "PTP. Error de protocolo, se esperaba respuesta"
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr "Escrito por Mariusz Woloszyn <emsi@ipartners.pl>. ¡Disfrute!"
 
-#: camlibs/ptp/library.c:1027
+#: camlibs/ptp/library.c:1022
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP está implementado sólo para cámaras USB."
 
@@ -3650,12 +3650,12 @@ msgstr ""
 "Escrita originalmente por Mark Davies <mdavies@dial.pipex.com>\n"
 "Portado a gPhoto2 por Raymond Penners <raymond@dotsphinx.com>"
 
-#: camlibs/soundvision/soundvision.c:229
+#: camlibs/soundvision/soundvision.c:230
 #, c-format
 msgid "Revision: %8s"
 msgstr "Revisión: %8s"
 
-#: camlibs/soundvision/soundvision.c:236
+#: camlibs/soundvision/soundvision.c:237
 msgid ""
 "Soundvision Driver\n"
 "Vince Weaver <vince@deater.net>\n"
@@ -4057,6 +4057,3 @@ msgstr "Error desonocido de la biblioteca de la cámara"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "Error desconocido"
-
-#~ msgid ":"
-#~ msgstr ":"

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
-"POT-Creation-Date: 2002-12-01 19:44+0100\n"
+"POT-Creation-Date: 2002-12-01 21:00+0100\n"
 "PO-Revision-Date: 2002-11-30 15:16+0100\n"
 "Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -3622,7 +3622,6 @@ msgstr ""
 "Vince Weaver <vince@deater.net>\n"
 
 #: camlibs/spca504_flash/library.c:182
-#, fuzzy
 msgid ""
 "spca504_flash camlib\n"
 " Authors: Till Adam\n"
@@ -3632,7 +3631,7 @@ msgid ""
 msgstr ""
 "spca504_flash kamera bibliotek\n"
 "Författare: Till Adam <till@adam-lilienthal.de>\n"
-"baserat på arbete av Matthias Krau\n"
+"baserat på arbete av Matthias Krauss\n"
 "och Mark A. Zimmerman <mark@foresthaven.com>"
 
 #: camlibs/stv0680/library.c:354 camlibs/stv0680/library.c:388
