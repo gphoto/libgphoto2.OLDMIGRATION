@@ -201,24 +201,21 @@ static struct {
 	{"Kodak:DC4800", 0x040a, 0x0160},
 	/* Below other camers known to be detected by interface class */
 	
-	{"Kodak:DC290" , 0x040a, 0x0112},
 	{"Kodak:DX3900", 0x040a, 0x0170},
 	{"Kodak:MC3",    0x040a, 0x0400},
 	{"Kodak:DX3500", 0x040a, 0x0500},
 	{"Kodak:DX3600", 0x040a, 0x0510},
 	{"Kodak:DX3215", 0x040a, 0x0525},
 	{"Kodak:DX3700", 0x040a, 0x0530},
-	{"Kodak:DX4230", 0x040a, 0x0535},
 	{"Kodak:CX4230", 0x040a, 0x0535},
 	{"Kodak:LS420",  0x040a, 0x0540},
 	{"Kodak:DX4900", 0x040a, 0x0550},
 	{"Kodak:DX4330", 0x040a, 0x0555},
 	{"Kodak:CX4200", 0x040a, 0x0560},
-	{"Kodak:CX4210", 0x040a, 0x0560},
-	/* both above may share the same product IDs???
-	   A Europe/US versions of the same model??? */
+	{"Kodak:CX4210", 0x040a, 0x0565},
+	/* both above with different product IDs
+	   normal/retail versions of the same model */
 	{"Kodak:CX4300", 0x040a, 0x0566},
-	{"Kodak:DX4300", 0x040a, 0x0566},
 	{"Kodak:LS443",  0x040a, 0x0568},
 	{"Kodak:LS663",  0x040a, 0x0569},
 	{"Kodak:DX6340", 0x040a, 0x0570},
@@ -263,6 +260,8 @@ static struct {
 	{"Nikon:Coolpix 3500 (PTP mode)", 0x04b0, 0x0111},
 	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon:Coolpix 885 (PTP mode)",  0x04b0, 0x0112},
+	/* Nikon Coolpix 5400: T. Kaproncai, 25 Jul 2003 */
+	{"Nikon:Coolpix 5400 (PTP mode)", 0x04b0, 0x0119},
 	/* Nikon Coolpix SQ: M. Holzbauer, 07 Jul 2003 */
 	{"Nikon:Coolpix SQ (PTP mode)",   0x04b0, 0x0202},
 	/* Nikon Coolpix 2000 */
