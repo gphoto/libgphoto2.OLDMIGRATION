@@ -8,6 +8,8 @@ List of work that still has to be done on this driver:
 
  - make file upload work
 
+ - extend file attributes from 1 octet to 2 octets
+
  - make downloading raw images work
 
  - FOLDERS : folders are not supported on the A50 (users have no control on
