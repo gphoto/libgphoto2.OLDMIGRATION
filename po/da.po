@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
-"POT-Creation-Date: 2003-07-30 23:08+0200\n"
+"POT-Creation-Date: 2003-08-10 15:19+0200\n"
 "PO-Revision-Date: 2000-04-19 10:12+02:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Dansk <dansk@klid.dk>\n"
@@ -123,16 +123,16 @@ msgid ""
 "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
 msgstr ""
 
-#: camlibs/canon/crc.c:221
+#: camlibs/canon/crc.c:235
 #, c-format
 msgid "FATAL ERROR: initial CRC value for length %d unknown\n"
 msgstr ""
 
-#: camlibs/canon/crc.c:234
+#: camlibs/canon/crc.c:248
 msgid "unable to guess initial CRC value\n"
 msgstr ""
 
-#: camlibs/canon/crc.c:261
+#: camlibs/canon/crc.c:275
 #, c-format
 msgid ""
 "warning: CRC not checked (add len %d, value 0x%04x) "
