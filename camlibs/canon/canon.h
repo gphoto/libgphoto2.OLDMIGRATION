@@ -74,6 +74,14 @@ typedef enum
 canonCamModel;
 
 
+/**
+ * CANON_FLATTEN:
+ *
+ * Defines whether we should support flattened action. Not completely
+ * implemented and therefore disabled.
+ **/
+#undef CANON_FLATTEN
+
 struct _CameraPrivateLibrary
 {
 	canonCamModel model;
@@ -95,11 +103,19 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
+	/* driver settings
+	 * leave these as int, as gp_widget_get_value sets them as int!
+	 */
+	int list_all_files; /* whether to list all files, not just know types */
+#ifdef CANON_FLATTEN
+	int flatten_folders; /* whether to flatten the directory structure */
+#endif
 
 	/* this has nothing to do with CameraFilesystem and will
 	   therefore probably remain here */
 	int cached_ready;	/* whether canon_int_ready has already been called */
-
+	
+	char *cached_drive;	/* usually something like C: or D: */
 /*
  * Directory access may be rather expensive, so we cached some
  * information in the past. This is now done with the CameraFileSystem
@@ -108,7 +124,6 @@ struct _CameraPrivateLibrary
  * The first variable in each block indicates whether the block is valid.
  */
 
-	char *cached_drive;	/* usually something like C: or D: */
 #ifdef OBSOLETE
 	int cached_disk;
 	int cached_capacity;
@@ -144,7 +159,7 @@ struct _canon_dirent
 	uint8_t reserved_attrs;	/* one octet that is 0x00 */
 	uint32_t size;		/* four octets */
 	uint32_t datetime;	/* four octets */
-	char name[0];		/* until \0 character */
+	char name[1];		/* until \0 character */
 }
 __attribute__ ((packed));
 

@@ -715,13 +715,15 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	unsigned int dirents_length;
 	unsigned char *dirent_data = NULL;
 	unsigned char *end_of_data, *temp_ch, *pos;
-	const char *canonfolder = gphoto2canonpath (camera, folder);
+#ifdef CANON_FLATTEN
+	const char *canonfolder = gphoto2canonpath (camera, (camera->pl->flatten_folders?"/":folder));
+#else
+	const char *canonfolder = gphoto2canonpath (camera, folder);	
+#endif
 	int list_files = ((flags & CANON_LIST_FILES) != 0);
 	int list_folders = ((flags & CANON_LIST_FOLDERS) != 0);
 
 	canon_dirent *dirent = NULL;	/* current directory entry */
-	unsigned int direntnamelen;	/* length of dirent->name */
-	unsigned int direntsize;	/* size of dirent in octets */
 
 	GP_DEBUG ("BEGIN can_int_list_dir() folder '%s' aka '%s' (%s, %s)",
 		  folder, canonfolder,
@@ -780,6 +782,8 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	/* This is the main loop, for every directory entry returned */
 	while (pos < end_of_data) {
 		int is_dir, is_file;
+		unsigned int direntnamelen;	/* length of dirent->name */
+		unsigned int direntsize;	/* size of dirent in octets */
 
 		dirent = (canon_dirent *) pos;
 		is_dir = ((dirent->attrs & CANON_ATTR_NON_RECURS_ENT_DIR) != 0)
@@ -792,7 +796,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 			(pos - dirent_data), (end_of_data - dirent_data)
 			);
 
-		if (pos + sizeof (canon_dirent) + 1 > end_of_data) {
+		if (pos + sizeof (canon_dirent) > end_of_data) {
 			/* handle (possible) error case */
 			if (camera->port->type == GP_PORT_SERIAL) {
 				/* check to see if it is only NULL bytes left,
@@ -846,7 +850,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 			break;
 		}
 		direntnamelen = strlen (dirent->name);
-		direntsize = sizeof (canon_dirent) + direntnamelen + 1;
+		direntsize = sizeof (canon_dirent) + direntnamelen;
 
 		/* check that length of name in this dirent is not of unreasonable size.
 		 * 256 was picked out of the blue
@@ -865,81 +869,87 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 		GP_LOG (GP_LOG_DATA, "can_int_list_dir: "
 			"dirent determined to be %i=0x%x bytes :", direntsize, direntsize);
 		gp_log_data ("canon", pos, direntsize);
-		if (direntnamelen && ((list_folders && is_dir) || (list_files && is_file))
-			) {
-			/* we're going to fill out the info structure
-			   in this block */
-			memset (&info, 0, sizeof (info));
+		if (direntnamelen) {
+			if ((list_folders && is_dir) || (list_files && is_file)) {
 
-			/* we start with nothing and continously add stuff */
-			info.file.fields = GP_FILE_INFO_NONE;
+				/* we're going to fill out the info structure
+				   in this block */
+				memset (&info, 0, sizeof (info));
 
-			/* OK, this directory entry has a name in it. */
-			strncpy (info.file.name, dirent->name, sizeof (info.file.name));
-			info.file.fields |= GP_FILE_INFO_NAME;
+				/* we start with nothing and continously add stuff */
+				info.file.fields = GP_FILE_INFO_NONE;
 
-			/* the date is located at offset 6 and is 4
-			 * bytes long, re-order little/big endian */
-			info.file.time = byteswap32 (dirent->datetime);
-			if (info.file.time != 0)
-				info.file.fields |= GP_FILE_INFO_TIME;
+				/* OK, this directory entry has a name in it. */
+				strncpy (info.file.name, dirent->name, sizeof (info.file.name));
+				info.file.fields |= GP_FILE_INFO_NAME;
 
-			if (is_file) {
-				/* determine file type based on file name
-				 * this stuff only makes sense for files, not for folders
-				 */
-
-				strncpy (info.file.type, filename2mimetype (info.file.name),
-					 sizeof (info.file.type));
-				info.file.fields |= GP_FILE_INFO_TYPE;
-
-				if ((dirent->attrs & CANON_ATTR_DOWNLOADED) == 0)
-					info.file.status = GP_FILE_STATUS_DOWNLOADED;
-				else
-					info.file.status = GP_FILE_STATUS_NOT_DOWNLOADED;
-				info.file.fields |= GP_FILE_INFO_STATUS;
-
-				/* the size is located at offset 2 and is 4
+				/* the date is located at offset 6 and is 4
 				 * bytes long, re-order little/big endian */
-				info.file.size = byteswap32 (dirent->size);
-				info.file.fields |= GP_FILE_INFO_SIZE;
+				info.file.time = byteswap32 (dirent->datetime);
+				if (info.file.time != 0)
+					info.file.fields |= GP_FILE_INFO_TIME;
 
-				/* file access modes */
-				if ((dirent->attrs & CANON_ATTR_WRITE_PROTECTED) == 0)
-					info.file.permissions = GP_FILE_PERM_READ |
-						GP_FILE_PERM_DELETE;
-				else
-					info.file.permissions = GP_FILE_PERM_READ;
-				info.file.fields |= GP_FILE_INFO_PERMISSIONS;
-			}
+				if (is_file) {
+					/* determine file type based on file name
+					 * this stuff only makes sense for files, not for folders
+					 */
 
-			/* print dirent as text */
-			GP_DEBUG ("Raw info: name=%s is_dir=%i, is_file=%i, attrs=0x%x",
-				  dirent->name, is_dir, is_file, dirent->attrs);
-			debug_fileinfo (&info);
+					strncpy (info.file.type, filename2mimetype (info.file.name),
+						 sizeof (info.file.type));
+					info.file.fields |= GP_FILE_INFO_TYPE;
 
-			if (is_file) {
-				/*
-				 * Append directly to the filesystem instead of to the list,
-				 * because we have additional information.
-				 */
-				GP_DEBUG ("Doing gp_filesystem_append for %s", info.file.name);
-				gp_filesystem_append (camera->fs, folder, info.file.name);
-				GP_DEBUG ("Doing gp_filesystem_set_info_noop for %s",
-					  info.file.name);
-				gp_filesystem_set_info_noop (camera->fs, folder, info);
+					if ((dirent->attrs & CANON_ATTR_DOWNLOADED) == 0)
+						info.file.status = GP_FILE_STATUS_DOWNLOADED;
+					else
+						info.file.status = GP_FILE_STATUS_NOT_DOWNLOADED;
+					info.file.fields |= GP_FILE_INFO_STATUS;
+
+					/* the size is located at offset 2 and is 4
+					 * bytes long, re-order little/big endian */
+					info.file.size = byteswap32 (dirent->size);
+					info.file.fields |= GP_FILE_INFO_SIZE;
+
+					/* file access modes */
+					if ((dirent->attrs & CANON_ATTR_WRITE_PROTECTED) == 0)
+						info.file.permissions = GP_FILE_PERM_READ |
+							GP_FILE_PERM_DELETE;
+					else
+						info.file.permissions = GP_FILE_PERM_READ;
+					info.file.fields |= GP_FILE_INFO_PERMISSIONS;
+				}
+
+				/* print dirent as text */
+				GP_DEBUG ("Raw info: name=%s is_dir=%i, is_file=%i, attrs=0x%x",
+					  dirent->name, is_dir, is_file, dirent->attrs);
+				debug_fileinfo (&info);
+
+				if (is_file) {
+					/*
+					 * Append directly to the filesystem instead of to the list,
+					 * because we have additional information.
+					 */
+					if (!camera->pl->list_all_files && 
+					    !is_image(info.file.name) &&
+					    !is_movie(info.file.name) ) {
+						/* do nothing */
+						GP_DEBUG ("Ignored %s/%s", folder, info.file.name);
+					} else {
+						GP_DEBUG ("Added file %s/%s", folder, info.file.name);
+						gp_filesystem_append (camera->fs, folder, info.file.name);
+						gp_filesystem_set_info_noop (camera->fs, folder, info);
+					}
+				}
+				if (is_dir) {
+					gp_list_append (list, info.file.name, NULL);
+				}
+			} else {
+				/* this case could mean that this was the last dirent */
+				GP_DEBUG ("can_int_list_dir: "
+					  "dirent at position %i of %i has NULL name, skipping.",
+					  (pos - dirent_data), (end_of_data - dirent_data));
 			}
-			if (is_dir) {
-				GP_DEBUG ("Doing gp_list_append for %s", info.file.name);
-				gp_list_append (list, info.file.name, NULL);
-			}
-		} else {
-			/* this case could mean that this was the last dirent */
-			GP_DEBUG ("can_int_list_dir: "
-				  "dirent at position %i of %i has NULL name, skipping.",
-				  (pos - dirent_data), (end_of_data - dirent_data));
 		}
-
+		
 		/* make 'pos' point to next dirent in packet.
 		 * first we skip 10 bytes of attribute, size and date,
 		 * then we skip the name plus 1 for the NULL
