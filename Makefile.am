@@ -5,8 +5,7 @@
 
 bin_SCRIPTS = gphoto2-config
 
-EXTRA_DIST = HACKING MAINTAINERS autogen.sh \
-	makefile.os2 os2mak.inc TESTERS
+EXTRA_DIST = HACKING MAINTAINERS makefile.os2 os2mak.inc TESTERS
 
 SUBDIRS = 			\
 	libgphoto2_port 	\
@@ -25,13 +24,12 @@ doc_DATA = AUTHORS COPYING README
 ########################################################################
 # The following default options for aclocal and automake
 # are required in the top level Makefile.am for the automatic 
-# re-building of the build system files. 
+# re-building of the build system files (only if configured with
+# --enable-maintainer-mode). 
 #
 # It is not sufficient to have these options somewhere in autogen.sh!
 
-# default options for aclocal
 ACLOCAL_AMFLAGS = -I libgphoto2_port/m4
-# default options for automake - only required in the top Makefile.am
 AUTOMAKE_OPTIONS = gnu
 
 ########################################################################

@@ -1,5 +1,9 @@
 2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
 
+	* Makefile.am: Remove autogen.sh from EXTRA_DIST.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
         * configure.in: Make the check for cdk.h search in $ac_default_prefix.
           Make checks for libjpeg, libexif, libcdk, etc. consistent.
 
