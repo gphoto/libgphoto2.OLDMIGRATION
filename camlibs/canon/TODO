@@ -2,7 +2,10 @@
 List of work that still has to be done on this driver:
 ========================================================================
 
+ - make CameraFilesystem distinguish between files and folders
+
  - switch the camera keys and buttons off while connected
+   and on again when disconnected
 
  - make misc. models work on A/C adapter (e.g. G1, 90 IS)
 
