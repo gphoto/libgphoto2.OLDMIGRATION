@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
-"POT-Creation-Date: 2002-11-23 15:48+0100\n"
+"POT-Creation-Date: 2002-11-26 20:43+0100\n"
 "PO-Revision-Date: 2002-07-24 08:56+0200\n"
 "Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -2449,11 +2449,11 @@ msgstr "PTP protokollfel, data föråldrat"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP protokollfel, svar förväntat"
 
-#: camlibs/ptp/library.c:494
+#: camlibs/ptp/library.c:495
 msgid "Written by Mariusz Woloszyn <emsi@ipartners.pl>. Enjoy!"
 msgstr "Skrivet av Mariusz Woloszyn <emsi@ipartners.pl>. Njut!"
 
-#: camlibs/ptp/library.c:1026
+#: camlibs/ptp/library.c:1027
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP endast implementerat för USB kamror."
 
@@ -3603,12 +3603,12 @@ msgstr ""
 "Agfa CL18\n"
 "Vince Weaver <vince@deater.net>\n"
 
-#: camlibs/spca504_flash/library.c:181
+#: camlibs/spca504_flash/library.c:182
 msgid ""
 "spca504_flash camlib\n"
 " Authors: Till Adam\n"
 " <till@adam-lilienthal.de>\n"
-"based on work by Matthias Krau\n"
+"based on work by Matthias Krauss\n"
 "and Mark A. Zimmerman <mark@foresthaven.com>"
 msgstr ""
 
