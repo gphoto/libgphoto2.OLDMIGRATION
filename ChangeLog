@@ -1,3 +1,7 @@
+2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* configure.in: version 2.1.0rc1 (and branch creation).
+
 2002-06-17  Mariusz Woloszyn <emsi@ipartners.pl>
 	* doc/FAQ: Added "gphoto2 does not work..." general question
 
