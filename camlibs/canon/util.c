@@ -26,28 +26,6 @@
 #include "library.h"
 
 /**
- * intatpos:
- * @block: byte block we are to write the integer into
- * @pos: position in byte block where we are to write to
- * @integer: the int number we are to write into the block
- *
- * Utility function used by canon_usb_dialogue
- * FIXME: What about endianness?
- **/
-void
-intatpos (unsigned char *block, int pos, int integer)
-{
-	*(unsigned *) (block + pos) = integer;
-}
-
-
-unsigned int
-get_int (const unsigned char *p)
-{
-	return p[0] | (p[1] << 8) | (p[2] << 16) | (p[3] << 24);
-}
-
-/**
  * is_thumbnail:
  * @name: name of file to examine
  * Test whether the given @name corresponds to a thumbnail (.THM).
@@ -131,7 +109,7 @@ is_crw (const char *name)
 
 /**
  * is_movie:
- * @name: name of file to examing
+ * @name: name of file to examine
  *
  * Test whether the name given corresponds
  * to a movie (.AVI)
@@ -146,7 +124,7 @@ is_movie (const char *name)
 	if (pos)
 		res = (!strcmp (pos, ".AVI"));
 
-	GP_DEBUG("is_movie(%s) == %i", name, res);
+	GP_DEBUG ("is_movie(%s) == %i", name, res);
 	return (res);
 }
 
@@ -170,6 +148,16 @@ const char *filename2mimetype(const char *filename)
 	}
 	return GP_MIME_UNKNOWN;
 }
+
+int
+comp_dir (const void *a, const void *b)
+{
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "comp_dir()");
+
+	return strcmp (((const struct canon_dir *) a)->name,
+		       ((const struct canon_dir *) b)->name);
+}
+
 
 /****************************************************************************
  *

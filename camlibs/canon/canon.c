@@ -54,27 +54,59 @@
 #include "canon.h"
 #include "serial.h"
 
-/* These contain the default label for all the 
- * switch (camera->port->type) statements
- */
-#define OTHER_PORT_TYPE_RETURN(RETVAL) \
-		default: \
-			gp_camera_set_error (camera, "Don't know how to handle " \
-					     "camera->port->type value %i aka 0x%x" \
-					     "in %s line %i.", camera->port->type, \
-					     camera->port->type, __FILE__, __LINE__); \
-			return (RETVAL); \
-			break;
+/************************************************************************
+ * Camera definitions
+ ************************************************************************/
 
-#define OTHER_PORT_TYPE OTHER_PORT_TYPE_RETURN(GP_ERROR_NOT_SUPPORTED)
+/**
+ * models:
+ *
+ * Contains list of all camera models currently supported with their
+ * respective USB IDs and a flag denoting RS232 serial support.
+ **/
 
-/* Assertion on method parameter.
- */
-#define ASSERT_PARAM(what) \
-	if (!(what)) { \
-		GP_DEBUG("Assertion %s failed",#what); \
-		return GP_ERROR_BAD_PARAMETERS; \
-	}
+#define S32K	32 * 1024
+#define S1M	1024 * 1024
+#define S2M	2 * S1M
+#define S10M	10 * S1M
+
+static const struct canonCamModelData models[] =
+{
+	/* *INDENT-OFF* */
+	{"DE300 Canon Inc.",		CANON_PS_A5,		0, 0, 1, S2M, S32K},
+	{"Canon PowerShot A5 Zoom",	CANON_PS_A5_ZOOM,	0, 0, 1, S2M, S32K},
+	{"Canon PowerShot A50",		CANON_PS_A50,		0, 0, 1, S2M, S32K},
+	{"Canon PowerShot Pro70",	CANON_PS_A70,		0, 0, 1, S2M, S32K},
+	{"Canon PowerShot S10",		CANON_PS_S10,		0x04A9, 0x3041, 1, S10M, S32K},
+	{"Canon PowerShot S20",		CANON_PS_S20,		0x04A9, 0x3043, 1, S10M, S32K},
+	{"Canon EOS D30",		CANON_EOS_D30,		0x04A9, 0x3044, 0, S10M, S32K},
+	{"Canon PowerShot S100",	CANON_PS_S100,		0x04A9, 0x3045, 0, S10M, S32K},
+	{"Canon IXY DIGITAL",		CANON_PS_S100,		0x04A9, 0x3046, 0, S10M, S32K},
+	{"Canon Digital IXUS",		CANON_PS_S100,		0x04A9, 0x3047, 0, S10M, S32K},
+	{"Canon PowerShot G1",		CANON_PS_G1,		0x04A9, 0x3048, 1, S10M, S32K},
+	{"Canon PowerShot Pro90 IS",	CANON_PS_PRO90_IS,	0x04A9, 0x3049, 1, S10M, S32K},
+	{"Canon IXY DIGITAL 300",	CANON_PS_S300,		0x04A9, 0x304B, 0, S10M, S32K},
+	{"Canon PowerShot S300",	CANON_PS_S300,		0x04A9, 0x304C, 0, S10M, S32K},
+	{"Canon Digital IXUS 300",	CANON_PS_S300,		0x04A9, 0x304D, 0, S10M, S32K},
+	{"Canon PowerShot A20",		CANON_PS_A20,		0x04A9, 0x304E, 0, S10M, S32K},
+	{"Canon PowerShot A10",		CANON_PS_A10,		0x04A9, 0x304F, 0, S10M, S32K},
+	{"Canon PowerShot S110",	CANON_PS_S100,		0x04A9, 0x3051, 0, S10M, S32K},
+	{"Canon DIGITAL IXUS v",	CANON_PS_S100,		0x04A9, 0x3052, 0, S10M, S32K},
+	{"Canon PowerShot G2",		CANON_PS_G2,		0x04A9, 0x3055, 0, S10M, S32K},
+	{"Canon PowerShot S40",		CANON_PS_S40,		0x04A9, 0x3056, 0, S10M, S32K},
+	{"Canon PowerShot S30",		CANON_PS_S30,		0x04A9, 0x3057, 0, S10M, S32K},
+	{NULL}
+	/* *INDENT-ON* */
+};
+
+#undef S10M
+#undef S2M
+#undef S1M
+#undef S32K
+
+/************************************************************************
+ * Methods
+ ************************************************************************/
 
 /*
  * does operations on a directory based on the value
@@ -118,7 +150,7 @@ canon_int_directory_operations (Camera *camera, const char *path, int action)
 			msg = canon_serial_dialogue (camera, type, 0x11, &len, path,
 						     strlen (path) + 1, NULL);
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	if (!msg) {
@@ -173,7 +205,7 @@ canon_int_identify_camera (Camera *camera)
 				return GP_ERROR;
 			}
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 0x4c)
@@ -220,8 +252,9 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 				canon_serial_error_type (camera);
 				return GP_ERROR;
 			}
+
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 8)
@@ -303,7 +336,7 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 						     strlen (dir) + 1, file, strlen (file) + 1,
 						     NULL);
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	if (!msg) {
@@ -348,7 +381,7 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 			msg = canon_serial_dialogue (camera, 0x05, 0x12, &len, name,
 						     strlen (name) + 1, NULL);
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	if (!msg) {
@@ -369,7 +402,7 @@ canon_int_set_owner_name (Camera *camera, const char *name)
  * The camera gives time in little endian format, therefore we need
  * to swap the 4 bytes on big-endian machines.
  *
- * Note: the time returned is not GMT but local time. Therefore,
+ * Nota: the time returned is not GMT but local time. Therefore,
  * if you use functions like "ctime", it will be translated to local
  * time _a second time_, and the result will be wrong. Only use functions
  * that don't translate the date into localtime, like "gmtime".
@@ -379,7 +412,6 @@ canon_int_get_time (Camera *camera)
 {
 	unsigned char *msg;
 	int len;
-	int t;
 	time_t date;
 
 	GP_DEBUG ("canon_int_get_time()");
@@ -398,18 +430,13 @@ canon_int_get_time (Camera *camera)
 				return GP_ERROR;
 			}
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 0x10)
 		return GP_ERROR;
 
-	/* XXX will fail when sizeof(int) != 4. Should use u_int32_t or
-	 * something instead. Investigate portability issues.
-	 */
-	memcpy (&t, msg + 4, 4);
-
-	date = (time_t) byteswap32 (t);
+	date = (time_t) le32atoh (msg+4);
 
 	/* XXX should strip \n at the end of asctime() return data */
 	GP_DEBUG ("Camera time: %s ", asctime (gmtime (&date)));
@@ -447,7 +474,7 @@ canon_int_set_time (Camera *camera)
 			}
 
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	if (len != 0x10)
@@ -461,10 +488,7 @@ canon_int_set_time (Camera *camera)
  * @camera: camera to get ready
  * @Returns: gphoto2 error code
  *
- * Switches the camera on, detects the model and sets its speed. This
- * function must be called before doing anything on the camera. This
- * function should be called before every action on the camera for
- * RS232 connections, as these tend to be unreliable.
+ * Switches the camera on, detects the model and sets its speed.
  **/
 int
 canon_int_ready (Camera *camera)
@@ -480,7 +504,7 @@ canon_int_ready (Camera *camera)
 		case GP_PORT_SERIAL:
 			res = canon_serial_ready (camera);
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	return (res);
@@ -520,25 +544,20 @@ canon_int_get_disk_name (Camera *camera)
 				return NULL;
 			}
 			break;
-		OTHER_PORT_TYPE_RETURN(NULL);
+		GP_PORT_DEFAULT
 	}
 
-	switch (camera->port->type) {
-		case GP_PORT_SERIAL:
-			/* this is correct even though it looks a bit funny. canon_serial_dialogue()
-			 * has a static buffer, strdup() part of that buffer and return to our caller.
-			 */
-			msg = strdup ((char *) msg + 4);	/* @@@ should check length */
-			if (!msg) {
-				GP_DEBUG ("canon_int_get_disk_name: could not allocate %i "
-					  "bytes of memory to hold response",
-					  strlen ((char *) msg + 4));
-				return NULL;
-			}
-			break;
-		case GP_PORT_USB:
-			break;
-		OTHER_PORT_TYPE_RETURN(NULL);
+	if (camera->port->type == GP_PORT_SERIAL) {
+		/* this is correct even though it looks a bit funny. canon_serial_dialogue()
+		 * has a static buffer, strdup() part of that buffer and return to our caller.
+		 */
+		msg = strdup ((char *) msg + 4);	/* @@@ should check length */
+		if (!msg) {
+			GP_DEBUG ("canon_int_get_disk_name: could not allocate %i "
+				  "bytes of memory to hold response",
+				  strlen ((char *) msg + 4));
+			return NULL;
+		}
 	}
 
 	GP_DEBUG ("canon_int_get_disk_name: disk '%s'", msg);
@@ -559,23 +578,14 @@ canon_int_get_disk_name (Camera *camera)
 int
 canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, int *available)
 {
-	unsigned char *msg;
+	unsigned char *msg = NULL;
 	int len, cap, ava;
 
 	GP_DEBUG ("canon_int_get_disk_name_info() name '%s'", name);
 
-	if (name == NULL) {
-		gp_camera_set_error (camera, "NULL name in canon_int_get_disk_name_info");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
-	if (capacity == NULL) {
-		gp_camera_set_error (camera, "NULL capacity in canon_int_get_disk_name_info");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
-	if (available == NULL) {
-		gp_camera_set_error (camera, "NULL available in canon_int_get_disk_name_info");
-		return GP_ERROR_BAD_PARAMETERS;
-	}
+	CHECK_PARAM_NULL(name);
+	CHECK_PARAM_NULL(capacity);
+	CHECK_PARAM_NULL(available);
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
@@ -592,15 +602,15 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 				return GP_ERROR;
 			}
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 
 	if (len < 12) {
 		GP_DEBUG ("ERROR: truncated message");
 		return GP_ERROR;
 	}
-	cap = get_int (msg + 4);
-	ava = get_int (msg + 8);
+	cap = le32atoh (msg + 4);
+	ava = le32atoh (msg + 8);
 	if (capacity)
 		*capacity = cap;
 	if (available)
@@ -615,52 +625,53 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 
 /**
  * gphoto2canonpath:
- * @camera: the camera the path is on (to determine drive letter)
  * @path: gphoto2 path 
  *
  * convert gphoto2 path  (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
  * into canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
- * could it be that old (serial) cameras use pathes like
- * "\DCIM\116CANON\IMG_1234.JPG" ?
- **/
-const char *
-gphoto2canonpath (Camera *camera, const char *path)
+ */
+char *
+gphoto2canonpath (Camera *camera, char *path)
 {
 	static char tmp[2000];
 	char *p;
 
 	if (path[0] != '/') {
+		GP_DEBUG ("Non-absolute gphoto2 path cannot be converted");
 		return NULL;
 	}
-	if (camera->pl->cached_drive == NULL) {
+
+	if (camera->pl->cached_drive == NULL)
 		GP_DEBUG ("NULL camera->pl->cached_drive in gphoto2canonpath");
-		camera->pl->cached_drive = canon_int_get_disk_name (camera);
-		if (camera->pl->cached_drive == NULL) {
-			GP_DEBUG ("NULL camera->pl->cached_drive fix failed "
-				  "in gphoto2canonpath");
-		}
-	}
+
 	strcpy (tmp, camera->pl->cached_drive);
 	strcat (tmp, path);
+
+	/* replace all slashes by backslashes */
 	for (p = tmp; *p != '\0'; p++) {
 		if (*p == '/')
 			*p = '\\';
 	}
+
 	/* remove trailing backslash */
-	if ((p > tmp) && (*(p - 1) == '\\'))
-		*(p - 1) = '\0';
+	if ((p > tmp) && (*(p-1) == '\\'))
+		*(p-1) = '\0';
+
 	GP_LOG (GP_LOG_DATA, "gphoto2canonpath: converted '%s' to '%s'", path, tmp);
+
 	return (tmp);
 }
 
 /**
- * canon2gphotopath:
- * @camera: the camera the path is on (to determine drive letter)
+ * cancon2gphotopath:
  * @path: canon style path
  *
  * convert canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
  * into gphoto2 path        (e.g.   "/DCIM/116CANON/IMG_1240.JPG")
- **/
+ *
+ * Assumes @path to start with drive name followed by a colon.
+ * It just drops the drive name.
+ */
 const char *
 canon2gphotopath (Camera *camera, const char *path)
 {
@@ -670,99 +681,61 @@ canon2gphotopath (Camera *camera, const char *path)
 	if (!((path[1] == ':') && (path[2] == '\\'))) {
 		return NULL;
 	}
-	// FIXME: just drops the drive letter
-	p = strchr (path, ':');
-	p++;
+
+	p = strchr(path, ':') + 1;
 	strcpy (tmp, p);
+
+	/* replace backslashes by slashes */
 	for (p = tmp; *p != '\0'; p++) {
 		if (*p == '\\')
 			*p = '/';
 	}
+
 	GP_LOG (GP_LOG_DATA, "canon2gphotopath: converted '%s' to '%s'", path, tmp);
+
 	return (tmp);
 }
 
 
-void
-debug_fileinfo (CameraFileInfo * info)
-{
-	GP_DEBUG ("<CameraFileInfo>");
-	GP_DEBUG ("  <CameraFileInfoFile>");
-	if ((info->file.fields & GP_FILE_INFO_NAME) != 0)
-		GP_DEBUG ("    Name:   %s", info->file.name);
-	if ((info->file.fields & GP_FILE_INFO_TYPE) != 0)
-		GP_DEBUG ("    Type:   %s", info->file.type);
-	if ((info->file.fields & GP_FILE_INFO_SIZE) != 0)
-		GP_DEBUG ("    Size:   %i", info->file.size);
-	if ((info->file.fields & GP_FILE_INFO_WIDTH) != 0)
-		GP_DEBUG ("    Width:  %i", info->file.width);
-	if ((info->file.fields & GP_FILE_INFO_HEIGHT) != 0)
-		GP_DEBUG ("    Height: %i", info->file.height);
-	if ((info->file.fields & GP_FILE_INFO_PERMISSIONS) != 0)
-		GP_DEBUG ("    Perms:  0x%x", info->file.permissions);
-	if ((info->file.fields & GP_FILE_INFO_STATUS) != 0)
-		GP_DEBUG ("    Status: %i", info->file.status);
-	if ((info->file.fields & GP_FILE_INFO_TIME) != 0) {
-		char *p, *time = asctime (gmtime (&info->file.time));
 
-		for (p = time; *p != 0; ++p)
-			/* do nothing */ ;
-		*(p - 1) = '\0';
-		GP_DEBUG ("    Time:   %s (%i)", time, info->file.time);
-	}
-	GP_DEBUG ("  </CameraFileInfoFile>");
-	GP_DEBUG ("</CameraFileInfo>");
+void
+canon_int_free_dir (Camera *camera, struct canon_dir *list)
+{
+	struct canon_dir *walk;
+
+	for (walk = list; walk->name; walk++)
+		free ((char *) walk->name);
+	free (list);
 }
 
-
 /**
- * canon_int_list_directory:
- * @camera: the camera we are using
- * @list: the list we should append the direntry names to
- * @folder: the gphoto2 style path of the folder we are to list
- * @flags: determines what to list: CANON_LIST_FILES or CANON_LIST_FOLDERS
- *
- * List all files within a given folder, append their names to the
- * given @filelist and set the file info using
- * #gp_filesystem_set_info_noop
- *
- * This method is really long and should probably reorganized and
- * separated into multiple methods.
- **/
+ * Get the directory tree of a given flash device.
+ */
 int
-canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
-			  const int flags)
+canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const char *path)
 {
-	CameraFileInfo info;
-	int res;
+	struct canon_dir *dir = NULL;
+	int entrys = 0, res, is_dir = 0;
 	unsigned int dirents_length;
-	unsigned char *dirent_data = NULL;
-	unsigned char *end_of_data, *temp_ch, *pos;
-#ifdef CANON_FLATTEN
-	const char *canonfolder = gphoto2canonpath (camera, (camera->pl->flatten_folders?"/":folder));
-#else
-	const char *canonfolder = gphoto2canonpath (camera, folder);	
-#endif
-	int list_files = ((flags & CANON_LIST_FILES) != 0);
-	int list_folders = ((flags & CANON_LIST_FOLDERS) != 0);
+	char filedate_str[32];
+	unsigned char *dirent_data = NULL, *end_of_data, *temp_ch, *dirent_name, *pos;
 
-	canon_dirent *dirent = NULL;	/* current directory entry */
+	gp_log (GP_LOG_DEBUG, "canon", "canon_list_directory() path '%s'", path);
 
-	GP_DEBUG ("BEGIN can_int_list_dir() folder '%s' aka '%s' (%s, %s)",
-		  folder, canonfolder,
-		  list_files ? "files" : "no files", list_folders ? "folders" : "no folders");
+	/* set return value to NULL in case something fails */
+	*result_dir = NULL;
 
 	/* Fetch all directory entrys from the camera */
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			res = canon_usb_get_dirents (camera, &dirent_data, &dirents_length,
-						     canonfolder);
+						     path);
 			break;
 		case GP_PORT_SERIAL:
 			res = canon_serial_get_dirents (camera, &dirent_data, &dirents_length,
-							canonfolder);
+							path);
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 	if (res != GP_OK)
 		return res;
@@ -770,7 +743,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	end_of_data = dirent_data + dirents_length;
 
 	if (dirents_length < CANON_MINIMUM_DIRENT_SIZE) {
-		gp_camera_set_error (camera, "can_int_list_dir: ERROR: "
+		gp_camera_set_error (camera, "canon_list_directory: ERROR: "
 				     "initial message too short (%i < minimum %i)",
 				     dirents_length, CANON_MINIMUM_DIRENT_SIZE);
 		free (dirent_data);
@@ -784,15 +757,14 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 	 * dirent which is actually the first one we are interested
 	 * in
 	 */
-	dirent = (canon_dirent *) dirent_data;
+	dirent_name = dirent_data + 10;
 
-	GP_DEBUG ("can_int_list_dir: "
-		  "Camera directory listing for directory '%s'", dirent->name);
+	GP_DEBUG ("canon_list_directory: "
+		  "Camera directory listing for directory '%s'", dirent_name);
 
-	for (pos = dirent->name; pos < end_of_data && *pos != 0; pos++)
-		/* do nothing */ ;
+	for (pos = dirent_name; pos < end_of_data && *pos != 0; pos++) ;
 	if (pos == end_of_data || *pos != 0) {
-		gp_camera_set_error (camera, "can_int_list_dir: "
+		gp_camera_set_error (camera, "canon_list_directory: "
 				     "Reached end of packet while "
 				     "examining the first dirent");
 		free (dirent_data);
@@ -804,53 +776,42 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
 	/* This is the main loop, for every directory entry returned */
 	while (pos < end_of_data) {
-		int is_dir, is_file;
-		unsigned int direntnamelen;	/* length of dirent->name */
-		unsigned int direntsize;	/* size of dirent in octets */
+		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
+		gp_log (GP_LOG_DATA, "canon", "canon_list_directory: "
+			"reading dirent at position %i of %i", (pos - dirent_data),
+			(end_of_data - dirent_data));
 
-		dirent = (canon_dirent *) pos;
-		is_dir = ((dirent->attrs & CANON_ATTR_NON_RECURS_ENT_DIR) != 0)
-			|| ((dirent->attrs & CANON_ATTR_RECURS_ENT_DIR) != 0);
-		is_file = !is_dir;
-
-		GP_LOG (GP_LOG_DATA, "can_int_list_dir: "
-			"reading dirent at position %i of %i (0x%x of 0x%x)",
-			(pos - dirent_data), (end_of_data - dirent_data),
-			(pos - dirent_data), (end_of_data - dirent_data)
-			);
-
-		if (pos + sizeof (canon_dirent) > end_of_data) {
-			/* handle (possible) error case */
+		if (pos + CANON_MINIMUM_DIRENT_SIZE > end_of_data) {
 			if (camera->port->type == GP_PORT_SERIAL) {
 				/* check to see if it is only NULL bytes left,
 				 * that is not an error for serial cameras
 				 * (at least the A50 adds five zero bytes at the end)
 				 */
-				for (temp_ch = pos; temp_ch < end_of_data && *temp_ch; temp_ch++)
-					;	/* do nothing */
+				for (temp_ch = pos; temp_ch < end_of_data && *temp_ch;
+				     temp_ch++) ;
 
 				if (temp_ch == end_of_data) {
-					GP_DEBUG ("can_int_list_dir: "
+					GP_DEBUG ("canon_list_directory: "
 						  "the last %i bytes were all 0 - ignoring.",
 						  temp_ch - pos);
 					break;
 				} else {
-					GP_DEBUG ("can_int_list_dir: "
+					GP_DEBUG ("canon_list_directory: "
 						  "byte[%i=0x%x] == %i=0x%x", temp_ch - pos,
 						  temp_ch - pos, *temp_ch, *temp_ch);
-					GP_DEBUG ("can_int_list_dir: "
+					GP_DEBUG ("canon_list_directory: "
 						  "pos is 0x%x, end_of_data is 0x%x, temp_ch is 0x%x - diff is 0x%x",
 						  pos, end_of_data, temp_ch, temp_ch - pos);
 				}
 			}
-			GP_DEBUG ("can_int_list_dir: "
+			GP_DEBUG ("canon_list_directory: "
 				  "dirent at position %i=0x%x of %i=0x%x is too small, "
 				  "minimum dirent is %i bytes",
 				  (pos - dirent_data), (pos - dirent_data),
 				  (end_of_data - dirent_data), (end_of_data - dirent_data),
 				  CANON_MINIMUM_DIRENT_SIZE);
 			gp_camera_set_error (camera,
-					     "can_int_list_dir: "
+					     "canon_list_directory: "
 					     "truncated directory entry encountered");
 			free (dirent_data);
 			return GP_ERROR;
@@ -858,281 +819,171 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 
 		/* Check end of this dirent, 10 is to skip over
 		 * 2    attributes + 0x00
-		 * 4    file date (UNIX localtime)
 		 * 4    file size
+		 * 4    file date (UNIX localtime)
 		 * to where the direntry name begins.
 		 */
-		for (temp_ch = dirent->name; temp_ch < end_of_data && *temp_ch != 0;
+		dirent_name = pos + 10;
+		for (temp_ch = dirent_name; temp_ch < end_of_data && *temp_ch != 0;
 		     temp_ch++) ;
 
 		if (temp_ch == end_of_data || *temp_ch != 0) {
-			GP_DEBUG ("can_int_list_dir: "
+			GP_DEBUG ("canon_list_directory: "
 				  "dirent at position %i of %i has invalid name in it."
 				  "bailing out with what we've got.",
 				  (pos - dirent_data), (end_of_data - dirent_data));
 			break;
 		}
-		direntnamelen = strlen (dirent->name);
-		direntsize = sizeof (canon_dirent) + direntnamelen;
 
 		/* check that length of name in this dirent is not of unreasonable size.
 		 * 256 was picked out of the blue
 		 */
-		if (direntnamelen > 256) {
-			GP_DEBUG ("can_int_list_dir: "
+		if (strlen (dirent_name) > 256) {
+			GP_DEBUG ("canon_list_directory: "
 				  "dirent at position %i of %i has too long name in it (%i bytes)."
 				  "bailing out with what we've got.",
 				  (pos - dirent_data), (end_of_data - dirent_data),
-				  direntnamelen);
+				  strlen (pos + 10));
 			break;
 		}
 
 		/* 10 bytes of attributes, size and date, a name and a NULL terminating byte */
 		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
-		GP_LOG (GP_LOG_DATA, "can_int_list_dir: "
-			"dirent determined to be %i=0x%x bytes :", direntsize, direntsize);
-		gp_log_data ("canon", pos, direntsize);
-		if (direntnamelen) {
-			if ((list_folders && is_dir) || (list_files && is_file)) {
+		gp_log (GP_LOG_DATA, "canon", "canon_list_directory: "
+			"dirent determined to be %i=0x%x bytes :",
+			10 + strlen (dirent_name) + 1, 10 + strlen (dirent_name) + 1);
+		gp_log_data ("canon", pos, 10 + strlen (dirent_name) + 1);
 
-				/* we're going to fill out the info structure
-				   in this block */
-				memset (&info, 0, sizeof (info));
+		if (strlen (dirent_name)) {
+			/* OK, this directory entry has a name in it. */
 
-				/* we start with nothing and continously add stuff */
-				info.file.fields = GP_FILE_INFO_NONE;
+			temp_ch = realloc (dir, sizeof (struct canon_dir) * (entrys + 1));
+			if (temp_ch == NULL) {
+				gp_camera_set_error (camera, "canon_list_directory: "
+						     "Could not resize canon_dir buffer to %i bytes",
+						     sizeof (*dir) * (entrys + 1));
+				if (dir)
+					canon_int_free_dir (camera, dir);
 
-				/* OK, this directory entry has a name in it. */
-				strncpy (info.file.name, dirent->name, sizeof (info.file.name));
-				info.file.fields |= GP_FILE_INFO_NAME;
-
-				/* the date is located at offset 6 and is 4
-				 * bytes long, re-order little/big endian */
-				info.file.time = byteswap32 (dirent->datetime);
-				if (info.file.time != 0)
-					info.file.fields |= GP_FILE_INFO_TIME;
-
-				if (is_file) {
-					/* determine file type based on file name
-					 * this stuff only makes sense for files, not for folders
-					 */
-
-					strncpy (info.file.type, filename2mimetype (info.file.name),
-						 sizeof (info.file.type));
-					info.file.fields |= GP_FILE_INFO_TYPE;
-
-					if ((dirent->attrs & CANON_ATTR_DOWNLOADED) == 0)
-						info.file.status = GP_FILE_STATUS_DOWNLOADED;
-					else
-						info.file.status = GP_FILE_STATUS_NOT_DOWNLOADED;
-					info.file.fields |= GP_FILE_INFO_STATUS;
-
-					/* the size is located at offset 2 and is 4
-					 * bytes long, re-order little/big endian */
-					info.file.size = byteswap32 (dirent->size);
-					info.file.fields |= GP_FILE_INFO_SIZE;
-
-					/* file access modes */
-					if ((dirent->attrs & CANON_ATTR_WRITE_PROTECTED) == 0)
-						info.file.permissions = GP_FILE_PERM_READ |
-							GP_FILE_PERM_DELETE;
-					else
-						info.file.permissions = GP_FILE_PERM_READ;
-					info.file.fields |= GP_FILE_INFO_PERMISSIONS;
-				}
-
-				/* print dirent as text */
-				GP_DEBUG ("Raw info: name=%s is_dir=%i, is_file=%i, attrs=0x%x",
-					  dirent->name, is_dir, is_file, dirent->attrs);
-				debug_fileinfo (&info);
-
-				if (is_file) {
-					/*
-					 * Append directly to the filesystem instead of to the list,
-					 * because we have additional information.
-					 */
-					if (!camera->pl->list_all_files && 
-					    !is_image(info.file.name) &&
-					    !is_movie(info.file.name) ) {
-						/* do nothing */
-						GP_DEBUG ("Ignored %s/%s", folder, info.file.name);
-					} else {
-						GP_DEBUG ("Added file %s/%s", folder, info.file.name);
-						gp_filesystem_append (camera->fs, folder, info.file.name);
-						gp_filesystem_set_info_noop (camera->fs, folder, info);
-					}
-				}
-				if (is_dir) {
-					gp_list_append (list, info.file.name, NULL);
-				}
-			} else {
-				/* this case could mean that this was the last dirent */
-				GP_DEBUG ("can_int_list_dir: "
-					  "dirent at position %i of %i has NULL name, skipping.",
-					  (pos - dirent_data), (end_of_data - dirent_data));
+				free (dirent_data);
+				return GP_ERROR_NO_MEMORY;
 			}
+			dir = (struct canon_dir *) temp_ch;
+
+			dir[entrys].name = strdup (dirent_name);
+			if (!dir[entrys].name) {
+				gp_camera_set_error (camera, "canon_list_directory: "
+						     "Could not duplicate string of %i bytes",
+						     strlen (dirent_name));
+				if (dir)
+					canon_int_free_dir (camera, dir);
+
+				free (dirent_data);
+				return GP_ERROR_NO_MEMORY;
+			}
+
+			dir[entrys].attrs = *pos;
+			/* is_dir is set to the 'real' value, used when printing the
+			 * debug output later on.
+			 */
+			is_dir = ((dir[entrys].attrs & CANON_ATTR_NON_RECURS_ENT_DIR) != 0x0)
+				|| ((dir[entrys].attrs & CANON_ATTR_RECURS_ENT_DIR) != 0x0);
+			/* dir[entrys].is_file is really 'is_not_recursively_entered_directory' */
+			dir[entrys].is_file =
+				!((dir[entrys].attrs & CANON_ATTR_NON_RECURS_ENT_DIR) != 0x0);
+
+			/* the size is located at offset 2 and is 4 bytes long */
+			dir[entrys].size = le32atoh (pos+2);
+
+			/* the date is located at offset 6 and is 4 bytes long */
+			dir[entrys].date = le32atoh (pos+6);
+
+			/* if there is a date, make filedate_str be the ascii representation
+			 * without newline at the end
+			 */
+			if (dir[entrys].date != 0) {
+				snprintf (filedate_str, sizeof (filedate_str), "%s",
+					  asctime (gmtime (&dir[entrys].date)));
+				if (filedate_str[strlen (filedate_str) - 1] == '\n')
+					filedate_str[strlen (filedate_str) - 1] = 0;
+			} else {
+				strcpy (filedate_str, "           -");
+			}
+
+			/* This produces ls(1) like output, one line per file :
+			 * XXX ADD EXAMPLE HERE
+			 */
+			/* *INDENT-OFF* */
+			GP_DEBUG ("dirent: %c%s  %-5s  (attrs:0x%02x%s%s%s%s)   %10i %-24s %s\n",
+				(is_dir) ? 'd' : '-',
+				(dir[entrys].attrs & CANON_ATTR_WRITE_PROTECTED) == 0x0 ? "rw" : "r-",
+				(dir[entrys].attrs & CANON_ATTR_DOWNLOADED) == 0x0 ? "saved" : "new",
+				(unsigned char) dir[entrys].attrs,
+				(dir[entrys].attrs & CANON_ATTR_UNKNOWN_2) == 0x0 ? "" : " u2",
+				(dir[entrys].attrs & CANON_ATTR_UNKNOWN_4) == 0x0 ? "" : " u4",
+				(dir[entrys].attrs & CANON_ATTR_UNKNOWN_8) == 0x0 ? "" : " u8",
+				(dir[entrys].attrs & CANON_ATTR_UNKNOWN_40) == 0x0 ? "" : " u40", dir[entrys].size,
+				filedate_str,
+				dir[entrys].name);
+			/* *INDENT-ON* */
+
+			entrys++;
+		} else {
+			GP_DEBUG ("canon_list_directory: "
+				  "dirent at position %i of %i has NULL name, skipping.",
+				  (pos - dirent_data), (end_of_data - dirent_data));
 		}
-		
-		/* make 'pos' point to next dirent in packet.
+
+		/* make 'p' point to next dirent in packet.
 		 * first we skip 10 bytes of attribute, size and date,
 		 * then we skip the name plus 1 for the NULL
 		 * termination bytes.
 		 */
-		pos += direntsize;
+		pos += 10 + strlen (dirent_name) + 1;
 	}
 	free (dirent_data);
 
-	GP_DEBUG ("<FILESYSTEM-DUMP>");
-	gp_filesystem_dump (camera->fs);
-	GP_DEBUG ("</FILESYSTEM-DUMP>");
+	if (dir) {
+		/* allocate one more dirent */
+		temp_ch = realloc (dir, sizeof (struct canon_dir) * (entrys + 1));
+		if (temp_ch == NULL) {
+			gp_camera_set_error (camera, "canon_list_directory: "
+					     "could not realloc() %i bytes of memory",
+					     sizeof (*dir) * (entrys + 1));
+			if (dir)
+				canon_int_free_dir (camera, dir);
 
-	GP_DEBUG ("END can_int_list_dir() folder '%s' aka '%s'", folder, canonfolder);
+			return GP_ERROR_NO_MEMORY;
+		}
+
+		dir = (struct canon_dir *) temp_ch;
+		/* show that this is the last record by setting the name to NULL */
+		dir[entrys].name = NULL;
+
+		gp_log (GP_LOG_DEBUG, "canon", "canon_list_directory: "
+			"Returning %i directory entrys", entrys);
+
+		*result_dir = dir;
+	}
 
 	return GP_OK;
 }
-
-/**
- * canon_int_get_file:
- * @camera:
- * @name: canon style path of file
- * @data: pointer to data pointer
- * @length: pointer to size of data
- *
- * Just a wrapper for the port specific routines #canon_usb_get_file
- * and #canon_serial_get_file
- **/
 
 int
 canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int *length)
 {
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-		        return canon_usb_get_file (camera, name, data, length);
+			return canon_usb_get_file (camera, name, data, length);
 			break;
 		case GP_PORT_SERIAL:
- 		        return canon_serial_get_file (camera, name, data, length);
-			break;
-		OTHER_PORT_TYPE;
-	}
-	/* never reached */
-	return GP_ERROR;
-}
-
-/**
- * canon_int_handle_jfif_thumb:
- *
- * extract thumbnail from JFIF image (A70)
- * just extracted the code from the old #canon_int_get_thumbnail
- **/
-
-static int
-canon_int_handle_jfif_thumb(const unsigned int total, unsigned char **data)
-{
-	int i, j, in;
-	unsigned char *thumb;
-	ASSERT_PARAM(data != NULL);
-	*data = NULL;
-	/* pictures are JFIF files */
-	/* we skip the first FF D8 */
-	i = 3;
-	j = 0;
-	in = 0;
-
-	/* we want to drop the header to get the thumbnail */
-
-	thumb = malloc (total);
-	if (!thumb) {
-		perror ("malloc");
-		return GP_ERROR_NO_MEMORY;
-	}
-
-	while (i < total) {
-		if (*data[i] == JPEG_ESC) {
-			if (*data[i + 1] == JPEG_BEG &&
-			    ((*data[i + 3] == JPEG_SOS)
-			     || (*data[i + 3] == JPEG_A50_SOS))) {
-				in = 1;
-			} else if (*data[i + 1] == JPEG_END) {
-				in = 0;
-				thumb[j++] = *data[i];
-				thumb[j] = *data[i + 1];
-				*data = thumb;
+			*data = canon_serial_get_file (camera, name, length);
+			if (*data)
 				return GP_OK;
-			}
-		}
-
-		if (in == 1)
-			thumb[j++] = *data[i];
-		i++;
-
-	}
-	return GP_ERROR;
-}
-
-/**
- * canon_int_handle_exif_thumb:
- *
- * Get information and thumbnail data from EXIF thumbnail.
- * just extracted the code from the old #canon_int_get_thumbnail
- **/
-static int
-canon_int_handle_exif_thumb (unsigned char *data, const char *name, 
-			     const unsigned int length, unsigned char **retdata) {
-	exifparser exifdat;
-
-	ASSERT_PARAM(data != NULL);
-        ASSERT_PARAM(retdata != NULL);
-
-	exifdat.header = data;
-	exifdat.data = data + 12;
-
-	GP_DEBUG ("Got thumbnail, extracting it with the " "EXIF lib.");
-	if (exif_parse_data (&exifdat) > 0) {
-		GP_DEBUG ("Parsed exif data.");
-		data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
-		if (data == NULL) {
-			int f;
-			char filename[255];
-
-			if (rindex (name, '\\') != NULL)
-				snprintf (filename, sizeof (filename) - 1,
-					  "canon-death-dump.dat-%s",
-					  rindex (name, '\\') + 1);
-			else
-				snprintf (filename, sizeof (filename) - 1,
-					  "canon-death-dump.dat-%s", name);
-			filename[sizeof (filename) - 1] = '\0';
-
-			GP_DEBUG ("canon_int_handle_exif_thumb: "
-				  "Thumbnail conversion error, saving "
-				  "%i bytes to file '%s'", 
-				  length, filename);
-			/* create with O_EXCL and 0600 for security */
-			if ((f =
-			     open (filename, 
-				   O_CREAT | O_EXCL | O_RDWR,
-				   0600)) == -1) {
-				/* XXX Is %m portable to non-glibc
-				 * systems? */
-				GP_DEBUG ("canon_int_handle_exif_thumb: "
-					  "error creating file '%s': %m",
-					  filename);
-				return GP_ERROR;
-			}
-			if (write (f, data, length) == -1) {
-				GP_DEBUG ("canon_int_handle_exif_thumb: "
-					  "error writing to file '%s': %m",
-					  filename);
-			}
-
-			close (f);
 			return GP_ERROR;
-		}
-		*retdata = data;
-		return GP_OK;
+			break;
+		GP_PORT_DEFAULT
 	}
-	GP_DEBUG ("couldn't parse exif thumbnail data");
-	return GP_ERROR;
 }
 
 /**
@@ -1143,122 +994,177 @@ canon_int_handle_exif_thumb (unsigned char *data, const char *name,
  *
  * Returns the thumbnail data of the picture designated by @name.
  **/
-int 
-canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retdata, int *length)
+unsigned char *
+canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 {
-	int res;
 	unsigned char *data = NULL;
+	unsigned char *msg;
+	exifparser exifdat;
+	unsigned int total = 0, expect = 0, size, payload_length, total_file_size;
+	int i, j, in;
+	unsigned char *thumb;
 
 	GP_DEBUG ("canon_int_get_thumbnail() called for file '%s'", name);
-	ASSERT_PARAM(retdata != NULL);
-	ASSERT_PARAM(length != NULL);
 
 	gp_camera_progress (camera, 0);
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			res = canon_usb_get_thumbnail (camera, name, &data, length);
+			i = canon_usb_get_thumbnail (camera, name, &data, length);
+			if (i != GP_OK) {
+				GP_DEBUG ("canon_usb_get_thumbnail() failed, "
+					  "returned %i", i);
+				return NULL;	// XXX for now
+			}
 			break;
 		case GP_PORT_SERIAL:
-			res = canon_serial_get_thumbnail (camera, name, &data, length);
+			if (camera->pl->receive_error == FATAL_ERROR) {
+				GP_DEBUG ("ERROR: can't continue a fatal "
+					  "error condition detected");
+				return NULL;
+			}
+
+			payload_length = strlen (name) + 1;
+			msg = canon_serial_dialogue (camera, 0x1, 0x11, &total_file_size,
+						     "\x01\x00\x00\x00\x00", 5,
+						     &payload_length, 1, "\x00", 2,
+						     name, strlen (name) + 1, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return NULL;
+			}
+
+			total = le32atoh (msg + 4);
+			if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
+				GP_DEBUG ("ERROR: %d is too big", total);
+				return NULL;
+			}
+			data = malloc (total);
+			if (!data) {
+				perror ("malloc");
+				return NULL;
+			}
+			if (length)
+				*length = total;
+
+			while (msg) {
+				if (total_file_size < 20 || le32atoh (msg)) {
+					return NULL;
+				}
+				size = le32atoh (msg + 12);
+				if (le32atoh (msg + 8) != expect || expect + size > total
+				    || size > total_file_size - 20) {
+					GP_DEBUG ("ERROR: doesn't fit");
+					return NULL;
+				}
+				memcpy (data + expect, msg + 20, size);
+				expect += size;
+				gp_camera_progress (camera,
+						    total ? (expect / (float) total) : 1.);
+				if ((expect == total) != le32atoh (msg + 16)) {
+					GP_DEBUG ("ERROR: end mark != end of data");
+					return NULL;
+				}
+				if (expect == total) {
+					/* We finished receiving the file. Parse the header and
+					   return just the thumbnail */
+					break;
+				}
+				msg = canon_serial_recv_msg (camera, 0x1, 0x21,
+							     &total_file_size);
+			}
 			break;
-		OTHER_PORT_TYPE;
-	}
-	if (res != GP_OK) {
-		GP_DEBUG ("canon_port_get_thumbnail() failed, "
-			  "returned %i", res);
-		return res;
+		GP_PORT_DEFAULT
 	}
 
-	switch (camera->pl->model) {
-		/* We should decide this not on model base. Better use
-		 * capabilities or just have a look at the data itself
-		 */
-		case CANON_PS_A70:
-			res = canon_int_handle_jfif_thumb(*length, &data);
+	switch (camera->pl->md->model) {
+		case CANON_PS_A70:	/* pictures are JFIF files */
+			/* we skip the first FF D8 */
+			i = 3;
+			j = 0;
+			in = 0;
+
+			/* we want to drop the header to get the thumbnail */
+
+			thumb = malloc (total);
+			if (!thumb) {
+				perror ("malloc");
+				break;
+			}
+
+			while (i < total) {
+				if (data[i] == JPEG_ESC) {
+					if (data[i + 1] == JPEG_BEG &&
+					    ((data[i + 3] == JPEG_SOS)
+					     || (data[i + 3] == JPEG_A50_SOS))) {
+						in = 1;
+					} else if (data[i + 1] == JPEG_END) {
+						in = 0;
+						thumb[j++] = data[i];
+						thumb[j] = data[i + 1];
+						return thumb;
+					}
+				}
+
+				if (in == 1)
+					thumb[j++] = data[i];
+				i++;
+
+			}
+			return NULL;
 			break;
 
-		default:
-			res = canon_int_handle_exif_thumb (data, name, *length, retdata);
+		default:	/* Camera supports EXIF */
+			exifdat.header = data;
+			exifdat.data = data + 12;
+
+			GP_DEBUG ("Got thumbnail, extracting it with the EXIF lib.");
+			if (exif_parse_data (&exifdat) > 0) {
+				data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
+				if (data == NULL) {
+					int f;
+					char fn[255];
+
+					if (rindex (name, '\\') != NULL)
+						snprintf (fn, sizeof (fn),
+							  "canon-death-dump.dat-%s",
+							  rindex (name, '\\') + 1);
+					else
+						snprintf (fn, sizeof (fn),
+							  "canon-death-dump.dat-%s", name);
+
+					GP_DEBUG ("canon_int_get_thumbnail: "
+						  "Thumbnail conversion error, saving "
+						  "%i bytes to '%s'", total, fn);
+					/* create with O_EXCL and 0600 for security */
+					if ((f =
+					     open (fn, O_CREAT | O_EXCL | O_RDWR,
+						   0600)) == -1) {
+						GP_DEBUG ("canon_int_get_thumbnail: "
+							  "error creating '%s': %m", fn);
+						break;
+					}
+					if (write (f, data, total) == -1) {
+						GP_DEBUG ("canon_int_get_thumbnail: "
+							  "error writing to file '%s': %m",
+							  fn);
+					}
+
+					close (f);
+					break;
+				}
+
+				GP_DEBUG ("Parsed EXIF data.");
+				return data;
+			}
 			break;
 	}
 
 	free (data);
-	return res;
-}
-
-/**
- * canon_int_filename2thumbname:
- * @filename: file name on camera
- * @Returns: file name of corresponding thumbnail if it exists, NULL else
- *
- * Determine name of corresponding thumbnail file.
- *
- * XXX We should use information about the camera type to
- * determine for what kinds of files the thumbnail is located
- * in an extra file. Until then, we just replace .XXX by .THM
- * and return that string.
- **/
-
-/* simulate capabilities */
-#define extra_file_for_thumb_of_jpeg (0 == 1)
-#define extra_file_for_thumb_of_crw (0 == 0)
-
-const char *
-canon_int_filename2thumbname (Camera *camera, const char *filename)
-{
-	static char buf[1024];
-	char *p;
-
-	/* First handle cases where we shouldn't try to get extra .THM
-	 * file but use the special get_thumbnail_of_xxx function.
-	 */
-	if (!extra_file_for_thumb_of_jpeg && is_jpeg (filename))
-		return NULL;
-	if (!extra_file_for_thumb_of_crw  && is_crw (filename))
-		return NULL;
-
-	/* We use the thumbnail file itself as the thumbnail of the
-	 * thumbnail file. In short thumbfile = thumbnail(thumbfile)
-	 */
-	if (is_thumbnail(filename))
-		return filename;
-
-	/* We just replace file ending by .THM and assume this is the
-	 * name of the thumbnail file.
-	 */
-	if (strncpy (buf, filename, sizeof(buf)) < 0) {
-		GP_DEBUG ("Buffer too small in %s line %i.", 
-			  __FILE__, __LINE__);
-		return NULL;
-	}
-	if ((p = strrchr(buf, '.')) == NULL) {
-		GP_DEBUG ("No '.' found in filename '%s' in %s line %i.",
-			  filename, __FILE__, __LINE__);
-		return NULL;
-	}
-	if (((p - buf) < sizeof(buf) - 4) && strncpy (p, ".THM", 4)) {
-		GP_DEBUG ("Thumbnail name for '%s' is '%s'",
-			  filename, buf);
-		return buf;
-	} else {
-		GP_DEBUG ("Thumbnail name for filename '%s' doesnt fit in %s line %i.",
-			  filename, __FILE__, __LINE__);
-		return NULL;
-	}
-	/* never reached */
 	return NULL;
 }
 
-/**
- * canon_int_delete_file:
- * @camera: the camera to work on
- * @folder: the canon path of the folder where the file to delete is located
- * @filename: the name of the file in the folder
- *
- * Deletes the file named @filename in the folder @folder.
- **/
 int
-canon_int_delete_file (Camera *camera, const char *folder, const char *filename)
+canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 {
 	unsigned char payload[300];
 	unsigned char *msg;
@@ -1266,35 +1172,34 @@ canon_int_delete_file (Camera *camera, const char *folder, const char *filename)
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			memccpy (payload, folder, strlen (folder) + 1, sizeof(payload));
-			memccpy (payload + strlen(folder) + 1, filename, 
-				 strlen (filename) + 1, sizeof(payload) - strlen(folder) - 1);
-			payload_length = strlen (folder) + strlen(filename) + 2;
+			memcpy (payload, dir, strlen (dir) + 1);
+			memcpy (payload + strlen (dir) + 1, name, strlen (name) + 1);
+			payload_length = strlen (dir) + strlen (name) + 2;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
 						  payload, payload_length);
-			if (! msg)
+			if (!msg)
 				return GP_ERROR;
+
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0xd, 0x11, &len,
-						     folder, strlen (folder) + 1,
-						     filename, strlen (filename) + 1,
+			msg = canon_serial_dialogue (camera, 0xd, 0x11, &len, dir,
+						     strlen (dir) + 1, name, strlen (name) + 1,
 						     NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
 				return GP_ERROR;
 			}
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
-	
+
 	if (len != 4) {
 		/* XXX should mark folder as dirty since we can't be sure if the file
 		 * got deleted or not
 		 */
 		return GP_ERROR;
 	}
-	
+
 	if (msg[0] == 0x29) {
 		gp_camera_message (camera, _("File protected"));
 		return GP_ERROR;
@@ -1306,10 +1211,9 @@ canon_int_delete_file (Camera *camera, const char *folder, const char *filename)
 	return GP_OK;
 }
 
-/**
- * canon_int_put_file:
+/*
+ * Upload a file to the camera
  *
- * Upload a file to the camera. Just a wrapper for port specific functions.
  */
 int
 canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
@@ -1322,7 +1226,7 @@ canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 		case GP_PORT_SERIAL:
 			return canon_serial_put_file (camera, file, destname, destpath);
 			break;
-		OTHER_PORT_TYPE;
+		GP_PORT_DEFAULT
 	}
 }
 
