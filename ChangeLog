@@ -2,7 +2,8 @@
 
 	* autogen-1.6.sh: autogen file using automake and co version 1.6.
 	* configure.in: 2.1.0rc3 is there.
-	* Makefile.am: Use plain old tar instead of TAR or AMTAR.
+	* Makefile.am: Use plain old tar instead of TAR or AMTAR,
+	   Add CHANGES in EXTRA_DIST.
 
 2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
 
