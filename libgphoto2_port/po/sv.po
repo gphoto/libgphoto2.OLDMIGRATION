@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2_port 2.0\n"
-"POT-Creation-Date: 2002-12-01 19:44+0100\n"
+"POT-Creation-Date: 2002-12-01 20:50+0100\n"
 "PO-Revision-Date: 2002-07-24 08:54+0200\n"
 "Last-Translator: Stefan Björnelund <Stefanb@Update.UU.SE>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -272,7 +272,7 @@ msgid "Could not open USB device (%m)."
 msgstr "Kunde inte öppna USB enheten (%m)"
 
 #: usb/libusb.c:138
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Could not claim interface %d (%m). Make sure no other program or kernel "
 "module (e.g. dc2xx or stv680) is using the device and you have read/write "
