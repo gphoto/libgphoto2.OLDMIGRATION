@@ -200,6 +200,7 @@ else
   AC_MSG_RESULT([deactivated (requires xmlto)])
 fi
 
+AC_SUBST(doc_formats)
 AM_CONDITIONAL(XMLTOHTML,$have_xmltohtml)
 AM_CONDITIONAL(XMLTOMAN,$have_xmltoman)
 AM_CONDITIONAL(XMLTOPDF,$have_xmltopdf)
