@@ -193,20 +193,17 @@ camera_abilities (CameraAbilitiesList *list)
 void
 clear_readiness (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_readiness() OBSOLETE DUMMY");
+	GP_DEBUG("clear_readiness()");
+	camera->pl->cached_ready = 0;
 }
 
 static int
 check_readiness (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "check_readiness() cached_ready == %i",
-			 camera->pl->cached_ready);
-
+	GP_DEBUG("check_readiness()");
 	if (camera->pl->cached_ready)
 		return 1;
 	if (canon_int_ready (camera) == GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera type:  %d\n",
-				 camera->pl->model);
 		camera->pl->cached_ready = 1;
 		return 1;
 	}
@@ -258,6 +255,7 @@ canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source)
 
 /* This function is only used by A5 */
 
+#ifdef OBSOLETE
 static int
 recurse (Camera *camera, const char *name)
 {
@@ -308,11 +306,12 @@ recurse (Camera *camera, const char *name)
 	free (dir);
 	return 1;
 }
-
+#endif
 
 
 /* This function is only used by A50 */
 
+#ifdef OBSOLETE
 static struct canon_dir *
 dir_tree (Camera *camera, const char *path)
 {
@@ -341,14 +340,12 @@ dir_tree (Camera *camera, const char *path)
 	qsort (dir, walk - dir, sizeof (*dir), comp_dir);
 	return dir;
 }
-
+#endif
 
 static void
 clear_dir_cache (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_dir_cache()");
-
-	canon_int_free_dir (camera, camera->pl->cached_tree);
+	GP_DEBUG("clear_dir_cache() OBSOLETE DUMMY");
 }
 
 
@@ -387,10 +384,13 @@ compare_a5_paths (const void *p1, const void *p2)
 	}
 }
 
-
 static int
 update_dir_cache (Camera *camera)
 {
+	GP_DEBUG("update_dir_cache() OBSOLETE DUMMY");
+	return GP_OK;
+}
+#ifdef OBSOLETE
 	int i;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_dir_cache() "
@@ -435,15 +435,26 @@ update_dir_cache (Camera *camera)
 			break;
 	}
 }
+#endif
 
 static int
-file_list_func (CameraFilesystem *fs, const char *folder, CameraList *filelist, void *data)
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data)
 {
 	Camera *camera = data;
 
 	GP_DEBUG("file_list()");
 
-	return canon_int_list_directory(camera,fs,filelist,folder);
+	return canon_int_list_directory (camera, folder, list, CANON_LIST_FILES);
+}
+
+static int
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data)
+{
+	Camera *camera = data;
+
+	GP_DEBUG("folder_list()");
+
+	return canon_int_list_directory (camera, folder, list, CANON_LIST_FOLDERS);
 }
 
 /****************************************************************************
@@ -587,6 +598,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
  *
  * Return value: a gphoto2 error code.
  **/
+#ifdef OBSOLETE
 int
 _get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, char *path,
 		int recursively_entered)
@@ -650,10 +662,14 @@ _get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, ch
 	return GP_ERROR;
 }
 
+#endif // OBSOLETE
+
 static int
 get_file_path (Camera *camera, const char *filename, char *path)
 {
-	return _get_file_path (camera, camera->pl->cached_tree, filename, path, 0);
+	GP_DEBUG("get_file_path() OBSOLETE DUMMY");
+	strcpy(path,filename);
+	return GP_OK;
 }
 
 static int
@@ -814,17 +830,21 @@ camera_summary (Camera *camera, CameraText *summary)
 	int pwr_source, pwr_status;
 	char power_stats[48], cde[16];
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_summary()");
+	unsigned int capacity, available;
+
+	GP_DEBUG("camera_summary()");
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
-	/*clear_readiness(); */
-	if (!update_disk_cache (camera))
-		return GP_ERROR;
+	if (camera->pl->cached_drive == NULL)
+		camera->pl->cached_drive = canon_int_get_disk_name (camera);
+	
+	canon_int_get_disk_name_info (camera, camera->pl->cached_drive,
+				      &capacity, &available);
 
-	pretty_number (camera->pl->cached_capacity, a);
-	pretty_number (camera->pl->cached_available, b);
+	pretty_number (capacity, a);
+	pretty_number (available, b);
 
 	model = "Canon PowerShot";
 	switch (camera->pl->model) {
@@ -986,6 +1006,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 
 /****************************************************************************/
 
+#ifdef OBSOLETE
+/* This code could probably be used to get a default path */
 static int
 _get_last_dir (Camera *camera, struct canon_dir *tree, char *path, char *temppath)
 {
@@ -1080,8 +1102,10 @@ get_last_picture (Camera *camera, char *directory, char *filename)
 
 	return _get_last_picture (camera->pl->cached_tree, directory, filename);
 }
+#endif //OBSOLETE
 
 
+#ifdef TO_BE_REWORKED
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data)
 {
@@ -1186,6 +1210,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	return canon_int_put_file (camera, file, destname, destpath);
 }
+#endif //TO_BE_REWORKED
 
 /****************************************************************************/
 
@@ -1213,6 +1238,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_set_value (t, camera->pl->owner);
 	gp_widget_append (section, t);
 
+#ifdef TBD
 	gp_widget_new (GP_WIDGET_TEXT, "date", &t);
 	if (camera->pl->cached_ready == 1) {
 		camtime = canon_int_get_time (camera);
@@ -1224,6 +1250,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	} else
 		gp_widget_set_value (t, _("Unavailable"));
 	gp_widget_append (section, t);
+#endif
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Set camera date to PC date"), &t);
 	gp_widget_append (section, t);
@@ -1234,6 +1261,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_set_value (t, firm);
 	gp_widget_append (section, t);
 
+#ifdef TBD
 	if (camera->pl->cached_ready == 1) {
 		canon_get_batt_status (camera, &pwr_status, &pwr_source);
 		if ((pwr_source & CAMERA_MASK_BATTERY) == 0) {
@@ -1262,6 +1290,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_new (GP_WIDGET_TEXT, _("Power"), &t);
 	gp_widget_set_value (t, power_stats);
 	gp_widget_append (section, t);
+#endif
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Debug"), &section);
 	gp_widget_append (*window, section);
@@ -1403,10 +1432,10 @@ camera_init (Camera *camera)
 	camera->functions->about = camera_about;
 
 	/* Set up the CameraFilesystem */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, folder_list_func, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,
+	gp_filesystem_set_folder_funcs (camera->fs, NULL, NULL,
 					make_dir_func, remove_dir_func, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
