@@ -241,11 +241,12 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (!check_readiness (camera))
 		return GP_ERROR;
 
-	return canon_int_list_directory (camera, folder, list, CANON_LIST_FILES);
+	return canon_int_list_directory (camera, folder, list, CANON_LIST_FILES, context);
 }
 
 static int
-folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data)
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, 
+		  void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -254,7 +255,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, vo
 	if (!check_readiness (camera))
 		return GP_ERROR;
 
-	return canon_int_list_directory (camera, folder, list, CANON_LIST_FOLDERS);
+	return canon_int_list_directory (camera, folder, list, CANON_LIST_FOLDERS, context);
 }
 
 
@@ -393,7 +394,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = user_data;
 	unsigned char *data = NULL;
-	int buflen, size, ret;
+	int datalen, ret;
 	char tempfilename[300], canon_path[300];
 
 	/* put complete canon path into canon_path */
@@ -406,8 +407,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR;
 	}
 
-	GP_DEBUG ("get_file_func() "
-		  "folder '%s' filename '%s', i.e. '%s'", folder, filename, canon_path);
+	GP_DEBUG ("get_file_func: "
+		  "folder '%s' filename '%s' (i.e. '%s'), getting %s", 
+		  folder, filename, canon_path,
+		  (type == GP_FILE_TYPE_PREVIEW)?"thumbnail":"file itself");
 
 	/* FIXME:
 	 * There are probably some memory leaks in the fetching of
@@ -418,7 +421,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (type) {
 		const char *thumbname;
 		case GP_FILE_TYPE_NORMAL:
-			ret = canon_int_get_file (camera, canon_path, &data, &buflen);
+			ret = canon_int_get_file (camera, canon_path, &data, &datalen);
 			if (ret == GP_OK) {
 				uint8_t attr = 0;
 				/* This should cover all attribute
@@ -426,7 +429,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				 * info.file
 				 */
 				CameraFileInfo info;
-				gp_filesystem_get_info(fs, folder, filename, &info);
+				gp_filesystem_get_info(fs, folder, filename, &info, context);
 				if (info.file.status == GP_FILE_STATUS_NOT_DOWNLOADED)
 					attr |= CANON_ATTR_DOWNLOADED;
 				if ((info.file.permissions & GP_FILE_PERM_DELETE) == 0)
@@ -440,9 +443,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			thumbname = canon_int_filename2thumbname (camera, canon_path);
 			if (thumbname != NULL) {
 				ret = canon_int_get_file (camera, thumbname,
-							  &data, &buflen);
+							  &data, &datalen);
 			} else {
-				ret = canon_int_get_thumbnail (camera, canon_path, &data, &size);
+				ret = canon_int_get_thumbnail (camera, canon_path, &data, &datalen);
 			}
 			break;
 		default:
@@ -464,19 +467,29 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * (not all canon cameras produces EXIF headers I think, but still)
 	 * should be less than 256 bytes long.
 	 */
-	if (!data || buflen < 256)
-		return GP_ERROR;
+	if (data == NULL) {
+		GP_DEBUG ("get_file_func: "
+			  "Fatal error: data == NULL");
+		return GP_ERROR_CORRUPTED_DATA;
+	}
+	if (datalen < 256) {
+		GP_DEBUG ("get_file_func: "
+			  "datalen < 256 (datalen = %i = 0x%x)", 
+			  datalen, datalen);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	switch (type) {
+		int size;
 		case GP_FILE_TYPE_PREVIEW:
 			/* we count the byte returned until the end of the jpeg data
 			   which is FF D9 */
 			/* It would be prettier to get that info from the exif tags */
-			for (size = 1; size < buflen; size++)
+			for (size = 1; size < datalen; size++)
 				if ((data[size - 1] == JPEG_ESC) && (data[size] == JPEG_END))
 					break;
-			buflen = size + 1;
-			gp_file_set_data_and_size (file, data, buflen);
+			datalen = size + 1;
+			gp_file_set_data_and_size (file, data, datalen);
 			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
 			strncpy (tempfilename, filename, sizeof(tempfilename));
 			strcpy (strchr (tempfilename, '.'), ".JPG"); /* not really clean */
@@ -484,7 +497,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		case GP_FILE_TYPE_NORMAL:
 			gp_file_set_mime_type (file, filename2mimetype (filename));
-			gp_file_set_data_and_size (file, data, buflen);
+			gp_file_set_data_and_size (file, data, datalen);
 			gp_file_set_name (file, filename);
 			break;
 		default:
@@ -664,7 +677,7 @@ camera_summary (Camera *camera, CameraText *summary)
 	char a[20], b[20];
 	int pwr_source, pwr_status;
 	int res;
-	char power_str[128];
+	char disk_str[128], power_str[128], time_str[128];
 	time_t camera_time;
 	double time_diff;
 	char formatted_camera_time[20];

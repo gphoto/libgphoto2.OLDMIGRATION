@@ -196,7 +196,7 @@ int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,
 /*
  *
  */
-int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const int flags);
+int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const int flags, GPContext *context);
 void canon_int_free_dir(Camera *camera, struct canon_dir *list);
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
 int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, int *length);
