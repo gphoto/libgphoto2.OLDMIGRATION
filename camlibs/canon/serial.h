@@ -44,6 +44,8 @@ int canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, cha
 int canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			      unsigned int *dirents_length, const char *path);
 
+int canon_serial_ready (Camera *camera);
+
 #define MAX_TRIES 10
 
 #define USLEEP1 0
