@@ -1,5 +1,10 @@
 2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
 
+	* configure.in : 2.1.0rc2 and a few merges from the main branch.
+	* Makefile.am: autogen.sh is back in EXTRA_DIST.
+
+2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
+
 	Patch by Arnaud Launay <asl@launay.org>
 
 	* doc/Makefile.am : Don't try to move figures when fig2dev is not there.
