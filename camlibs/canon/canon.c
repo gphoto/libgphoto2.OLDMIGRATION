@@ -108,6 +108,70 @@ const struct canonCamModelData models[] =
  * Methods
  ************************************************************************/
 
+
+/**
+ * canon_int_filename2thumbname:
+ * @filename: file name on camera
+ * @Returns: file name of corresponding thumbnail if it exists, NULL else
+ *
+ * Determine name of corresponding thumbnail file.
+ *
+ * XXX We should use information about the camera type to
+ * determine for what kinds of files the thumbnail is located
+ * in an extra file. Until then, we just replace .XXX by .THM
+ * and return that string.
+ **/
+
+/* simulate capabilities */
+#define extra_file_for_thumb_of_jpeg (0 == 1)
+#define extra_file_for_thumb_of_crw (0 == 0)
+
+const char *
+canon_int_filename2thumbname (Camera *camera, const char *filename)
+{
+	static char buf[1024];
+	char *p;
+
+	/* First handle cases where we shouldn't try to get extra .THM
+	 * file but use the special get_thumbnail_of_xxx function.
+	 */
+	if (!extra_file_for_thumb_of_jpeg && is_jpeg (filename))
+		return NULL;
+	if (!extra_file_for_thumb_of_crw  && is_crw (filename))
+		return NULL;
+
+	/* We use the thumbnail file itself as the thumbnail of the
+	 * thumbnail file. In short thumbfile = thumbnail(thumbfile)
+	 */
+	if (is_thumbnail(filename))
+		return filename;
+
+	/* We just replace file ending by .THM and assume this is the
+	 * name of the thumbnail file.
+	 */
+	if (strncpy (buf, filename, sizeof(buf)) < 0) {
+		GP_DEBUG ("Buffer too small in %s line %i.", 
+			  __FILE__, __LINE__);
+		return NULL;
+	}
+	if ((p = strrchr(buf, '.')) == NULL) {
+		GP_DEBUG ("No '.' found in filename '%s' in %s line %i.",
+			  filename, __FILE__, __LINE__);
+		return NULL;
+	}
+	if (((p - buf) < sizeof(buf) - 4) && strncpy (p, ".THM", 4)) {
+		GP_DEBUG ("Thumbnail name for '%s' is '%s'",
+			  filename, buf);
+		return buf;
+	} else {
+		GP_DEBUG ("Thumbnail name for filename '%s' doesnt fit in %s line %i.",
+			  filename, __FILE__, __LINE__);
+		return NULL;
+	}
+	/* never reached */
+	return NULL;
+}
+
 /*
  * does operations on a directory based on the value
  * of action : DIR_CREATE, DIR_REMOVE
@@ -266,6 +330,7 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 		*pwr_status = msg[4];
 	if (pwr_source)
 		*pwr_source = msg[7];
+
 	GP_DEBUG ("canon_int_get_battery: Status: %i / Source: %i\n", *pwr_status,
 		  *pwr_source);
 
@@ -316,36 +381,33 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 			payload_length = 4 + strlen (dir) + 1 + strlen (file) + 1;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_ATTR, &len,
 						  payload, payload_length);
-			if (len == 4) {
-				/* XXX check camera return value (not canon_usb_dialogue return value
-				 * but the bytes in the packet returned)
-				 */
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "canon_int_set_file_attributes: "
-						 "returned four bytes as expected, "
-						 "we should check if they indicate "
-						 "error or not. Returned data :");
-				gp_log_data ("canon", msg, 4);
-			} else {
-				gp_debug_printf (GP_DEBUG_LOW, "canon",
-						 "canon_int_set_file_attributes: "
-						 "setting attribute failed!");
+			if (! msg)
 				return GP_ERROR;
-			}
 
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0xe, 0x11, &len, attr, 4, dir,
 						     strlen (dir) + 1, file, strlen (file) + 1,
 						     NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 		GP_PORT_DEFAULT
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return GP_ERROR;
+	if (len != 4) {
+		GP_DEBUG ("canon_int_set_file_attributes: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4, len);
+		return GP_ERROR_CORRUPTED_DATA;
 	}
+		
+	GP_LOG (GP_LOG_DATA, "canon_int_set_file_attributes: "
+		"returned four bytes as expected, "
+		 "we should check if they indicate "
+		 "error or not. Returned data :");
+	gp_log_data ("canon", msg, 4);
 
 	return GP_OK;
 }
@@ -372,25 +434,33 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 				 "canon_int_set_owner_name: Name too long (%i chars), "
 				 "max is 30 characters!", strlen (name));
 		gp_camera_status (camera, _("Name too long, max is 30 characters!"));
-		return 0;
+		return GP_OK;
 	}
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_CAMERA_CHOWN,
 						  &len, name, strlen (name) + 1);
+			if (! msg)
+				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x05, 0x12, &len, name,
 						     strlen (name) + 1, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 		GP_PORT_DEFAULT
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return GP_ERROR;
+	if (len != 0x04) {
+		GP_DEBUG ("canon_int_set_owner_name: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4, len);
+		return GP_ERROR_CORRUPTED_DATA;
 	}
+		
 	return canon_int_identify_camera (camera);
 }
 
@@ -586,9 +656,9 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 
 	GP_DEBUG ("canon_int_get_disk_name_info() name '%s'", name);
 
-	CHECK_PARAM_NULL(name);
-	CHECK_PARAM_NULL(capacity);
-	CHECK_PARAM_NULL(available);
+	CAM_CHECK_PARAM_NULL(name);
+	CAM_CHECK_PARAM_NULL(capacity);
+	CAM_CHECK_PARAM_NULL(available);
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
@@ -704,7 +774,7 @@ canon2gphotopath (Camera *camera, const char *path)
 	return (tmp);
 }
 
-void
+static void
 debug_fileinfo (CameraFileInfo * info)
 {
 	GP_DEBUG ("<CameraFileInfo>");
@@ -1019,15 +1089,190 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int 
 }
 
 /**
+ * canon_int_handle_jfif_thumb:
+ *
+ * extract thumbnail from JFIF image (A70)
+ * just extracted the code from the old #canon_int_get_thumbnail
+ **/
+
+static int
+canon_int_handle_jfif_thumb(const unsigned int total, unsigned char **data)
+{
+	int i, j, in;
+	unsigned char *thumb;
+	if (data == NULL) {
+		GP_DEBUG ("NULL data");
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	*data = NULL;
+	/* pictures are JFIF files */
+	/* we skip the first FF D8 */
+	i = 3;
+	j = 0;
+	in = 0;
+
+	/* we want to drop the header to get the thumbnail */
+
+	thumb = malloc (total);
+	if (!thumb) {
+		perror ("malloc");
+		return GP_ERROR_NO_MEMORY;
+	}
+
+	while (i < total) {
+		if (*data[i] == JPEG_ESC) {
+			if (*data[i + 1] == JPEG_BEG &&
+			    ((*data[i + 3] == JPEG_SOS)
+			     || (*data[i + 3] == JPEG_A50_SOS))) {
+				in = 1;
+			} else if (*data[i + 1] == JPEG_END) {
+				in = 0;
+				thumb[j++] = *data[i];
+				thumb[j] = *data[i + 1];
+				*data = thumb;
+				return GP_OK;
+			}
+		}
+
+		if (in == 1)
+			thumb[j++] = *data[i];
+		i++;
+
+	}
+	return GP_ERROR;
+}
+
+/**
+ * canon_int_handle_exif_thumb:
+ *
+ * Get information and thumbnail data from EXIF thumbnail.
+ * just extracted the code from the old #canon_int_get_thumbnail
+ **/
+static int
+canon_int_handle_exif_thumb (unsigned char *data, const char *name, 
+			     const unsigned int length, unsigned char **retdata) {
+	exifparser exifdat;
+
+	CHECK_PARAM_NULL(data);
+        CHECK_PARAM_NULL(retdata);
+
+	exifdat.header = data;
+	exifdat.data = data + 12;
+
+	GP_DEBUG ("Got thumbnail, extracting it with the " "EXIF lib.");
+	if (exif_parse_data (&exifdat) > 0) {
+		GP_DEBUG ("Parsed exif data.");
+		data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
+		if (data == NULL) {
+			int f;
+			char filename[255];
+
+			if (rindex (name, '\\') != NULL)
+				snprintf (filename, sizeof (filename) - 1,
+					  "canon-death-dump.dat-%s",
+					  rindex (name, '\\') + 1);
+			else
+				snprintf (filename, sizeof (filename) - 1,
+					  "canon-death-dump.dat-%s", name);
+			filename[sizeof (filename) - 1] = '\0';
+
+			GP_DEBUG ("canon_int_handle_exif_thumb: "
+				  "Thumbnail conversion error, saving "
+				  "%i bytes to file '%s'", 
+				  length, filename);
+			/* create with O_EXCL and 0600 for security */
+			if ((f =
+			     open (filename, 
+				   O_CREAT | O_EXCL | O_RDWR,
+				   0600)) == -1) {
+				/* XXX Is %m portable to non-glibc
+				 * systems? */
+				GP_DEBUG ("canon_int_handle_exif_thumb: "
+					  "error creating file '%s': %m",
+					  filename);
+				return GP_ERROR;
+			}
+			if (write (f, data, length) == -1) {
+				GP_DEBUG ("canon_int_handle_exif_thumb: "
+					  "error writing to file '%s': %m",
+					  filename);
+			}
+
+			close (f);
+			return GP_ERROR;
+		}
+		GP_DEBUG ("Parsed EXIF data.");
+		*retdata = data;
+		return GP_OK;
+	}
+	GP_DEBUG ("couldn't parse exif thumbnail data");
+	return GP_ERROR;
+}
+
+/**
  * canon_int_get_thumbnail:
+ * @camera: camera to work with
+ * @name: image to get thumbnail of
+ * @length: length of data returned
+ * @retdata: The thumbnail data
+ *
+ * Returns GPError.
+ **/
+int 
+canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retdata, int *length)
+{
+	int res;
+	unsigned char *data = NULL;
+
+	GP_DEBUG ("canon_int_get_thumbnail() called for file '%s'", name);
+
+	CAM_CHECK_PARAM_NULL(retdata);
+	CAM_CHECK_PARAM_NULL(length);
+
+	gp_camera_progress (camera, 0);
+	switch (camera->port->type) {
+		case GP_PORT_USB:
+			res = canon_usb_get_thumbnail (camera, name, &data, length);
+			break;
+		case GP_PORT_SERIAL:
+			res = canon_serial_get_thumbnail (camera, name, &data, length);
+			break;
+		GP_PORT_DEFAULT
+	}
+	if (res != GP_OK) {
+		GP_DEBUG ("canon_port_get_thumbnail() failed, "
+			  "returned %i", res);
+		return res;
+	}
+
+	switch (camera->pl->md->model) {
+		/* We should decide this not on model base. Better use
+		 * capabilities or just have a look at the data itself
+		 */
+		case CANON_PS_A70:
+			res = canon_int_handle_jfif_thumb(*length, &data);
+			break;
+
+		default:
+			res = canon_int_handle_exif_thumb (data, name, *length, retdata);
+			break;
+	}
+
+	free (data);
+	return res;
+}
+
+#ifdef OBSOLETE
+/**
+ * old_canon_int_get_thumbnail:
  * @camera: camera to work with
  * @name: image to get thumbnail of
  * @length: length of data returned
  *
  * Returns the thumbnail data of the picture designated by @name.
  **/
-unsigned char *
-canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
+static unsigned char *
+old_canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 {
 	unsigned char *data = NULL;
 	unsigned char *msg;
@@ -1194,6 +1439,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 	free (data);
 	return NULL;
 }
+#endif
 
 int
 canon_int_delete_file (Camera *camera, const char *name, const char *dir)
