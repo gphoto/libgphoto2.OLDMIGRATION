@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
-"POT-Creation-Date: 2003-07-13 10:18+0200\n"
+"POT-Creation-Date: 2003-07-30 23:08+0200\n"
 "PO-Revision-Date: 2003-01-09 08:13+0100\n"
 "Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -55,15 +55,6 @@ msgstr ""
 "\n"
 "Implementerat med hjälp av dokument från\n"
 "nätet. Med tillstånd från Vision."
-
-#: camlibs/canon/canon.c:391
-msgid "create"
-msgstr ""
-
-#: camlibs/canon/canon.c:391
-#, fuzzy
-msgid "remove"
-msgstr "Fjärr"
 
 #: camlibs/canon/canon.c:419
 #, fuzzy, c-format
@@ -331,7 +322,7 @@ msgstr "Kunde inte skapa \\DCIM-katalogen."
 msgid "Could not create destination directory."
 msgstr "Kunde inte skapa destinationskatalogen."
 
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:617
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:627
 msgid "Camera and Driver Configuration"
 msgstr "Kamera- och drivrutinskonfiguration"
 
@@ -368,7 +359,7 @@ msgstr "Sätt kamerans datum till datorns datum"
 msgid "Firmware revision (readonly)"
 msgstr "Fastvarurevision (skrivskyddad)"
 
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:619
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:629
 msgid "Power (readonly)"
 msgstr "Kraft (skrivskyddad)"
 
@@ -2258,7 +2249,7 @@ msgstr "Av"
 msgid "Day-lt"
 msgstr "Dagsljus"
 
-#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptpcam.c:526
+#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptpcam.c:573
 msgid "Sharpness"
 msgstr ""
 
@@ -2856,7 +2847,7 @@ msgstr ""
 msgid "Image Quality"
 msgstr "Bildkvalitet"
 
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptpcam.c:506
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptpcam.c:553
 msgid "Image Size"
 msgstr "Bildstorlek"
 
@@ -3173,7 +3164,7 @@ msgstr "PTP protokollfel, data föråldrat"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP protokollfel, svar förväntat"
 
-#: camlibs/ptp2/library.c:548
+#: camlibs/ptp2/library.c:558
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3181,7 +3172,7 @@ msgid ""
 "Enjoy!"
 msgstr "Skrivet av Mariusz Woloszyn <emsi@ipartners.pl>. Njut!"
 
-#: camlibs/ptp2/library.c:584
+#: camlibs/ptp2/library.c:594
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3191,25 +3182,25 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:624
+#: camlibs/ptp2/library.c:634
 #, fuzzy
 msgid "Number of values"
 msgstr "Antal bilder: %d\n"
 
-#: camlibs/ptp2/library.c:628
+#: camlibs/ptp2/library.c:638
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:641
+#: camlibs/ptp2/library.c:651
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1083
+#: camlibs/ptp2/library.c:1093
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "Stänger av kameran"
 
-#: camlibs/ptp2/library.c:1155 camlibs/ptp/library.c:1065
+#: camlibs/ptp2/library.c:1165 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP endast implementerat för USB kamror."
 
@@ -3413,170 +3404,170 @@ msgstr "PTP protokollfel, data föråldrat"
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP protokollfel, svar förväntat"
 
-#: camlibs/ptp2/ptpcam.c:503
+#: camlibs/ptp2/ptpcam.c:550
 #, fuzzy
 msgid "PTP Undefined Property"
 msgstr "PTP odefinierat fel"
 
-#: camlibs/ptp2/ptpcam.c:504
+#: camlibs/ptp2/ptpcam.c:551
 #, fuzzy
 msgid "Battery Level"
 msgstr "%sBatteritid: %i\n"
 
-#: camlibs/ptp2/ptpcam.c:505
+#: camlibs/ptp2/ptpcam.c:552
 #, fuzzy
 msgid "Functional Mode"
 msgstr "Operationsläge."
 
-#: camlibs/ptp2/ptpcam.c:507
+#: camlibs/ptp2/ptpcam.c:554
 #, fuzzy
 msgid "Compression Setting"
 msgstr "Kompression"
 
-#: camlibs/ptp2/ptpcam.c:508 camlibs/sierra/epson-desc.c:229
+#: camlibs/ptp2/ptpcam.c:555 camlibs/sierra/epson-desc.c:229
 #: camlibs/sierra/nikon-desc.c:259 camlibs/sierra/olympus-desc.c:265
 #: camlibs/sierra/sierra.c:992 camlibs/sierra/sierra.c:1275
 #: camlibs/sierra/sierra.c:1469 camlibs/sierra/sierra.c:1692
 msgid "White Balance"
 msgstr "Vitbalans"
 
-#: camlibs/ptp2/ptpcam.c:509
+#: camlibs/ptp2/ptpcam.c:556
 msgid "RGB Gain"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:510
+#: camlibs/ptp2/ptpcam.c:557
 msgid "F-Number"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:511
+#: camlibs/ptp2/ptpcam.c:558
 msgid "Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:512
+#: camlibs/ptp2/ptpcam.c:559
 #, fuzzy
 msgid "Focus Distance"
 msgstr "Fokusläge"
 
-#: camlibs/ptp2/ptpcam.c:513 camlibs/sierra/nikon-desc.c:296
+#: camlibs/ptp2/ptpcam.c:560 camlibs/sierra/nikon-desc.c:296
 #: camlibs/sierra/olympus-desc.c:282
 msgid "Focus Mode"
 msgstr "Fokusläge"
 
-#: camlibs/ptp2/ptpcam.c:514
+#: camlibs/ptp2/ptpcam.c:561
 #, fuzzy
 msgid "Exposure Metering Mode"
 msgstr "Exponeringsmätning"
 
-#: camlibs/ptp2/ptpcam.c:515 camlibs/sierra/sierra.c:931
+#: camlibs/ptp2/ptpcam.c:562 camlibs/sierra/sierra.c:931
 #: camlibs/sierra/sierra.c:1232 camlibs/sierra/sierra.c:1441
 #: camlibs/sierra/sierra.c:1672
 msgid "Flash Mode"
 msgstr "Blixt Läge"
 
-#: camlibs/ptp2/ptpcam.c:516
+#: camlibs/ptp2/ptpcam.c:563
 #, fuzzy
 msgid "Exposure Time"
 msgstr "Exponering med bollslutare"
 
-#: camlibs/ptp2/ptpcam.c:517
+#: camlibs/ptp2/ptpcam.c:564
 msgid "Exposure Program Mode"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:519
+#: camlibs/ptp2/ptpcam.c:566
 msgid "Exposure Index (film speed ISO)"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:521
+#: camlibs/ptp2/ptpcam.c:568
 #, fuzzy
 msgid "Exposure Bias Compensation"
 msgstr "Exponeringskompensation"
 
-#: camlibs/ptp2/ptpcam.c:522
+#: camlibs/ptp2/ptpcam.c:569
 #, fuzzy
 msgid "Date Time"
 msgstr "Datum & Tid"
 
-#: camlibs/ptp2/ptpcam.c:523
+#: camlibs/ptp2/ptpcam.c:570
 msgid "Pre-Capture Delay"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:524
+#: camlibs/ptp2/ptpcam.c:571
 msgid "Still Capture Mode"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:525
+#: camlibs/ptp2/ptpcam.c:572
 #, fuzzy
 msgid "Contrast"
 msgstr "Kontrast-"
 
-#: camlibs/ptp2/ptpcam.c:527 camlibs/sierra/nikon-desc.c:518
+#: camlibs/ptp2/ptpcam.c:574 camlibs/sierra/nikon-desc.c:518
 #: camlibs/sierra/nikon-desc.c:541
 msgid "Digital Zoom"
 msgstr "Digital Zoom"
 
-#: camlibs/ptp2/ptpcam.c:528
+#: camlibs/ptp2/ptpcam.c:575
 #, fuzzy
 msgid "Effect Mode"
 msgstr "Inspelningsläge"
 
-#: camlibs/ptp2/ptpcam.c:529
+#: camlibs/ptp2/ptpcam.c:576
 msgid "Burst Number"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:530
+#: camlibs/ptp2/ptpcam.c:577
 msgid "Burst Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:531
+#: camlibs/ptp2/ptpcam.c:578
 msgid "Timelapse Number"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:532
+#: camlibs/ptp2/ptpcam.c:579
 msgid "Timelapse Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:533
+#: camlibs/ptp2/ptpcam.c:580
 #, fuzzy
 msgid "Focus Metering Mode"
 msgstr "Punktmätningsläge"
 
-#: camlibs/ptp2/ptpcam.c:534
+#: camlibs/ptp2/ptpcam.c:581
 msgid "Upload URL"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:535
+#: camlibs/ptp2/ptpcam.c:582
 msgid "Artist"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:536
+#: camlibs/ptp2/ptpcam.c:583
 #, fuzzy
 msgid "Copyright Info"
 msgstr "Copyright"
 
-#: camlibs/ptp2/ptpcam.c:543
+#: camlibs/ptp2/ptpcam.c:590
 msgid "EK Color Temperature"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:545
+#: camlibs/ptp2/ptpcam.c:592
 #, fuzzy
 msgid "EK Date Time Stamp Format"
 msgstr "Datumformat"
 
-#: camlibs/ptp2/ptpcam.c:546
+#: camlibs/ptp2/ptpcam.c:593
 #, fuzzy
 msgid "EK Beep Mode"
 msgstr "LED-läge"
 
-#: camlibs/ptp2/ptpcam.c:547
+#: camlibs/ptp2/ptpcam.c:594
 msgid "EK Video Out"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:548
+#: camlibs/ptp2/ptpcam.c:595
 #, fuzzy
 msgid "EK Power Saving"
 msgstr "EJ extraljus"
 
-#: camlibs/ptp2/ptpcam.c:549
+#: camlibs/ptp2/ptpcam.c:596
 #, fuzzy
 msgid "EK UI Language"
 msgstr "Språk"
@@ -5131,33 +5122,33 @@ msgstr "Denna kamera kan inte ta bilder."
 msgid "This camera can not capture previews."
 msgstr "Denna kamera kan inte ta förgranskningsbilder."
 
-#: libgphoto2/gphoto2-filesys.c:254
+#: libgphoto2/gphoto2-filesys.c:258
 #, c-format
 msgid "The path '%s' is not absolute."
 msgstr "Sökvägen '%s' är inte absolut."
 
-#: libgphoto2/gphoto2-filesys.c:375
+#: libgphoto2/gphoto2-filesys.c:379
 #, c-format
 msgid "Could not append folder '%s' as this folder already exists."
 msgstr "Kunde inte lägga till mappen '%s' eftersom denna mapp redan existerar."
 
-#: libgphoto2/gphoto2-filesys.c:547
+#: libgphoto2/gphoto2-filesys.c:551
 #, c-format
 msgid "Could not find folder '%s'."
 msgstr "Kunde inte hitta mapp '%s'"
 
-#: libgphoto2/gphoto2-filesys.c:564
+#: libgphoto2/gphoto2-filesys.c:568
 #, c-format
 msgid "Folder '%s' does not contain a folder '%s'."
 msgstr "Mapp '%s' innehåller inte någon mapp '%s'."
 
-#: libgphoto2/gphoto2-filesys.c:628
+#: libgphoto2/gphoto2-filesys.c:632
 #, c-format
 msgid "Could not append '%s' to folder '%s' because this file already exists."
 msgstr ""
 "Kunde inte lägga till '%s' till mapp '%s' eftersom denna fil redan existerar."
 
-#: libgphoto2/gphoto2-filesys.c:1005
+#: libgphoto2/gphoto2-filesys.c:1009
 #, c-format
 msgid ""
 "You have been trying to delete '%s' from folder '%s', but the filesystem "
@@ -5166,23 +5157,23 @@ msgstr ""
 "Du har försökt att radera '%s' från mappen '%s', men filsystemet stödjer "
 "inte radering av filer."
 
-#: libgphoto2/gphoto2-filesys.c:1108
+#: libgphoto2/gphoto2-filesys.c:1112
 #, c-format
 msgid ""
 "There are still subfolders in folder '%s' that you are trying to remove."
 msgstr ""
 "Det finns fortfarande undermappar i mappen '%s' som du försöker ta bort."
 
-#: libgphoto2/gphoto2-filesys.c:1115
+#: libgphoto2/gphoto2-filesys.c:1119
 #, c-format
 msgid "There are still files in folder '%s' that you are trying to remove."
 msgstr "Det finns fortfarande filer i mappen '%s' som du försöker ta bort."
 
-#: libgphoto2/gphoto2-filesys.c:1157
+#: libgphoto2/gphoto2-filesys.c:1161
 msgid "The filesystem does not support upload of files."
 msgstr "Filsystemet stödjer inte uppladdning av filer."
 
-#: libgphoto2/gphoto2-filesys.c:1198
+#: libgphoto2/gphoto2-filesys.c:1202
 #, c-format
 msgid ""
 "Folder '%s' does only contain %i files, but you requested a file with number "
@@ -5190,36 +5181,36 @@ msgid ""
 msgstr ""
 "Mappen '%s' innehåller endast %i filer, men du begärde en fil med nummer %i."
 
-#: libgphoto2/gphoto2-filesys.c:1243
+#: libgphoto2/gphoto2-filesys.c:1247
 #, c-format
 msgid "File '%s' could not be found in folder '%s'."
 msgstr "Filen '%s' kunde inte hittas i mappen '%s'."
 
-#: libgphoto2/gphoto2-filesys.c:1330
+#: libgphoto2/gphoto2-filesys.c:1334
 #, c-format
 msgid "Could not find file '%s'."
 msgstr "Kunde inte hitta filen '%s'."
 
-#: libgphoto2/gphoto2-filesys.c:1455
+#: libgphoto2/gphoto2-filesys.c:1459
 msgid "The filesystem doesn't support getting files"
 msgstr "Filsystemet stödjer inte nerladdning av filer."
 
-#: libgphoto2/gphoto2-filesys.c:1490 libgphoto2/gphoto2-filesys.c:2001
-#: libgphoto2/gphoto2-filesys.c:2154
+#: libgphoto2/gphoto2-filesys.c:1494 libgphoto2/gphoto2-filesys.c:2037
+#: libgphoto2/gphoto2-filesys.c:2190
 #, c-format
 msgid "Unknown file type %i."
 msgstr "Okänd filtyp %i."
 
-#: libgphoto2/gphoto2-filesys.c:1494
+#: libgphoto2/gphoto2-filesys.c:1498
 #, c-format
 msgid "Downloading '%s' from folder '%s'..."
 msgstr "Laddar ner '%s' från mappen '%s'..."
 
-#: libgphoto2/gphoto2-filesys.c:1704
+#: libgphoto2/gphoto2-filesys.c:1708
 msgid "The filesystem doesn't support getting file information"
 msgstr "Filsystemet har inget stöd för att hämta filinformation"
 
-#: libgphoto2/gphoto2-filesys.c:1879
+#: libgphoto2/gphoto2-filesys.c:1883
 #, c-format
 msgid ""
 "Could not open '/proc/meminfo' for reading ('%m'). Make sure the proc "
@@ -5228,21 +5219,31 @@ msgstr ""
 "Kunde inte öppna '/proc/meminfo' för läsning ('%m'). Se till att proc-"
 "filsystemet är monterat."
 
-#: libgphoto2/gphoto2-filesys.c:1887
+#: libgphoto2/gphoto2-filesys.c:1891
 #, c-format
 msgid "An error occured while reading '/proc/meminfo' ('%m')."
 msgstr "Ett fel uppstod vid läsning av '/proc/meminfo' ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:1922
+#: libgphoto2/gphoto2-filesys.c:1926
 #, c-format
 msgid "sysctl call failed ('%m')."
 msgstr "sysctl anropet misslyckades ('%m')."
 
-#: libgphoto2/gphoto2-filesys.c:2257
+#: libgphoto2/gphoto2-filesys.c:1944
+#, fuzzy, c-format
+msgid "sysconf call failed ('%m')."
+msgstr "sysctl anropet misslyckades ('%m')."
+
+#: libgphoto2/gphoto2-filesys.c:1952
+#, fuzzy, c-format
+msgid "swapctl call failed ('%m')."
+msgstr "sysctl anropet misslyckades ('%m')."
+
+#: libgphoto2/gphoto2-filesys.c:2293
 msgid "The filesystem doesn't support setting file information"
 msgstr "Filsystemet har inget stöd för att sätta filinformation"
 
-#: libgphoto2/gphoto2-filesys.c:2280
+#: libgphoto2/gphoto2-filesys.c:2316
 msgid "Read-only file attributes like width and height can not be changed."
 msgstr "Skrivskyddade filattribut som bredd och höjd kan inte ändras."
 
@@ -5285,6 +5286,10 @@ msgstr "Okänt kamerabiblioteksfel"
 #: libgphoto2/gphoto2-result.c:82
 msgid "Unknown error"
 msgstr "Okänt fel"
+
+#, fuzzy
+#~ msgid "remove"
+#~ msgstr "Fjärr"
 
 #, fuzzy
 #~ msgid "Could not identify camera based on name \"%s\""

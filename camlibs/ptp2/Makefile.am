@@ -1,4 +1,4 @@
-EXTRA_DIST = ptp-pack.c
+EXTRA_DIST = ptp-pack.c ptpcam.c
 
 camlib_LTLIBRARIES = libgphoto2_ptp2.la
 
@@ -12,9 +12,9 @@ libgphoto2_ptp2_la_SOURCES = ptp.c ptp.h library.c
 libgphoto2_ptp2_la_LDFLAGS = -module -avoid-version
 libgphoto2_ptp2_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
 
-# Only compile ptpcam if libusb exists
-if HAVE_LIBUSB
-noinst_PROGRAMS = ptpcam
-ptpcam_SOURCES = ptpcam.c
-ptpcam_LDADD = -lusb ptp.o
-endif
+# # Only compile ptpcam if libusb exists
+# if HAVE_LIBUSB
+# noinst_PROGRAMS = ptpcam
+# ptpcam_SOURCES = ptpcam.c
+# ptpcam_LDADD = -lusb ptp.o
+# endif
