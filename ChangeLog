@@ -1,3 +1,10 @@
+2002-06-21  Christophe Barbé <christophe.barbe@ufies.org>
+
+   po files from Takeshi AIHANA <aihana@jcom.home.ne.jp>
+
+	* po/ja.po: Update Japan translation.
+	* libgphoto2_port/po/ja.po: Update Japan translation.
+			
 2002-06-19  Christophe Barbé <christophe.barbe@ufies.org>
 
 	* autogen-1.6.sh: autogen file using automake and co version 1.6.
