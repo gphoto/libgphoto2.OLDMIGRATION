@@ -1,4 +1,17 @@
+2002-11-26 Mariusz Woloszyn
+	* library.c: one more camera added (thx to Tim Looney)
+2002-11-22 Mariusz Woloszyn
+
+	* library.c: added several Kodak cameras (thx to Tim Looney)
+	  Changed naming convention of Kodak devices. Dash removed (less
+	  readable, but conforms to original Kodak naming scheme).
+
+2002-11-20  Hans Ulrich Niedermann  <gp@n-dimensional.de>
+
+	* library.c: several Canon cameras have a PTP mode
+
 2002-10-16 Stephen H. Westin
+	
 	* library.c: Nikon D100 has a PTP mode
 
 2002-10-03  Lutz Müller <lutz@users.sourceforge.net>

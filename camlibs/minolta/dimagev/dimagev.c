@@ -19,15 +19,13 @@
 *                                                                     *
 **********************************************************************/
 
-/* $Id$ */
-
 #include <config.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
 #  ifdef gettext_noop
-#    define _(String) dgettext (PACKAGE, String)
+#    define _(String) dgettext (GETTEXT_PACKAGE, String)
 #    define N_(String) gettext_noop (String)
 #  else
 #    define _(String) (String)

@@ -25,7 +25,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
@@ -49,6 +49,7 @@ struct {
    char serial;
 } models[] = {
         {"Agfa ePhoto CL18",0x06bd,0x0403,0},
+        {"Mustek gSmart 350",0x055f,0xa350,0},
         {"RCA CDS1005",0x0784,0x0100,0},
         
         {"Tiger Fast Flicks",0x0919,0x0100,0},

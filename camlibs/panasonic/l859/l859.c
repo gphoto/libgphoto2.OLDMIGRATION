@@ -1,6 +1,4 @@
 /*
-	$Id$
-
 	Copyright (c) 2001 Andrew Selkirk <aselkirk@mailandnews.com>
 
 	This file is part of the gPhoto project and may only be used,  modified,
@@ -27,7 +25,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
