@@ -376,6 +376,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, vo
  ****************************************************************************/
 
 #ifdef OBSOLETE
+/* this routine was replace with get_file_func */
 static int
 canon_get_picture (Camera *camera, char *canon_path, int thumbnail,
 		   unsigned char **data, int *size)
@@ -514,13 +515,35 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
+	/* FIXME:
+	 * There are probably some memory leaks in the fetching of
+	 * files and thumbnails with the different buffers used in
+	 * that process.
+	 */
+
 	switch (type) {
 		const char *thumbname;
 		case GP_FILE_TYPE_NORMAL:
 			ret = canon_int_get_file (camera, canon_path, &data, &buflen);
+			if (ret == GP_OK) {
+				uint8_t attr = 0;
+				/* This should cover all attribute
+				 * bits known of and reflected in
+				 * info.file
+				 */
+				CameraFileInfo info;
+				gp_filesystem_get_info(fs, folder, filename, &info);
+				if (info.file.status == GP_FILE_STATUS_NOT_DOWNLOADED)
+					attr |= CANON_ATTR_DOWNLOADED;
+				if ((info.file.permissions & GP_FILE_PERM_DELETE) == 0)
+					attr |= CANON_ATTR_WRITE_PROTECTED;
+				canon_int_set_file_attributes (camera, filename, 
+							       gphoto2canonpath (camera, folder),
+							       attr);
+			}
 			break;
 		case GP_FILE_TYPE_PREVIEW:
-			thumbname = canon_int_thumbnail_file_name (camera, canon_path);
+			thumbname = canon_int_filename2thumbname (camera, canon_path);
 			if (thumbname != NULL) {
 				ret = canon_int_get_file (camera, thumbname,
 							  &data, &buflen);
@@ -574,6 +597,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			/* this case should've been caught above anyway */
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
+
+	clear_readiness(camera);
 
 	return GP_OK;
 }
@@ -781,7 +806,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 	}
 
 	/* If we have a thumbnail in an extra file, delete it as well */
-	thumbname = canon_int_thumbnail_file_name (camera, filename);
+	thumbname = canon_int_filename2thumbname (camera, filename);
 	if (thumbname != NULL) {
 		if (canon_int_delete_file (camera, canon_folder, thumbname) != GP_OK) {
 			gp_camera_set_error (camera,
@@ -794,108 +819,19 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 	return GP_OK;
 }
 
-/****************************************************************************/
+/**
+ * put_file_func:
+ * @fs: CameraFS to add file to
+ * @folder: gphoto2 path of folder on camera to put the file into
+ * @file: the file to put on the cam
+ * @data: pointer to Camera
+ *
+ * As described in the Camlib interface: Put file described by @file
+ * into folder @folder on the camera.
+ **/
 
-#ifdef OBSOLETE
-/* This code could probably be used to get a default path */
-static int
-_get_last_dir (Camera *camera, struct canon_dir *tree, char *path, char *temppath)
-{
-
-	if (tree == NULL)
-		return GP_ERROR;
-
-	if (camera->pl->canon_comm_method != CANON_USB) {
-		path = strchr (path, 0);
-		*path = '\\';
-	}
-
-	while (tree->name) {
-		if (!is_image (tree->name) && !is_movie (tree->name)
-		    && !is_thumbnail (tree->name)) {
-			switch (camera->pl->canon_comm_method) {
-				case CANON_USB:
-					strcpy (path, tree->name);
-					break;
-				case CANON_SERIAL_RS232:
-				default:
-					strcpy (path + 1, tree->name);
-					break;
-			}
-		}
-
-		if (!tree->is_file) {
-			if ((strcmp (path + 4, "CANON") == 0) && (strcmp (temppath, path) < 0))
-				strcpy (temppath, path);
-			_get_last_dir (camera, tree->user, path, temppath);
-		}
-		tree++;
-	}
-
-	strcpy (path, temppath);
-
-	return GP_OK;
-}
-
-/*
- * get from the cache the name of the highest numbered directory
- * 
- */
-static int
-get_last_dir (Camera *camera, char *path)
-{
-	char temppath[300];
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "get_last_dir()");
-
-	strncpy (temppath, path, sizeof (temppath));
-
-	return _get_last_dir (camera, camera->pl->cached_tree, path, temppath);
-}
-
-static int
-_get_last_picture (struct canon_dir *tree, char *directory, char *filename)
-{
-
-	if (tree == NULL)
-		return GP_ERROR;
-
-	while (tree->name) {
-
-		if (is_image (tree->name) || is_movie (tree->name)
-		    || is_thumbnail (tree->name)) {
-			if (strcmp (tree->name, filename) > 0)
-				strcpy (filename, tree->name);
-		}
-
-		if (!tree->is_file) {
-			if ((strcmp (tree->name, "DCIM") == 0)
-			    || (strcmp (tree->name, directory) == 0)) {
-				_get_last_picture (tree->user, directory, filename);
-			}
-		}
-
-		tree++;
-	}
-
-	return GP_OK;
-}
-
-/*
- * get from the cache the name of the highest numbered picture
- * 
- */
-static int
-get_last_picture (Camera *camera, char *directory, char *filename)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "get_last_picture()");
-
-	return _get_last_picture (camera->pl->cached_tree, directory, filename);
-}
-#endif //OBSOLETE
-
-
-#ifdef TO_BE_REWORKED
+/* old obsolete complicated version */
+#ifdef STILL_TO_BE_FIXED
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data)
 {
@@ -905,7 +841,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 	char buf[10];
 	CameraAbilities a;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_folder_put_file()");
+	GP_DEBUG ("camera_folder_put_file()");
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
@@ -1000,7 +936,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 
 	return canon_int_put_file (camera, file, destname, destpath);
 }
-#endif //TO_BE_REWORKED
+#endif
 
 /****************************************************************************/
 
@@ -1241,7 +1177,8 @@ camera_init (Camera *camera)
 	gp_filesystem_set_list_funcs (camera->fs, file_list_func, folder_list_func, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
-	gp_filesystem_set_folder_funcs (camera->fs, NULL, NULL,
+	gp_filesystem_set_folder_funcs (camera->fs, 
+					NULL /* put_file_func */, NULL,
 					make_dir_func, remove_dir_func, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
@@ -1253,9 +1190,13 @@ camera_init (Camera *camera)
 	camera->pl->seq_rx = 1;
 
 #ifdef CANON_FLATTEN
+	/* flatten directory structure. doesnt really work and 
+	 * should be done in the CameraFileSystem anyway */
 	camera->pl->flatten_folders = (0 == 0);
 #endif
-	camera->pl->list_all_files = (0 == 0);
+
+	/* default to false, i.e. list only known files */
+	camera->pl->list_all_files = (0 != 0);
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
