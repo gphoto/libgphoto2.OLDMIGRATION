@@ -235,7 +235,7 @@ int canon_int_set_owner_name (Camera *camera, const char *name);
 const char *gphoto2canonpath (Camera *camera, const char *path);
 const char *canon2gphotopath (Camera *camera, const char *path);
 
-const char *canon_int_thumbnail_file_name (Camera *camera, const char *filename);
+const char *canon_int_filename2thumbname (Camera *camera, const char *filename);
 
 /* display fileinfo with gp_log */
 void debug_fileinfo (CameraFileInfo * info);
