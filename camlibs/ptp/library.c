@@ -215,12 +215,15 @@ static struct {
 	{"Nikon Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
 
 	/* (at least some) newer Canon cameras can be switched between
-	 * PTP and "normal" (i.e. Canon) mode 
+	 * PTP and "normal" (i.e. Canon) mode
+	 * IXUS v3 and S230 are identical, but both are listed for
+	 * user's convenience
 	 */
 	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d}, /* 0x306c is S45 in normal (canon) mode */
 	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071}, /* 0x3070 is S230 in normal (canon) mode */
+	{"Canon Digital IXUS v3 (PTP mode)", 0x04a9, 0x3071}, /* 0x3070 is v3 in normal (canon) mode */
 
-	/* more comming soon :) */
+	/* more coming soon :) */
 	{NULL, 0, 0}
 };
 
