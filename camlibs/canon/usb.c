@@ -185,6 +185,9 @@ canon_usb_camera_init (Camera *camera)
 		}
 	}
 
+	/* FIXME: Hack */
+	camera->pl->cached_drive = canon_int_get_disk_name (camera);
+
 	return GP_OK;
 }
 
