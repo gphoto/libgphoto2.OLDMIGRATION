@@ -96,7 +96,7 @@ int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char 
 #define MSG_LEN_LSB     8
 #define MSG_LEN_MSB     9
 
-// #define MSG_FFFB     12
+/* #define MSG_FFFB     12 */
 
 
 

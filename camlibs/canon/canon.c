@@ -1162,7 +1162,7 @@ canon_int_handle_exif_thumb (unsigned char *data, const char *name,
 	GP_DEBUG ("Got thumbnail, extracting it with the " "EXIF lib.");
 	if (exif_parse_data (&exifdat) > 0) {
 		GP_DEBUG ("Parsed exif data.");
-		data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
+		data = exif_get_thumbnail (&exifdat);	/* Extract Thumbnail */
 		if (data == NULL) {
 			int f;
 			char filename[255];
@@ -1290,7 +1290,7 @@ old_canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 			if (i != GP_OK) {
 				GP_DEBUG ("canon_usb_get_thumbnail() failed, "
 					  "returned %i", i);
-				return NULL;	// XXX for now
+				return NULL;	/* XXX for now */
 			}
 			break;
 		case GP_PORT_SERIAL:
@@ -1396,7 +1396,7 @@ old_canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 
 			GP_DEBUG ("Got thumbnail, extracting it with the EXIF lib.");
 			if (exif_parse_data (&exifdat) > 0) {
-				data = exif_get_thumbnail (&exifdat);	// Extract Thumbnail
+				data = exif_get_thumbnail (&exifdat);	/* Extract Thumbnail */
 				if (data == NULL) {
 					int f;
 					char fn[255];
