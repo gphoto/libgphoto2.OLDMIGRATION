@@ -11,6 +11,7 @@ explicitly required. In fact, you really shouldn't.
 In order to get gphoto2 running after installation, you will probably
 want to read doc/FAQ and doc/gphoto2.txt.
 
+
 ===============================
 Step 0: Preparing configuration
 ===============================
@@ -60,7 +61,7 @@ As to whether 'autogen.sh' does its job, we are not completely sure.
   Redhat Linux 7.3 user Uli says:
   ===============================
 
-    ./autogen.sh (with your parameters to ./configure)
+    ./autogen.sh
 
     (yeah, autogen works again. we fixed the stuff for the 2.1.0 release)
 
@@ -83,7 +84,7 @@ Now run either one of
 
   ./configure --prefix=/usr/local
 
-     to prepare a tarball source tree for installation in /usr/local
+     to prepare a tarball source tree for installation in (e.g.) /usr/local
 
 
   ./configure --prefix=/home/me/root --with-drivers=ptp,canon
