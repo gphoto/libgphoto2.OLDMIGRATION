@@ -166,7 +166,7 @@ canon_int_switch_camera_off (Camera *camera)
 		case GP_PORT_USB:
 			GP_DEBUG ("Not trying to shut down USB camera...");
 			break;
-		GP_PORT_DEFAULT_RETURN()
+		GP_PORT_DEFAULT_RETURN_EMPTY
 	}
 	clear_readiness (camera);
 }
@@ -259,6 +259,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, vo
  *
  ****************************************************************************/
 
+#ifdef OBSOLETE
 static int
 canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 		   unsigned char **data, int *size)
@@ -378,9 +379,119 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 	/* NOT REACHED */
 	return GP_ERROR;
 }
+#endif
 
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
+	       CameraFileType type, CameraFile *file, void *user_data)
+{
+	Camera *camera = user_data;
+	unsigned char *data = NULL;
+	int buflen, size, ret;
+	char tempfilename[300], canon_path[300];
+
+	/* put complete canon path into canon_path */
+	ret = snprintf (canon_path, sizeof (canon_path) - 3, "%s\\%s",
+			gphoto2canonpath (camera, folder), filename);
+	if (ret < 0) {
+		gp_camera_set_error (camera,
+				     "Internal error #1 in get_file_func()"
+				     " (%s line %i)", __FILE__, __LINE__);
+		return GP_ERROR;
+	}
+
+	GP_DEBUG ("get_file_func() "
+		  "folder '%s' filename '%s', i.e. '%s'", folder, filename, canon_path);
+
+	/* FIXME:
+	 * There are probably some memory leaks in the fetching of
+	 * files and thumbnails with the different buffers used in
+	 * that process.
+	 */
+
+	switch (type) {
+		const char *thumbname;
+		case GP_FILE_TYPE_NORMAL:
+			ret = canon_int_get_file (camera, canon_path, &data, &buflen);
+			if (ret == GP_OK) {
+				uint8_t attr = 0;
+				/* This should cover all attribute
+				 * bits known of and reflected in
+				 * info.file
+				 */
+				CameraFileInfo info;
+				gp_filesystem_get_info(fs, folder, filename, &info);
+				if (info.file.status == GP_FILE_STATUS_NOT_DOWNLOADED)
+					attr |= CANON_ATTR_DOWNLOADED;
+				if ((info.file.permissions & GP_FILE_PERM_DELETE) == 0)
+					attr |= CANON_ATTR_WRITE_PROTECTED;
+				canon_int_set_file_attributes (camera, filename, 
+							       gphoto2canonpath (camera, folder),
+							       attr);
+			}
+			break;
+		case GP_FILE_TYPE_PREVIEW:
+			thumbname = canon_int_filename2thumbname (camera, canon_path);
+			if (thumbname != NULL) {
+				ret = canon_int_get_file (camera, thumbname,
+							  &data, &buflen);
+			} else {
+				ret = canon_int_get_thumbnail (camera, canon_path, &data, &size);
+			}
+			break;
+		default:
+			GP_DEBUG ("unsupported file type %i", type);
+			return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+	if (ret != GP_OK) {
+		GP_DEBUG ("get_file_func: "
+			  "getting image data failed, returned %i", ret);
+		/* XXX we should return a generic error image here 
+		 * and NOT return an error. This lets us handle
+		 * non-thumbnailed files MUCH better.
+		 */
+		return ret;
+	}
+
+	/* 256 is picked out of the blue, I figured no JPEG with EXIF header
+	 * (not all canon cameras produces EXIF headers I think, but still)
+	 * should be less than 256 bytes long.
+	 */
+	if (!data || buflen < 256)
+		return GP_ERROR;
+
+	switch (type) {
+		case GP_FILE_TYPE_PREVIEW:
+			/* we count the byte returned until the end of the jpeg data
+			   which is FF D9 */
+			/* It would be prettier to get that info from the exif tags */
+			for (size = 1; size < buflen; size++)
+				if ((data[size - 1] == JPEG_ESC) && (data[size] == JPEG_END))
+					break;
+			buflen = size + 1;
+			gp_file_set_data_and_size (file, data, buflen);
+			gp_file_set_mime_type (file, GP_MIME_JPEG);	/* always */
+			strncpy (tempfilename, filename, sizeof(tempfilename));
+			strcpy (strchr (tempfilename, '.'), ".JPG"); /* not really clean */
+			gp_file_set_name (file, tempfilename);
+			break;
+		case GP_FILE_TYPE_NORMAL:
+			gp_file_set_mime_type (file, filename2mimetype (filename));
+			gp_file_set_data_and_size (file, data, buflen);
+			gp_file_set_name (file, filename);
+			break;
+		default:
+			/* this case should've been caught above anyway */
+			return (GP_ERROR_NOT_SUPPORTED);
+	}
+
+	return GP_OK;
+}
+
+#ifdef OBSOLETE
+static int
+old_get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data)
 {
 	Camera *camera = user_data;
@@ -499,6 +610,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	return GP_OK;
 }
+#endif
 
 /****************************************************************************/
 
@@ -996,16 +1108,17 @@ camera_init (Camera *camera)
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
 
+	/* default to false, i.e. list only known file types */
+	camera->pl->list_all_files = FALSE;
+
 	switch (camera->port->type) {
 		case GP_PORT_USB:
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "GPhoto tells us that we should use a USB link.\n");
+			GP_DEBUG ("GPhoto tells us that we should use a USB link.");
 
 			return canon_usb_init (camera);
 			break;
 		case GP_PORT_SERIAL:
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "GPhoto tells us that we should use a RS232 link.\n");
+			GP_DEBUG ("GPhoto tells us that we should use a RS232 link.");
 
 			/* Figure out the speed (and set to default speed if 0) */
 			gp_port_get_settings (camera->port, &settings);
@@ -1014,9 +1127,8 @@ camera_init (Camera *camera)
 			if (camera->pl->speed == 0)
 				camera->pl->speed = 9600;
 
-			gp_debug_printf (GP_DEBUG_LOW, "canon",
-					 "Camera transmission speed : %i\n",
-					 camera->pl->speed);
+			GP_DEBUG ("Camera transmission speed : %i",
+				  camera->pl->speed);
 
 			return canon_serial_init (camera);
 			break;
