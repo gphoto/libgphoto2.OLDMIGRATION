@@ -1,18 +1,18 @@
 ----------------------------------------------------------------------------
-libgphoto2 CVS HEAD
-
-   * Support multiple USB devices by introducing additional USB ports,
-     usb:<bus>,<device>.
+libgphoto2 2.1.4 
 
 drivers (camlibs):
 
    * Canon driver:
-     - added support for G5, Optura 20
+     - added support for G5, Optura 20, ZR-70MC
      - re-added support for A300 and S50
+     - fix erroneous file size limits
 
    * PTP driver:
      - enhanced Canon Capture support.
      - added id for Canon Digital IXUS i.
+
+   * Added support for misc other cameras
 
 packaging:
 
