@@ -1,8 +1,13 @@
 2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
 
+	* Makefile.am: Removed autogen.sh from EXTRA_DIST.
+
+2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
+
 	* configure.in: version 2.1.0rc1 (and branch creation).
 
 2002-06-17  Mariusz Woloszyn <emsi@ipartners.pl>
+
 	* doc/FAQ: Added "gphoto2 does not work..." general question
 
 2002-06-15  Lutz Müller <lutz@users.sourceforge.net>
