@@ -1025,7 +1025,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 		gp_camera_set_error (camera, "canon_serial_get_dirents: "
 				     "Initial dirent packet too short (only %i bytes)",
 				     *dirents_length);
-		return NULL;
+		return GP_ERROR;
 	}
 
 	/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
