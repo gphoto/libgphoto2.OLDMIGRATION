@@ -111,8 +111,8 @@ install-data-local-manual: manual figures-stamp
 # copy HTML manual to distribution
 dist_hook_manual = dist-hook-manual
 dist-hook-manual: manual figures-stamp
-	$(AMTAR) cf - manual/*.html | (cd $(distdir); $(AMTAR) xvf -)
-	$(AMTAR) cf - figures/*.png | (cd $(distdir)/manual/; $(AMTAR) xvf -)
+	tar cf - manual/*.html | (cd $(distdir); tar xvf -)
+	tar cf - figures/*.png | (cd $(distdir)/manual/; tar xvf -)
 endif
 ########################################################################
 
