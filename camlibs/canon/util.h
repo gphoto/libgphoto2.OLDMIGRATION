@@ -10,6 +10,9 @@
 
 #include <gphoto2-endian.h>
 
+#define TRUE 1
+#define FALSE 0
+
 /****************************************************************************
  *
  * prototypes
