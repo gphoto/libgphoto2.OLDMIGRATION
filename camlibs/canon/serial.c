@@ -933,8 +933,8 @@ canon_serial_put_file (Camera *camera, CameraFile *file, char *destname, char *d
 	return GP_OK;
 }
 
-unsigned char *
-canon_serial_get_file (Camera *camera, const char *name, int *length)
+int
+canon_serial_get_file (Camera *camera, const char *name, unsigned char **data, int *length)
 {
 	unsigned char *file = NULL;
 	unsigned char *msg;
@@ -946,14 +946,14 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 	if (camera->pl->receive_error == FATAL_ERROR) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon",
 				 "ERROR: can't continue a fatal error condition detected\n");
-		return NULL;
+		return GP_ERROR;
 	}
 	name_len = strlen (name) + 1;
 	msg = canon_serial_dialogue (camera, 0x1, 0x11, &len, "\x00\x00\x00\x00", 5,
 				     &name_len, 1, "\x00", 2, name, strlen (name) + 1, NULL);
 	if (!msg) {
 		canon_serial_error_type (camera);
-		return NULL;
+		return GP_ERROR;;
 	}
 	while (msg) {
 		if (len < 20 || get_int (msg)) {
@@ -994,12 +994,14 @@ canon_serial_get_file (Camera *camera, const char *name, int *length)
 			GP_DEBUG ("ERROR: end mark != end of data");
 			break;
 		}
-		if (expect == total)
-			return file;
+		if (expect == total) {
+		  *data = file;
+		  return GP_OK;
+		}
 		msg = canon_serial_recv_msg (camera, 0x1, 0x21, &len);
 	}
 	free (file);
-	return NULL;
+	return GP_ERROR;
 }
 
 int
@@ -1134,3 +1136,10 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
  * End of file: serial.c
  *
  ****************************************************************************/
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
