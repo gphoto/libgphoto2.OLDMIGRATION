@@ -442,7 +442,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void
 {
 	Camera *camera = data;
 
-	GP_DEBUG("file_list()");
+	GP_DEBUG("file_list_func()");
 
 	return canon_int_list_directory (camera, folder, list, CANON_LIST_FILES);
 }
@@ -452,7 +452,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, vo
 {
 	Camera *camera = data;
 
-	GP_DEBUG("folder_list()");
+	GP_DEBUG("folder_list_func()");
 
 	return canon_int_list_directory (camera, folder, list, CANON_LIST_FOLDERS);
 }
