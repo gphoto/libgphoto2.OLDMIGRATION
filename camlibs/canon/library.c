@@ -384,11 +384,13 @@ compare_a5_paths (const void *p1, const void *p2)
 	}
 }
 
+/* WTF should we return? */
 static int
 update_dir_cache (Camera *camera)
 {
 	GP_DEBUG("update_dir_cache() OBSOLETE DUMMY");
-	return GP_OK;
+	check_readiness (camera);
+	return 0;
 }
 #ifdef OBSOLETE
 	int i;
@@ -399,8 +401,6 @@ update_dir_cache (Camera *camera)
 	if (camera->pl->cached_dir)
 		return 1;
 	if (!update_disk_cache (camera))
-		return 0;
-	if (!check_readiness (camera))
 		return 0;
 	camera->pl->cached_images = 0;
 	switch (camera->pl->model) {
@@ -463,12 +463,12 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, vo
  *
  ****************************************************************************/
 
+#ifdef OBSOLETE
 static int
-canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
+canon_get_picture (Camera *camera, char *canon_path, int thumbnail,
 		   unsigned char **data, int *size)
 {
 	unsigned char attribs;
-	char complete_filename[300];
 	int res;
 
 	GP_DEBUG ("canon_get_picture()");
@@ -507,20 +507,15 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 		default:
 			/* For A50 or others */
 			/* clear_readiness(); */
+			
+			/* this should be a no-op now */
 			if (!update_dir_cache (camera)) {
 				gp_camera_status (camera,
 						  _("Could not obtain directory listing"));
 				return GP_ERROR;
 			}
 
-			/* strip trailing backslash on path, if any */
-			if (path[strlen (path) - 1] == '\\')
-				path[strlen (path) - 1] = 0;
-
-			snprintf (complete_filename, sizeof (complete_filename), "%s\\%s",
-				  path, filename);
-
-			GP_DEBUG ("canon_get_picture: path='%s', file='%s'\n\tcomplete filename='%s'\n", path, filename, complete_filename);
+			GP_DEBUG ("canon_get_picture: path='%s', file='%s'\n\tcomplete filename='%s'\n", path, filename, canon_filename);
 			attribs = 0;
 			if (!check_readiness (camera)) {
 				return GP_ERROR;
@@ -580,6 +575,7 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 	/* NOT REACHED */
 	return GP_ERROR;
 }
+#endif
 
 /**
  * _get_file_path:
@@ -679,72 +675,66 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = user_data;
 	unsigned char *data = NULL;
 	int buflen, size, ret;
-	char path[300], tempfilename[300];
+	char tempfilename[300], canon_path[300];
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get() "
-			 "folder '%s' filename '%s'", folder, filename);
+	/* put complete canon path into canon_path */
+	ret = snprintf (canon_path, sizeof(canon_path) - 3, "%s\\%s", 
+			gphoto2canonpath (camera, folder), filename);
+	if (ret < -1) {
+		gp_camera_set_error(camera,
+				    "Internal error #1 in get_file_func()"
+				    " (%s line %i)",
+				    __FILE__, __LINE__);
+		return GP_ERROR;
+	}
+
+	GP_DEBUG("camera_file_get() "
+		 "folder '%s' filename '%s', i.e. '%s'",
+		 folder, filename, canon_path);
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
-	strncpy (path, camera->pl->cached_drive, sizeof (path) - 1);
-
-	/* update file cache (if necessary) first */
+	/* NOOP: update file cache (if necessary) first */
 	if (!update_dir_cache (camera)) {
 		gp_camera_status (camera, _("Could not obtain directory listing"));
 		return GP_ERROR;
 	}
 
-	/* update_dir_cache() loads all file names into cache, now call
-	 * get_file_path() to determine in which folder on flash the file
-	 * is located
-	 */
-	if (get_file_path (camera, filename, path) == GP_ERROR) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get: "
-				 "Filename '%s' path '%s' not found!", filename, path);
-		return GP_ERROR;
-	}
-
-	gp_debug_printf (GP_DEBUG_HIGH, "canon", "camera_file_get: "
-			 "Found picture, '%s' '%s'", path, filename);
-
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
-			/* add trailing backslash */
-			if (path[strlen (path) - 1] != '\\')
-				strncat (path, "\\", sizeof (path) - 1);
-			break;
-		case CANON_SERIAL_RS232:
-		default:
-			/* find rightmost \ in path */
-			if (strrchr (path, '\\') == NULL) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get: "
-						 "Could not determine directory part of path '%s'",
-						 path);
-				return GP_ERROR;
-			}
-			/* truncate path after the last \ */
-			path[strrchr (path, '\\') - path + 1] = '\0';
-
-			break;
-	}
-
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
-			ret = canon_get_picture (camera, (char *) filename,
-						 (char *) path, 0, &data, &buflen);
+			ret = canon_int_get_file (camera, canon_path, &data,
+						  &buflen);
 			break;
 		case GP_FILE_TYPE_PREVIEW:
-			ret = canon_get_picture (camera, (char *) filename,
-						 (char *) path, 1, &data, &buflen);
+			if (is_movie(canon_path)) {
+				strcpy (strrchr(canon_path,'.'), ".THM");
+				GP_DEBUG ("canon_get_picture: movie thumbnail: %s\n",
+					  canon_path);
+				ret = canon_int_get_picture (camera, canon_path,
+							     &data, &buflen);
+			} else {
+				*data = canon_int_get_thumbnail (camera,
+								 canon_path,
+								 size);
+				if (*data) {
+					ret = GP_OK;
+				} else {
+					GP_DEBUG ("canon_get_picture: ",
+						  "canon_int_get_thumbnail() '%s' %d failed!",
+						  canon_path, size);
+					return GP_ERROR;
+				}
+			}
 			break;
 		default:
+			GP_DEBUG("unsupported file type %i", type);
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	if (ret != GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_get: "
-				 "canon_get_picture() failed, returned %i", ret);
+		GP_DEBUG("camera_file_get: "
+			 "canon_get_picture() failed, returned %i", ret);
 		return ret;
 	}
 
@@ -772,15 +762,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_set_name (file, tempfilename);
 			break;
 		case GP_FILE_TYPE_NORMAL:
-			if (is_movie (filename))
-				gp_file_set_mime_type (file, GP_MIME_AVI);
-			else if (is_image (filename))
-				gp_file_set_mime_type (file, GP_MIME_JPEG);
-			/* else if (is_crw (filename))
-			 * gp_file_set_mime_type (file, GP_MIME_CRW);
-			 */
-			else
-				gp_file_set_mime_type (file, GP_MIME_UNKNOWN);
+			gp_file_set_mime_type (file, filename2mimetype(filename));
 			gp_file_set_data_and_size (file, data, buflen);
 			gp_file_set_name (file, filename);
 			break;
