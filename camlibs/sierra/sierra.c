@@ -34,7 +34,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
@@ -131,7 +131,7 @@ static SierraCamera sierra_cameras[] = {
 	{"Olympus C-2020Z",	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus C-2040Z", 	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105, 1,
 							&oly3040_cam_desc},
-	{"Olympus C-2100UZ",    SIERRA_MODEL_OLYMPUS,	0x07b4, 0x100, 0,
+	{"Olympus C-2100UZ",    SIERRA_MODEL_CAM_DESC,	0x07b4, 0x100, 0,
 							&oly3040_cam_desc},
 	{"Olympus C-2500L",     SIERRA_MODEL_OLYMPUS,   0, 0, 0 },
 /* Does this model really exist?
@@ -1857,17 +1857,17 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 		    "    A value of 0 will take the default one (auto).\n"
 		    "(2) Olympus C-3040Z (and possibly also the C-2040Z\n"
 		    "    and others) have a USB PC Control mode. In order\n"
-		    "    to use this mode, the camera must be switched \n"
-		    "    into 'USB PC control mode'. To get to the menu \n"
-		    "    for switching modes, turn on the camera, open \n"
-		    "    the memory card access door and then press and \n"
-		    "    hold both of the menu and LCD buttons until the \n"
-		    "    camera control menu appears. Set it to ON. \n"
-		    "(3) If you switch the 'LCD mode' to 'Monitor' or \n"
-		    "    'Normal', don't forget to switch it back to 'Off' \n"
-		    "    before disconnectig. Otherwise you cannot use \n"
-		    "    the camera's buttons. If you end up with this \n"
-		    "    state, you should reconnect the camera to the \n"
+		    "    to use this mode, the camera must be switched\n"
+		    "    into 'USB PC control mode'. To get to the menu\n"
+		    "    for switching modes, turn on the camera, open\n"
+		    "    the memory card access door and then press and\n"
+		    "    hold both of the menu and LCD buttons until the\n"
+		    "    camera control menu appears. Set it to ON.\n"
+		    "(3) If you switch the 'LCD mode' to 'Monitor' or\n"
+		    "    'Normal', don't forget to switch it back to 'Off'\n"
+		    "    before disconnectig. Otherwise you cannot use\n"
+		    "    the camera's buttons. If you end up with this\n"
+		    "    state, you should reconnect the camera to the\n"
 		    "    PC and switch LCD to 'Off'."));
 		break;
 	}

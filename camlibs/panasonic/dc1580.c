@@ -1,6 +1,4 @@
 /*
-        $Id$
-
         Copyright (c) 2000 Mariusz Zynel <mariusz@mizar.org> (gPhoto port)
         Copyright (C) 2000 Fredrik Roubert <roubert@df.lth.se> (idea)
         Copyright (C) 1999 Galen Brooks <galen@nine.com> (DC1580 code)
@@ -35,7 +33,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else

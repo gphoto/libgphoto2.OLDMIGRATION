@@ -11,7 +11,6 @@
  * This file contains all the "glue code" required to use the canon
  * driver with libgphoto2.
  *
- * $Id$
  ****************************************************************************/
 
 
@@ -42,7 +41,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else

@@ -44,7 +44,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
@@ -196,7 +196,7 @@ static int camera_get_file (Camera *camera, GPContext *context, int index,
   if (nr_of_blocks < 0) 
     return GP_ERROR_FILE_NOT_FOUND;
   picturebuffersize = nr_of_blocks * 512;
-  id = gp_context_progress_start(context,nr_of_blocks,_("Downloading file.."));
+  id = gp_context_progress_start(context,nr_of_blocks,_("Downloading file..."));
   *data= malloc(picturebuffersize+1);
   memset(*data,0,picturebuffersize+1);
   for (n = 0; n != nr_of_blocks; n++){
@@ -263,7 +263,7 @@ static int camera_manual(Camera *camera, CameraText *manual, GPContext *context)
 static int camera_about(Camera *camera, CameraText *about, GPContext *context)
 {
   strcpy(about->text, 
-	 _("Creative PC-CAM600\n Author:Peter Kajberg\n email:<pbk@odense.kollegienet.dk>\n"));
+	 _("Creative PC-CAM600\n Author: Peter Kajberg\n email: <pbk@odense.kollegienet.dk>\n"));
   return GP_OK;
 }
 static int

@@ -20,7 +20,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
@@ -131,19 +131,19 @@ struct Image *dsc_f1_get_picture (int picNum, int thumbnail) {
 }
 
 struct Image *dsc_f1_get_preview () {
-        update_status(_("Sorry this function not implemented.."));
+        update_status(_("Sorry, this function not implemented..."));
         return(0);
 }
 
 /* Sorry, don't have any config data for DSC-F1 */
 int dsc_f1_configure() {
-    update_status(_("Sorry, nothing to configure.."));
+    update_status(_("Sorry, nothing to configure..."));
     return(1);
 }
 
 /* Not implemented at this time */
 int dsc_f1_take_picture() {
-    update_status(_("Sorry, taking pictures is not implemented.."));
+    update_status(_("Sorry, taking pictures is not implemented..."));
     return(0);
 }
 

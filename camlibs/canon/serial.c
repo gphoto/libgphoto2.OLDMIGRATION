@@ -4,7 +4,6 @@
  *
  * Serial communication layer.
  *
- * $Id$
  ****************************************************************************/
 
 /****************************************************************************
@@ -31,7 +30,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else

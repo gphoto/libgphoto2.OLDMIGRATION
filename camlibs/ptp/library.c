@@ -29,7 +29,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
@@ -141,7 +141,7 @@ report_result (GPContext *context, short result)
 
 	for (i = 0; ptp_errors[i].txt; i++)
 		if (ptp_errors[i].n == result)
-			gp_context_error (context, dgettext(PACKAGE, ptp_errors[i].txt));
+			gp_context_error (context, dgettext(GETTEXT_PACKAGE, ptp_errors[i].txt));
 }
 
 static int
@@ -181,46 +181,67 @@ static struct {
 	 * The very first PTP camera (with special firmware only), also
 	 * called "PTP Prototype", may report non PTP interface class
 	 */
-	{"Kodak DC-240 (PTP)",  0x040a, 0x0121},
+	{"Kodak DC240 (PTP mode)",  0x040a, 0x0121},
 	/*
-	 * Old DC-4800 firmware reported cutom interface class, so we have
+	 * Old DC-4800 firmware reported custom interface class, so we have
 	 * to detect it by product/vendor IDs
 	 */
-	{"Kodak DC-4800", 0x040a, 0x0160},
+	{"Kodak DC4800", 0x040a, 0x0160},
 	/* Below other camers known to be detected by interface class */
-
-	{"Kodak DX-3215", 0x040a, 0x0525},
-	{"Kodak DX-3500", 0x040a, 0x0500},
-	{"Kodak DX-3600", 0x040a, 0x0510},
-	{"Kodak DX-3700", 0x040a, 0x0530},
-	{"Kodak DX-3900", 0x040a, 0x0170},
-	{"Kodak DX-4900", 0x040a, 0x0550},
+	
+	{"Kodak DC3900", 0x040a, 0x0170},
+	{"Kodak DX3215", 0x040a, 0x0525},
+	{"Kodak DX3500", 0x040a, 0x0500},
+	{"Kodak DX3600", 0x040a, 0x0510},
+	{"Kodak DX3700", 0x040a, 0x0530},
+	{"Kodak DX3900", 0x040a, 0x0170},
+	{"Kodak DX4230", 0x040a, 0x0535},
+	{"Kodak DX4300", 0x040a, 0x0566},
+	{"Kodak DX4330", 0x040a, 0x0555},
+	{"Kodak DX4900", 0x040a, 0x0550},
 	{"Kodak MC3", 0x040a, 0x0400},
-	{"HP PhotoSmart 318", 0x03f0, 0x6302},
-	{"HP PhotoSmart 612", 0x03f0, 0x6302},
-	{"HP PhotoSmart 715",  0x03f0, 0x6402},
+	{"Kodak LS420", 0x040a, 0x0540},
+	{"Kodak LS443", 0x040a, 0x0566},
+	{"Kodak CX4210", 0x040a, 0x0560},
+	{"Kodak CX4230", 0x040a, 0x0535},
+
+
+	/* HP PTP cameras */
+	{"HP PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302},
+	{"HP PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302},
+	{"HP PhotoSmart 715 (PTP mode)",  0x03f0, 0x6402},
 	/* I got information that all SONY PTP cameras use the same
 	   product/vendor IDs */
-	{"Sony DSC-P5", 0x054c, 0x004e},
-	{"Sony DSC-F707V", 0x054c, 0x004e},
-	{"Sony DSC-P30", 0x054c, 0x004e},
-	{"Sony DSC-P50",  0x054c, 0x004e},
-	{"Sony DSC-S75",  0x054c, 0x004e},
-	{"Sony DSC-S85",  0x054c, 0x004e},
-	{"Sony MVC-CD300",  0x054c, 0x004e},
+	{"Sony DSC-P5 (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-F707V (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-P30 (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-P50 (PTP mode)",  0x054c, 0x004e},
+	{"Sony DSC-S75 (PTP mode)",  0x054c, 0x004e},
+	{"Sony DSC-S85 (PTP mode)",  0x054c, 0x004e},
+	{"Sony MVC-CD300 (PTP mode)",  0x054c, 0x004e},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon DSC D100 (PTP mode)", 0x04b0, 0x0402},
-	/* Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
+	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
 	{"Nikon Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
+	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
+	{"Nikon Coolpix 885 (PTP mode)", 0x04b0, 0x0112},
+
 
 	/* (at least some) newer Canon cameras can be switched between
 	 * PTP and "normal" (i.e. Canon) mode 
+	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
-	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d}, /* 0x306c is S45 in normal (canon) mode */
-	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071}, /* 0x3070 is S230 in normal (canon) mode */
+	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d},
+		/* 0x306c is S45 in normal (canon) mode */
+	{"Canon PowerShot G3 (PTP mode)", 0x04a9, 0x306f},
+		/* 0x306e is G3 in normal (canon) mode */
+	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071},
+		/* 0x3070 is S230 in normal (canon) mode */
+	{"Canon Digital IXUS v3 (PTP mode)",  0x04a9, 0x3071},
+		/* it's the same as S230 */
 
-	/* more comming soon :) */
+	/* more coming soon :) */
 	{NULL, 0, 0}
 };
 
@@ -603,12 +624,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* be paranoid, there can be ONLY storage pseudofolders in /, but
 	   check for that! */
 	if (!strncmp(folder,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {
-		/* compute the storageID */
-		char storagetxt[MAXFILENAMELEN];
 		/* be paranoid, allways!!! */
-		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
-		sprintf(storagetxt,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
-		storage=strtol(storagetxt,NULL,16);
+		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+8+1) return (GP_ERROR);
+		storage = strtol(folder + strlen(STORAGE_FOLDER_PREFIX) + 1, NULL, 16);
 	}
 
 
@@ -653,8 +671,9 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				CPR (context, ptp_getstorageinfo(params,
 					storageids.storage[i], &storageinfo));
 			}
-			snprintf(fname, MAXFILENAMELEN, STORAGE_FOLDER_PREFIX"%8.8x",
-			storageids.storage[i]);
+			/* let it be 8 chars and \0, no more :) */
+			snprintf(fname, strlen(STORAGE_FOLDER_PREFIX)+9, STORAGE_FOLDER_PREFIX"%08x",
+				storageids.storage[i]);
 			CR (gp_list_append (list, fname, NULL));
 		}
 		return (GP_OK);
@@ -665,12 +684,9 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	/* be paranoid, there can be ONLY storage pseudofolders in /, but
 	   check for that! */
 	if (!strncmp(folder,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1)) {
-		/* compute the storageID */
-		char storagetxt[MAXFILENAMELEN];
 		/* be paranoid, allways!!! */
-		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+1) return (GP_ERROR);
-		sprintf(storagetxt,"0x%s",&folder[strlen(STORAGE_FOLDER_PREFIX)+1]);
-		storage=strtol(storagetxt,NULL,16);
+		if (strlen(folder)<strlen(STORAGE_FOLDER_PREFIX)+8+1) return (GP_ERROR);
+		storage = strtol(folder + strlen(STORAGE_FOLDER_PREFIX) + 1, NULL, 16);
 	} else return (GP_ERROR);
 	/* Get (parent) folder handle omiting storage pseudofolder */
 	find_folder_handle(folder,parent,data);
