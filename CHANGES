@@ -6,6 +6,7 @@ drivers (camlibs):
    * Canon driver:
      - added support for G5, Optura 20, ZR-70MC
      - re-added support for A300 and S50
+     - fix erroneous file size limits
 
    * PTP driver:
      - enhanced Canon Capture support.
