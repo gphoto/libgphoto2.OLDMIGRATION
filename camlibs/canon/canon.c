@@ -445,7 +445,11 @@ canon_int_serial_ready (Camera *camera)
 	/*      cts=canon_serial_get_cts();
 	   gp_debug_printf(GP_DEBUG_LOW,"canon","cts : %i\n",cts);
 	   if (cts==32) {  CTS == 32  when the camera is connected. */
-	if (camera->pl->first_init == 0 && camera->pl->cached_ready == 1) {
+	if (camera->pl->first_init == 0) {
+		/* FIXME: There was
+		   && camera->pl->cached_ready == 1) {
+		   here once */
+
 		/* First case, the serial speed of the camera is the same as
 		 * ours, so let's try to send a ping packet : */
 		if (!canon_serial_send_packet
@@ -918,7 +922,7 @@ gphoto2canonpath (char *path)
 }
 
 /**
- * cancon2gphotopath:
+ * canon2gphotopath:
  * @path: canon style path
  *
  * convert canon style path (e.g. "D:\DCIM\116CANON\IMG_1240.JPG")
@@ -944,22 +948,272 @@ canon2gphotopath (char *path)
 }
 
 
+/**
+ * canon_dirent:
+ *
+ * makes symbolic interpretation of a dirent as delivered by the
+ * camera easier and more understandable
+ */
+
+struct canon_dirent {
+	u8 attrs;           /* one octet for attributes */
+	u8 reserved_attrs;  /* one octet that is 0x00 */
+	u32 datetime;       /* four octets */
+	u32 size;           /* four octets */
+	char name[0];       /* until \0 character */
+};
 
 void
-canon_int_free_dir (Camera *camera, struct canon_dir *list)
+debug_fileinfo (CameraFileInfo *info)
 {
-	struct canon_dir *walk;
+	GP_DEBUG("<CameraFileInfo>");
+	GP_DEBUG("  <CameraFileInfoFile>");
+	if ((info->file.fields & GP_FILE_INFO_NAME) != 0)
+		GP_DEBUG("    Name:   %s", info->file.name);
+	if ((info->file.fields & GP_FILE_INFO_TYPE) != 0)
+		GP_DEBUG("    Type:   %i", info->file.type);
+	if ((info->file.fields & GP_FILE_INFO_WIDTH) != 0)
+		GP_DEBUG("    Width:  %i", info->file.width);
+	if ((info->file.fields & GP_FILE_INFO_HEIGHT) != 0)
+		GP_DEBUG("    Height: %i", info->file.height);
+	if ((info->file.fields & GP_FILE_INFO_PERMISSIONS) != 0)
+		GP_DEBUG("    Perms:  0x%x", info->file.permissions);
+	if ((info->file.fields & GP_FILE_INFO_STATUS) != 0)
+		GP_DEBUG("    Status: %i", info->file.status);
+	if ((info->file.fields & GP_FILE_INFO_TIME) != 0)
+		GP_DEBUG("    Time:   %s (%i)",
+			 asctime (gmtime (& info->file.time)), info->file.time);
+	GP_DEBUG("  </CameraFileInfoFile>");
+	GP_DEBUG("</CameraFileInfo>");
+}
 
-	for (walk = list; walk->name; walk++)
-		free ((char *) walk->name);
-	free (list);
+
+/**
+ * canon_int_list_directory:
+ * @camera: the camera we are using
+ * @fs: the CameraFilesystem we're working on
+ * @filelist: the list of file names we should append the files to
+ * @folder: the gphoto2 style path of the folder we are to list
+ *
+ * List all files within a given folder, append their names to the
+ * given @filelist and set the file info using
+ * #gp_filesystem_set_info_noop
+ */
+int
+canon_int_list_directory (Camera *camera, CameraFilesystem *fs, CameraList *filelist, 
+			  char *folder)
+{
+	CameraFileInfo info;
+	int res;
+	unsigned int dirents_length;
+	unsigned char *dirent_data = NULL;
+	unsigned char *end_of_data, *temp_ch, *dirent_name, *pos;
+	char *canonfolder = gphoto2canonpath(folder);
+
+	GP_DEBUG("canon_list_directory() folder '%s' aka '%s'", folder, canonfolder);
+
+	/* Fetch all directory entrys from the camera */
+	switch (camera->port->type) {
+		case GP_PORT_USB:
+			res = canon_usb_get_dirents (camera, &dirent_data, &dirents_length,
+						     canonfolder);
+			break;
+		case GP_PORT_SERIAL:
+			res = canon_serial_get_dirents (camera, &dirent_data, &dirents_length,
+							canonfolder);
+			break;
+		default:
+			gp_camera_set_error (camera, "canon_list_directory: "
+					     "called for a camera->port->type we do not "
+					     "know how to handle");
+			return GP_ERROR_BAD_PARAMETERS;
+	}
+	if (res != GP_OK)
+		return res;
+
+	end_of_data = dirent_data + dirents_length;
+
+	if (dirents_length < CANON_MINIMUM_DIRENT_SIZE) {
+		gp_camera_set_error (camera, "canon_list_directory: ERROR: "
+				     "initial message too short (%i < minimum %i)",
+				     dirents_length, CANON_MINIMUM_DIRENT_SIZE);
+		free (dirent_data);
+		return GP_ERROR;
+	}
+
+	/* The first data we have got here is the dirent for the
+	 * directory we are reading. Skip over 10 bytes
+	 * (2 for attributes, 4 date and 4 size) and then go find
+	 * the end of the directory name so that we get to the next
+	 * dirent which is actually the first one we are interested
+	 * in
+	 */
+	dirent_name = dirent_data + 10;
+
+	GP_DEBUG ("canon_list_directory: "
+		  "Camera directory listing for directory '%s'", dirent_name);
+
+	for (pos = dirent_name; pos < end_of_data && *pos != 0; pos++)
+		/* do nothing */ ;
+	if (pos == end_of_data || *pos != 0) {
+		gp_camera_set_error (camera, "canon_list_directory: "
+				     "Reached end of packet while "
+				     "examining the first dirent");
+		free (dirent_data);
+		return GP_ERROR;
+	}
+	pos++;			/* skip NULL byte terminating directory name */
+
+	/* we are now positioned at the first interesting dirent */
+
+	/* This is the main loop, for every directory entry returned */
+	while (pos < end_of_data) {
+		struct canon_dirent * dirent = (struct canon_dirent *) pos;
+		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
+		GP_LOG (GP_LOG_DATA, "canon_list_directory: "
+			"reading dirent at position %i of %i", (pos - dirent_data),
+			(end_of_data - dirent_data));
+
+		if (pos + CANON_MINIMUM_DIRENT_SIZE > end_of_data) {
+			if (camera->port->type == GP_PORT_SERIAL) {
+				/* check to see if it is only NULL bytes left,
+				 * that is not an error for serial cameras
+				 * (at least the A50 adds five zero bytes at the end)
+				 */
+				for (temp_ch = pos; temp_ch < end_of_data && *temp_ch;
+				     temp_ch++) ;
+
+				if (temp_ch == end_of_data) {
+					GP_DEBUG ("canon_list_directory: "
+						  "the last %i bytes were all 0 - ignoring.",
+						  temp_ch - pos);
+					break;
+				} else {
+					GP_DEBUG ("canon_list_directory: "
+						  "byte[%i=0x%x] == %i=0x%x", temp_ch - pos,
+						  temp_ch - pos, *temp_ch, *temp_ch);
+					GP_DEBUG ("canon_list_directory: "
+						  "pos is 0x%x, end_of_data is 0x%x, temp_ch is 0x%x - diff is 0x%x",
+						  pos, end_of_data, temp_ch, temp_ch - pos);
+				}
+			}
+			GP_DEBUG ("canon_list_directory: "
+				  "dirent at position %i=0x%x of %i=0x%x is too small, "
+				  "minimum dirent is %i bytes",
+				  (pos - dirent_data), (pos - dirent_data),
+				  (end_of_data - dirent_data), (end_of_data - dirent_data),
+				  CANON_MINIMUM_DIRENT_SIZE);
+			gp_camera_set_error (camera,
+					     "canon_list_directory: "
+					     "truncated directory entry encountered");
+			free (dirent_data);
+			return GP_ERROR;
+		}
+
+		/* Check end of this dirent, 10 is to skip over
+		 * 2    attributes + 0x00
+		 * 4    file date (UNIX localtime)
+		 * 4    file size
+		 * to where the direntry name begins.
+		 */
+		for (temp_ch = dirent->name; temp_ch < end_of_data && *temp_ch != 0;
+		     temp_ch++) ;
+
+		if (temp_ch == end_of_data || *temp_ch != 0) {
+			GP_DEBUG ("canon_list_directory: "
+				  "dirent at position %i of %i has invalid name in it."
+				  "bailing out with what we've got.",
+				  (pos - dirent_data), (end_of_data - dirent_data));
+			break;
+		}
+
+		/* check that length of name in this dirent is not of unreasonable size.
+		 * 256 was picked out of the blue
+		 */
+		if (strlen (dirent->name) > 256) {
+			GP_DEBUG ("canon_list_directory: "
+				  "dirent at position %i of %i has too long name in it (%i bytes)."
+				  "bailing out with what we've got.",
+				  (pos - dirent_data), (end_of_data - dirent_data),
+				  strlen (dirent->name));
+			break;
+		}
+
+		/* 10 bytes of attributes, size and date, a name and a NULL terminating byte */
+		/* don't use GP_DEBUG since we log this with GP_LOG_DATA */
+		gp_log (GP_LOG_DATA, "canon", "canon_list_directory: "
+			"dirent determined to be %i=0x%x bytes :",
+			10 + strlen (dirent->name) + 1,
+			10 + strlen (dirent->name) + 1);
+		gp_log_data ("canon", pos, 10 + strlen (dirent->name) + 1);
+
+		if (strlen (dirent->name)) {
+			/* we're going to fill out the info structure
+			   in this block */
+
+			/* we start with nothing and continously add stuff */
+			info.file.fields = GP_FILE_INFO_NONE;
+
+			/* OK, this directory entry has a name in it. */
+			strncpy (info.file.name, dirent->name, sizeof(info.file.name));
+			info.file.fields |= GP_FILE_INFO_NAME;
+
+			dirent->attrs = *pos; /* attr is just a readable name */
+			if ((dirent->attrs && CANON_ATTR_DOWNLOADED) == 0)
+				info.file.status = GP_FILE_STATUS_DOWNLOADED;
+			else
+				info.file.status = GP_FILE_STATUS_NOT_DOWNLOADED;
+			info.file.fields |= GP_FILE_INFO_STATUS;
+
+			/* is_dir is set to the 'real' value, used when printing the
+			 * debug output later on.
+			 is_dir = ((dirent->attrs & CANON_ATTR_NON_RECURS_ENT_DIR) != 0x0)
+			          || ((dirent->attrs & CANON_ATTR_RECURS_ENT_DIR) != 0x0);
+			 */
+			/* dir[entrys].is_file is really 'is_not_recursively_entered_directory'
+			   is_file =
+			   !((dir[entrys].dirent->attrs &
+			   CANON_ATTR_NON_RECURS_ENT_DIR) != 0x0);
+			*/
+			
+			/* the size is located at offset 2 and is 4
+			 * bytes long, re-order little/big endian */
+			info.file.size = byteswap32(dirent->size);
+			info.file.fields |= GP_FILE_INFO_SIZE;
+
+			/* the date is located at offset 6 and is 4
+			 * bytes long, re-order little/big endian */
+			info.file.time = byteswap32(dirent->datetime);
+			info.file.fields |= GP_FILE_INFO_TIME;
+
+			debug_fileinfo(&info);
+			
+			gp_filesystem_append (camera->fs, folder, info.file.name);
+			gp_filesystem_set_info_noop (camera->fs, folder, info);
+		} else {
+			GP_DEBUG ("canon_list_directory: "
+				  "dirent at position %i of %i has NULL name, skipping.",
+				  (pos - dirent_data), (end_of_data - dirent_data));
+		}
+
+		/* make 'p' point to next dirent in packet.
+		 * first we skip 10 bytes of attribute, size and date,
+		 * then we skip the name plus 1 for the NULL
+		 * termination bytes.
+		 */
+		pos += 10 + strlen (dirent->name) + 1;
+	}
+	free (dirent_data);
+
+	return GP_OK;
 }
 
 /**
  * Get the directory tree of a given flash device.
  */
+#if OBSOLETE
 int
-canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const char *path)
+_obsolete_canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const char *path)
 {
 	struct canon_dir *dir = NULL;
 	int entrys = 0, res, is_dir = 0;
@@ -1221,6 +1475,7 @@ canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const c
 
 	return GP_OK;
 }
+#endif // OBSOLETE
 
 int
 canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int *length)
