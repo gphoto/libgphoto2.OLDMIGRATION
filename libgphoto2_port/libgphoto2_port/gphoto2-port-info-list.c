@@ -37,7 +37,7 @@
 #ifdef ENABLE_NLS
 #  include <libintl.h>
 #  undef _
-#  define _(String) dgettext (PACKAGE, String)
+#  define _(String) dgettext (GETTEXT_PACKAGE, String)
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
 #  else
@@ -84,7 +84,7 @@ gp_port_info_list_new (GPPortInfoList **list)
 	 * We put this in here because everybody needs to call this function
 	 * before accessing ports...
 	 */
-	bindtextdomain (PACKAGE, LOCALEDIR);
+	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 
 	*list = malloc (sizeof (GPPortInfoList));
 	if (!*list)
