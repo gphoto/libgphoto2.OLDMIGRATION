@@ -193,14 +193,14 @@ camera_abilities (CameraAbilitiesList *list)
 void
 clear_readiness (Camera *camera)
 {
-	GP_DEBUG("clear_readiness()");
+	GP_DEBUG ("clear_readiness()");
 	camera->pl->cached_ready = 0;
 }
 
 static int
 check_readiness (Camera *camera)
 {
-	GP_DEBUG("check_readiness()");
+	GP_DEBUG ("check_readiness()");
 	if (camera->pl->cached_ready)
 		return 1;
 	if (canon_int_ready (camera) == GP_OK) {
@@ -345,7 +345,7 @@ dir_tree (Camera *camera, const char *path)
 static void
 clear_dir_cache (Camera *camera)
 {
-	GP_DEBUG("clear_dir_cache() OBSOLETE DUMMY");
+	GP_DEBUG ("clear_dir_cache() OBSOLETE DUMMY");
 }
 
 
@@ -388,11 +388,15 @@ compare_a5_paths (const void *p1, const void *p2)
 static int
 update_dir_cache (Camera *camera)
 {
-	GP_DEBUG("update_dir_cache() OBSOLETE DUMMY");
+	GP_DEBUG ("update_dir_cache() OBSOLETE DUMMY");
 	check_readiness (camera);
 	return 0;
 }
+
 #ifdef OBSOLETE
+static int
+obsolete_update_dir_cache (Camera *camera)
+{
 	int i;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_dir_cache() "
@@ -442,7 +446,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void
 {
 	Camera *camera = data;
 
-	GP_DEBUG("file_list_func()");
+	GP_DEBUG ("file_list_func()");
 
 	return canon_int_list_directory (camera, folder, list, CANON_LIST_FILES);
 }
@@ -452,7 +456,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, vo
 {
 	Camera *camera = data;
 
-	GP_DEBUG("folder_list_func()");
+	GP_DEBUG ("folder_list_func()");
 
 	return canon_int_list_directory (camera, folder, list, CANON_LIST_FOLDERS);
 }
@@ -507,7 +511,7 @@ canon_get_picture (Camera *camera, char *canon_path, int thumbnail,
 		default:
 			/* For A50 or others */
 			/* clear_readiness(); */
-			
+
 			/* this should be a no-op now */
 			if (!update_dir_cache (camera)) {
 				gp_camera_status (camera,
@@ -663,8 +667,8 @@ _get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, ch
 static int
 get_file_path (Camera *camera, const char *filename, char *path)
 {
-	GP_DEBUG("get_file_path() OBSOLETE DUMMY");
-	strcpy(path,filename);
+	GP_DEBUG ("get_file_path() OBSOLETE DUMMY");
+	strcpy (path, filename);
 	return GP_OK;
 }
 
@@ -678,19 +682,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	char tempfilename[300], canon_path[300];
 
 	/* put complete canon path into canon_path */
-	ret = snprintf (canon_path, sizeof(canon_path) - 3, "%s\\%s", 
+	ret = snprintf (canon_path, sizeof (canon_path) - 3, "%s\\%s",
 			gphoto2canonpath (camera, folder), filename);
 	if (ret < -1) {
-		gp_camera_set_error(camera,
-				    "Internal error #1 in get_file_func()"
-				    " (%s line %i)",
-				    __FILE__, __LINE__);
+		gp_camera_set_error (camera,
+				     "Internal error #1 in get_file_func()"
+				     " (%s line %i)", __FILE__, __LINE__);
 		return GP_ERROR;
 	}
 
-	GP_DEBUG("camera_file_get() "
-		 "folder '%s' filename '%s', i.e. '%s'",
-		 folder, filename, canon_path);
+	GP_DEBUG ("camera_file_get() "
+		  "folder '%s' filename '%s', i.e. '%s'", folder, filename, canon_path);
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
@@ -703,20 +705,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
-			ret = canon_int_get_file (camera, canon_path, &data,
-						  &buflen);
+			ret = canon_int_get_file (camera, canon_path, &data, &buflen);
 			break;
 		case GP_FILE_TYPE_PREVIEW:
-			if (is_movie(canon_path)) {
-				strcpy (strrchr(canon_path,'.'), ".THM");
+			if (is_movie (canon_path)) {
+				strcpy (strrchr (canon_path, '.'), ".THM");
 				GP_DEBUG ("canon_get_picture: movie thumbnail: %s\n",
 					  canon_path);
 				ret = canon_int_get_picture (camera, canon_path,
 							     &data, &buflen);
 			} else {
-				*data = canon_int_get_thumbnail (camera,
-								 canon_path,
-								 size);
+				*data = canon_int_get_thumbnail (camera, canon_path, size);
 				if (*data) {
 					ret = GP_OK;
 				} else {
@@ -728,13 +727,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 			break;
 		default:
-			GP_DEBUG("unsupported file type %i", type);
+			GP_DEBUG ("unsupported file type %i", type);
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	if (ret != GP_OK) {
-		GP_DEBUG("camera_file_get: "
-			 "canon_get_picture() failed, returned %i", ret);
+		GP_DEBUG ("camera_file_get: " "canon_get_picture() failed, returned %i", ret);
 		return ret;
 	}
 
@@ -762,7 +760,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_set_name (file, tempfilename);
 			break;
 		case GP_FILE_TYPE_NORMAL:
-			gp_file_set_mime_type (file, filename2mimetype(filename));
+			gp_file_set_mime_type (file, filename2mimetype (filename));
 			gp_file_set_data_and_size (file, data, buflen);
 			gp_file_set_name (file, filename);
 			break;
@@ -814,16 +812,15 @@ camera_summary (Camera *camera, CameraText *summary)
 
 	unsigned int capacity, available;
 
-	GP_DEBUG("camera_summary()");
+	GP_DEBUG ("camera_summary()");
 
 	if (check_readiness (camera) != 1)
 		return GP_ERROR;
 
 	if (camera->pl->cached_drive == NULL)
 		camera->pl->cached_drive = canon_int_get_disk_name (camera);
-	
-	canon_int_get_disk_name_info (camera, camera->pl->cached_drive,
-				      &capacity, &available);
+
+	canon_int_get_disk_name_info (camera, camera->pl->cached_drive, &capacity, &available);
 
 	pretty_number (capacity, a);
 	pretty_number (available, b);
@@ -1324,8 +1321,7 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo * info, void *data)
 {
-	GP_DEBUG ("get_info_func() "
-		  "called for '%s'/'%s'", folder, filename);
+	GP_DEBUG ("get_info_func() " "called for '%s'/'%s'", folder, filename);
 
 #ifdef PERHAPS_OBSOLETE
 	info->preview.fields = GP_FILE_INFO_TYPE;
@@ -1338,8 +1334,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	// | GP_FILE_INFO_PERMISSIONS | GP_FILE_INFO_SIZE;
 	//info->file.fields.permissions = 
 
-	strncpy (info->file.type, filename2mimetype(filename), 
-		 sizeof(info->file.type));
+	strncpy (info->file.type, filename2mimetype (filename), sizeof (info->file.type));
 #endif
 
 	strcpy (info->file.name, filename);

@@ -37,13 +37,14 @@
 #define CAMERA_MASK_BATTERY  32
 
 #ifdef OBSOLETE
-struct canon_dir {
-  const char *name; /* NULL if at end */
-  unsigned int size;
-  time_t date;
-  unsigned char attrs; /* File attributes, see "Protocols" for details */
-  int is_file;
-  void *user;	/* user-specific data */
+struct canon_dir
+{
+	const char *name;	/* NULL if at end */
+	unsigned int size;
+	time_t date;
+	unsigned char attrs;	/* File attributes, see "Protocols" for details */
+	int is_file;
+	void *user;		/* user-specific data */
 };
 #endif
 
@@ -51,7 +52,8 @@ struct canon_dir {
 /**
  * Various Powershot camera types
  */
-typedef enum {
+typedef enum
+{
 	CANON_PS_A5,
 	CANON_PS_A5_ZOOM,
 	CANON_PS_A50,
@@ -68,26 +70,27 @@ typedef enum {
 	CANON_PS_A20,
 	CANON_EOS_D30,
 	CANON_PS_PRO90_IS
-} canonCamModel;
+}
+canonCamModel;
 
 
 struct _CameraPrivateLibrary
 {
 	canonCamModel model;
-	int speed;        /* The speed we're using for this camera */
-	char ident[32];   /* Model ID string given by the camera */
-	char owner[32];   /* Owner name */
-	char firmwrev[4]; /* Firmware revision */
+	int speed;		/* The speed we're using for this camera */
+	char ident[32];		/* Model ID string given by the camera */
+	char owner[32];		/* Owner name */
+	char firmwrev[4];	/* Firmware revision */
 	int A5;
 	char psa50_id[200];	/* some models may have a lot to report */
-	int canon_comm_method; // FIXME: obsolete. use camera->port->type instead
+	int canon_comm_method;	// FIXME: obsolete. use camera->port->type instead
 	unsigned char psa50_eot[8];
 
 	int receive_error;
-	int first_init;  /* first use of camera   1 = yes 0 = no */
-	int uploading;   /* 1 = yes ; 0 = no */
-	int slow_send;   /* to send data via serial with a usleep(1) 
-					  * between each byte 1 = yes ; 0 = no */ 
+	int first_init;		/* first use of camera   1 = yes 0 = no */
+	int uploading;		/* 1 = yes ; 0 = no */
+	int slow_send;		/* to send data via serial with a usleep(1) 
+				   * between each byte 1 = yes ; 0 = no */
 
 	unsigned char seq_tx;
 	unsigned char seq_rx;
@@ -95,7 +98,7 @@ struct _CameraPrivateLibrary
 
 	/* this has nothing to do with CameraFilesystem and will
 	   therefore probably remain here */
-	int cached_ready;   /* whether canon_int_ready has already been called */
+	int cached_ready;	/* whether canon_int_ready has already been called */
 
 /*
  * Directory access may be rather expensive, so we cached some
@@ -105,7 +108,7 @@ struct _CameraPrivateLibrary
  * The first variable in each block indicates whether the block is valid.
  */
 
-	char *cached_drive; /* usually something like C: or D: */
+	char *cached_drive;	/* usually something like C: or D: */
 #ifdef OBSOLETE
 	int cached_disk;
 	int cached_capacity;
@@ -113,7 +116,7 @@ struct _CameraPrivateLibrary
 	int cached_dir;
 	struct canon_dir *cached_tree;
 	int cached_images;
-	char **cached_paths; /* only used by A5 */
+	char **cached_paths;	/* only used by A5 */
 #endif
 };
 
@@ -135,13 +138,15 @@ struct _CameraPrivateLibrary
  */
 
 typedef struct _canon_dirent canon_dirent;
-struct _canon_dirent {
-	uint8_t attrs;           /* one octet for attributes */
-	uint8_t reserved_attrs;  /* one octet that is 0x00 */
-	uint32_t size;           /* four octets */
-	uint32_t datetime;       /* four octets */
-	char name[0];            /* until \0 character */
-} __attribute__((packed));
+struct _canon_dirent
+{
+	uint8_t attrs;		/* one octet for attributes */
+	uint8_t reserved_attrs;	/* one octet that is 0x00 */
+	uint32_t size;		/* four octets */
+	uint32_t datetime;	/* four octets */
+	char name[0];		/* until \0 character */
+}
+__attribute__ ((packed));
 
 
 /*
@@ -173,39 +178,42 @@ struct _canon_dirent {
 /**
  * Switches the camera on, detects the model and sets its speed
  */
-int canon_int_ready(Camera *camera);
+int canon_int_ready (Camera *camera);
 
 /*
  * 
  */
-char *canon_int_get_disk_name(Camera *camera);
+char *canon_int_get_disk_name (Camera *camera);
 
 /*
  *
  */
-int canon_int_get_battery(Camera *camera, int *pwr_status, int *pwr_source);
+int canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source);
 
 /*
  *
  */
-int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,int *available);
+int canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity,
+				  int *available);
 
 /*
  *
  */
-int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
-int canon_int_list_directory(Camera *camera, const char *folder, CameraList *list, const int flags);
-unsigned char *canon_int_get_thumbnail(Camera *camera, const char *name,int *length);
-int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
-int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
-int canon_int_delete_file(Camera *camera, const char *name, const char *dir);
-int canon_serial_end(Camera *camera);
-int canon_serial_off(Camera *camera);
-time_t canon_int_get_time(Camera *camera);
-int canon_int_set_time(Camera *camera);
-int canon_int_directory_operations(Camera *camera, const char *path, int action);
-int canon_int_identify_camera(Camera *camera);
-int canon_int_set_owner_name(Camera *camera, const char *name);
+int canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int *length);
+int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
+			      const int flags);
+unsigned char *canon_int_get_thumbnail (Camera *camera, const char *name, int *length);
+int canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
+int canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir,
+				   unsigned char attrs);
+int canon_int_delete_file (Camera *camera, const char *name, const char *dir);
+int canon_serial_end (Camera *camera);
+int canon_serial_off (Camera *camera);
+time_t canon_int_get_time (Camera *camera);
+int canon_int_set_time (Camera *camera);
+int canon_int_directory_operations (Camera *camera, const char *path, int action);
+int canon_int_identify_camera (Camera *camera);
+int canon_int_set_owner_name (Camera *camera, const char *name);
 
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 // char *canon2gphotopath(Camera *camera, char *path);
@@ -217,7 +225,7 @@ int canon_int_serial_ready (Camera *camera);
 int canon_int_usb_ready (Camera *camera);
 
 /* display fileinfo with gp_log */
-void debug_fileinfo (CameraFileInfo *info);
+void debug_fileinfo (CameraFileInfo * info);
 
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"

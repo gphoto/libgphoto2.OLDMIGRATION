@@ -397,7 +397,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		return NULL;
 	}
 
-	GP_DEBUG("canon_usb_dialogue: finished successfully (%s)", funct_descr);
+	GP_DEBUG ("canon_usb_dialogue: finished successfully (%s)", funct_descr);
 
 	/* if cmd3 equals to 0x202, this is a command that returns L (long) data
 	 * and what we return here is the complete packet (ie. not skipping the
