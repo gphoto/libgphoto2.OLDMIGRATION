@@ -1344,6 +1344,88 @@ canon_serial_ready (Camera *camera)
 	return GP_OK;
 }
 
+/**
+ * canon_serial_get_thumbnail:
+ *
+ * @camera: camera to work on
+ * @name: file name (complete canon path) of file to get thumbnail for
+ * @data: pointer to data pointer
+ * @length: pointer to data length
+ * @Returns: GP_ERROR code
+ *
+ * This is just the serial specific part extracted from the older
+ * canon_get_thumbnail() routine. 
+ **/
+int 
+canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length)
+{
+	unsigned int expect = 0, size, payload_length, total_file_size;
+	unsigned int total = 0;
+	unsigned char *msg;
+
+	CAM_CHECK_PARAM_NULL(length);
+	CAM_CHECK_PARAM_NULL(data);
+	*length = 0;
+	*data = NULL;
+
+	if (camera->pl->receive_error == FATAL_ERROR) {
+		gp_camera_set_error (camera, "ERROR: can't continue a fatal "
+				     "error condition detected");
+		return GP_ERROR;
+	}
+
+	payload_length = strlen (name) + 1;
+	msg = canon_serial_dialogue (camera, 0x1, 0x11, &total_file_size,
+				     "\x01\x00\x00\x00\x00", 5,
+				     &payload_length, 1, "\x00", 2,
+				     name, strlen (name) + 1, NULL);
+	if (!msg) {
+		canon_serial_error_type (camera);
+		return GP_ERROR;
+	}
+
+	
+	total = le32atoh (msg + 4);
+	if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
+		gp_camera_set_error (camera, "ERROR: %d is too big", total);
+		return GP_ERROR;
+	}
+	*data = malloc (total);
+	if (!*data) {
+		perror ("malloc");
+		return GP_ERROR;
+	}
+	*length = total;
+
+	while (msg) {
+		if (total_file_size < 20 || le32atoh (msg)) {
+			return GP_ERROR;
+		}
+		size = le32atoh (msg + 12);
+		if (le32atoh (msg + 8) != expect || expect + size > total
+		    || size > total_file_size - 20) {
+			GP_DEBUG ("ERROR: doesn't fit");
+			return GP_ERROR;
+		}
+		memcpy (*data + expect, msg + 20, size);
+		expect += size;
+		gp_camera_progress (camera,
+				    total ? (expect / (float) total) : 1.);
+		if ((expect == total) != le32atoh (msg + 16)) {
+			GP_DEBUG ("ERROR: end mark != end of data");
+			return GP_ERROR;
+		}
+		if (expect == total) {
+			/* We finished receiving the file. Parse the header and
+			   return just the thumbnail */
+			break;
+		}
+		msg = canon_serial_recv_msg (camera, 0x1, 0x21,
+					     &total_file_size);
+	}
+	return GP_OK;
+}
+
 /****************************************************************************
  *
  * End of file: serial.c
