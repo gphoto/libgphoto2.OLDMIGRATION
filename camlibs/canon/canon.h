@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef _LIBRARY_H
-#define _LIBRARY_H
+#ifndef _CANON_H
+#define _CANON_H
 
 /* ISO C99: 7.18 Integer types <stdint.h> */
 #include <stdint.h>
@@ -243,7 +243,7 @@ void debug_fileinfo (CameraFileInfo * info);
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
 
-#endif /* _LIBRARY_H */
+#endif /* _CANON_H */
 
 /*
  * Local Variables:
