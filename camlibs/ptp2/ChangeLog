@@ -1,3 +1,10 @@
+2004-11-29  Marcus Meissner  <marcus@jet.franken.de>
+
+	Edward Kuns <ekuns@kilroy.chi.il.us>
+	* library.c: Hack to detect root directories,
+	  if no objects with parentid 0 are there.
+	  (fixes Canon EOS 20D)
+
 2004-11-15  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Added Panasonic DMC-FZ20.
