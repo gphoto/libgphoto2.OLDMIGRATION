@@ -537,14 +537,14 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	char payload[100];
 	int payload_length, maxfilesize, res;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file() called for file '%s'",
-			 name);
+	GP_DEBUG ("canon_usb_get_file() called for file '%s'",
+		  name);
 
 	/* 8 is strlen ("12111111") */
 	if (8 + strlen (name) > sizeof (payload) - 1) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_usb_get_file: ERROR: "
-				 "Supplied file name '%s' does not fit in payload buffer.",
-				 name);
+	        GP_DEBUG ("canon_usb_get_file: ERROR: "
+			  "Supplied file name '%s' does not fit in payload buffer.",
+			  name);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 
@@ -558,7 +558,7 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	intatpos (payload, 0x4, USB_BULK_READ_SIZE);
 
 	if (camera->pl->model == CANON_PS_S10 || camera->pl->model == CANON_PS_S20
-	    || camera->pl->model == CANON_PS_S30
+	    || camera->pl->model == CANON_PS_S30 || camera->pl->model == CANON_PS_S40
 	    || camera->pl->model == CANON_PS_G2 || camera->pl->model == CANON_PS_G1
 	    || camera->pl->model == CANON_PS_S300 || camera->pl->model == CANON_PS_S100
 	    || camera->pl->model == CANON_PS_A10 || camera->pl->model == CANON_PS_A20
@@ -572,9 +572,8 @@ canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, int 
 	res = canon_usb_long_dialogue (camera, CANON_USB_FUNCTION_GET_FILE, data, length,
 				       maxfilesize, payload, payload_length, 1);
 	if (res != GP_OK) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "canon_usb_get_file: canon_usb_long_dialogue() "
-				 "returned error (%i).", res);
+		GP_DEBUG ("canon_usb_get_file: canon_usb_long_dialogue() "
+			  "returned error (%i).", res);
 		return res;
 	}
 
@@ -678,3 +677,10 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 
 	return GP_OK;
 }
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
