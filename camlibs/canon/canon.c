@@ -1287,13 +1287,142 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int 
 		case GP_PORT_USB:
 		        return canon_usb_get_file (camera, name, data, length);
 			break;
-		case GP_PORT_SERIAL_RS232:
+		case GP_PORT_SERIAL:
  		        return canon_serial_get_file (camera, name, data, length);
 			break;
 	        default:
-		  gp_camera_set_error(camera,"Unknown camera->port->type 0x%x at %s line %i", 
-				      amera->port->type, __FILE__, __LINE__);
+			gp_camera_set_error(camera,"Unknown camera->port->type 0x%x at %s line %i", 
+					    camera->port->type, __FILE__, __LINE__);
+			return GP_ERROR_NOT_SUPPORTED;
 	}
+	/* never reached */
+	return GP_ERROR;
+}
+
+#define CHECK_PARM(what) \
+	if (!(what)) { \
+		GP_DEBUG("Assertion %s failed",#what); \
+		return GP_ERROR_BAD_PARAMETERS; \
+	}
+
+int 
+canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length)
+{
+	unsigned int expect = 0, size, payload_length, total_file_size;
+	unsigned int total = 0;
+	unsigned char *msg;
+
+	CHECK_PARM(length != NULL);
+	*length = 0;
+	CHECK_PARM(data != NULL);
+	*data = NULL;
+
+	if (camera->pl->receive_error == FATAL_ERROR) {
+		gp_camera_set_error (camera, "ERROR: can't continue a fatal "
+				     "error condition detected");
+		return GP_ERROR;
+	}
+
+	payload_length = strlen (name) + 1;
+	msg = canon_serial_dialogue (camera, 0x1, 0x11, &total_file_size,
+				     "\x01\x00\x00\x00\x00", 5,
+				     &payload_length, 1, "\x00", 2,
+				     name, strlen (name) + 1, NULL);
+	if (!msg) {
+		canon_serial_error_type (camera);
+		return GP_ERROR;
+	}
+
+	
+	total = get_int (msg + 4);
+	if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
+		gp_camera_set_error (camera, "ERROR: %d is too big", total);
+		return GP_ERROR;
+	}
+	*data = malloc (total);
+	if (!*data) {
+		perror ("malloc");
+		return GP_ERROR;
+	}
+	*length = total;
+
+	while (msg) {
+		if (total_file_size < 20 || get_int (msg)) {
+			return GP_ERROR;
+		}
+		size = get_int (msg + 12);
+		if (get_int (msg + 8) != expect || expect + size > total
+		    || size > total_file_size - 20) {
+			GP_DEBUG ("ERROR: doesn't fit");
+			return GP_ERROR;
+		}
+		memcpy (*data + expect, msg + 20, size);
+		expect += size;
+		gp_camera_progress (camera,
+				    total ? (expect / (float) total) : 1.);
+		if ((expect == total) != get_int (msg + 16)) {
+			GP_DEBUG ("ERROR: end mark != end of data");
+			return GP_ERROR;
+		}
+		if (expect == total) {
+			/* We finished receiving the file. Parse the header and
+			   return just the thumbnail */
+			break;
+		}
+		msg = canon_serial_recv_msg (camera, 0x1, 0x21,
+					     &total_file_size);
+	}
+	return GP_OK;
+}
+
+/**
+ * canon_int_handle_jfif_thumb:
+ *
+ * extract thumbnail from JFIF image (A70)
+ **/
+
+static int
+canon_int_handle_jfif_thumb(const unsigned int total, unsigned char **data)
+{
+	int i, j, in;
+	unsigned char *thumb;
+	CHECK_PARM(data != NULL);
+	*data = NULL;
+	/* pictures are JFIF files */
+	/* we skip the first FF D8 */
+	i = 3;
+	j = 0;
+	in = 0;
+
+	/* we want to drop the header to get the thumbnail */
+
+	thumb = malloc (total);
+	if (!thumb) {
+		perror ("malloc");
+		return GP_ERROR_NO_MEMORY;
+	}
+
+	while (i < total) {
+		if (*data[i] == JPEG_ESC) {
+			if (*data[i + 1] == JPEG_BEG &&
+			    ((*data[i + 3] == JPEG_SOS)
+			     || (*data[i + 3] == JPEG_A50_SOS))) {
+				in = 1;
+			} else if (*data[i + 1] == JPEG_END) {
+				in = 0;
+				thumb[j++] = *data[i];
+				thumb[j] = *data[i + 1];
+				*data = thumb;
+				return GP_OK;
+			}
+		}
+
+		if (in == 1)
+			thumb[j++] = *data[i];
+		i++;
+
+	}
+	return GP_ERROR;
 }
 
 /**
@@ -1304,122 +1433,37 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int 
  *
  * Returns the thumbnail data of the picture designated by @name.
  **/
-unsigned char *
-canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
+int 
+canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retdata, int *length)
 {
+	int res;
 	unsigned char *data = NULL;
-	unsigned char *msg;
 	exifparser exifdat;
-	unsigned int total = 0, expect = 0, size, payload_length, total_file_size;
-	int i, j, in;
-	unsigned char *thumb;
 
 	GP_DEBUG ("canon_int_get_thumbnail() called for file '%s'", name);
+	CHECK_PARM(retdata != NULL);
+	CHECK_PARM(length != NULL);
 
 	gp_camera_progress (camera, 0);
-	switch (camera->pl->canon_comm_method) {
+	switch (camera->port->type) {
 		case GP_PORT_USB:
-			i = canon_usb_get_thumbnail (camera, name, &data, length);
-			if (i != GP_OK) {
-				GP_DEBUG ("canon_usb_get_thumbnail() failed, "
-					  "returned %i", i);
-				return NULL;	// XXX for now
-			}
+			res = canon_usb_get_thumbnail (camera, name, &data, length);
 			break;
 		case GP_PORT_SERIAL:
-			if (camera->pl->receive_error == FATAL_ERROR) {
-				GP_DEBUG ("ERROR: can't continue a fatal "
-					  "error condition detected");
-				return NULL;
-			}
-
-			payload_length = strlen (name) + 1;
-			msg = canon_serial_dialogue (camera, 0x1, 0x11, &total_file_size,
-						     "\x01\x00\x00\x00\x00", 5,
-						     &payload_length, 1, "\x00", 2,
-						     name, strlen (name) + 1, NULL);
-			if (!msg) {
-				canon_serial_error_type (camera);
-				return NULL;
-			}
-
-			total = get_int (msg + 4);
-			if (total > 2000000) {	/* 2 MB thumbnails ? unlikely ... */
-				GP_DEBUG ("ERROR: %d is too big", total);
-				return NULL;
-			}
-			data = malloc (total);
-			if (!data) {
-				perror ("malloc");
-				return NULL;
-			}
-			if (length)
-				*length = total;
-
-			while (msg) {
-				if (total_file_size < 20 || get_int (msg)) {
-					return NULL;
-				}
-				size = get_int (msg + 12);
-				if (get_int (msg + 8) != expect || expect + size > total
-				    || size > total_file_size - 20) {
-					GP_DEBUG ("ERROR: doesn't fit");
-					return NULL;
-				}
-				memcpy (data + expect, msg + 20, size);
-				expect += size;
-				gp_camera_progress (camera,
-						    total ? (expect / (float) total) : 1.);
-				if ((expect == total) != get_int (msg + 16)) {
-					GP_DEBUG ("ERROR: end mark != end of data");
-					return NULL;
-				}
-				if (expect == total) {
-					/* We finished receiving the file. Parse the header and
-					   return just the thumbnail */
-					break;
-				}
-				msg = canon_serial_recv_msg (camera, 0x1, 0x21,
-							     &total_file_size);
-			}
+			res = canon_serial_get_thumbnail (camera, name, &data, length);
 			break;
+		default:
+			return GP_ERROR_BAD_PARAMETERS;
+	}
+	if (res != GP_OK) {
+		GP_DEBUG ("canon_port_get_thumbnail() failed, "
+			  "returned %i", res);
+		return res;
 	}
 
 	switch (camera->pl->model) {
-		case CANON_PS_A70:	/* pictures are JFIF files */
-			/* we skip the first FF D8 */
-			i = 3;
-			j = 0;
-			in = 0;
-
-			/* we want to drop the header to get the thumbnail */
-
-			thumb = malloc (total);
-			if (!thumb) {
-				perror ("malloc");
-				break;
-			}
-
-			while (i < total) {
-				if (data[i] == JPEG_ESC) {
-					if (data[i + 1] == JPEG_BEG &&
-					    ((data[i + 3] == JPEG_SOS)
-					     || (data[i + 3] == JPEG_A50_SOS))) {
-						in = 1;
-					} else if (data[i + 1] == JPEG_END) {
-						in = 0;
-						thumb[j++] = data[i];
-						thumb[j] = data[i + 1];
-						return thumb;
-					}
-				}
-
-				if (in == 1)
-					thumb[j++] = data[i];
-				i++;
-
-			}
-			return NULL;
+		case CANON_PS_A70:
+			canon_int_handle_jfif_thumb(*length, &data);
 			break;
 
 		default:	/* Camera supports EXIF */
@@ -1446,7 +1490,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 					gp_debug_printf (GP_DEBUG_LOW, "canon",
 							 "canon_int_get_thumbnail: "
 							 "Thumbnail conversion error, saving "
-							 "%i bytes to '%s'", total, fn);
+							 "%i bytes to '%s'", *length, fn);
 					/* create with O_EXCL and 0600 for security */
 					if ((f =
 					     open (fn, O_CREAT | O_EXCL | O_RDWR,
@@ -1457,7 +1501,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 								 fn);
 						break;
 					}
-					if (write (f, data, total) == -1) {
+					if (write (f, data, *length) == -1) {
 						gp_debug_printf (GP_DEBUG_LOW, "canon",
 								 "canon_int_get_thumbnail: "
 								 "error writing to file '%s': %m",
@@ -1467,13 +1511,14 @@ canon_int_get_thumbnail (Camera *camera, const char *name, int *length)
 					close (f);
 					break;
 				}
-				return data;
+				*retdata = data;
+				return GP_OK;
 			}
 			break;
 	}
 
 	free (data);
-	return NULL;
+	return GP_ERROR;
 }
 
 int
