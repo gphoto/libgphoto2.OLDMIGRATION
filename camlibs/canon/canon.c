@@ -228,8 +228,11 @@ canon_int_directory_operations (Camera *camera, const char *path, int action)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 4)
+	if (len != 0x4) {
+		GP_DEBUG ("canon_int_directory_operations: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4, len);
 		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	if (msg[0] != 0x00) {
 		gp_camera_set_error (camera, "Could not %s directory %s",
@@ -280,8 +283,11 @@ canon_int_identify_camera (Camera *camera)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 0x4c)
+	if (len != 0x4c) {
+		GP_DEBUG ("canon_int_identify_camera: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4c, len);
 		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	/* Store these values in our "camera" structure: */
 	memcpy (camera->pl->firmwrev, (char *) msg + 8, 4);
@@ -329,8 +335,11 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 8)
+	if (len != 0x8) {
+		GP_DEBUG ("canon_int_get_battery: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x8, len);
 		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	if (pwr_status)
 		*pwr_status = msg[4];
@@ -403,8 +412,8 @@ canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 4) {
-		GP_DEBUG ("canon_int_set_file_attributes: Unexpected ammount of data returned "
+	if (len != 0x4) {
+		GP_DEBUG ("canon_int_set_file_attributes: Unexpected amount of data returned "
 			  "(expected %i got %i)", 0x4, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -462,7 +471,7 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 	}
 
 	if (len != 0x04) {
-		GP_DEBUG ("canon_int_set_owner_name: Unexpected ammount of data returned "
+		GP_DEBUG ("canon_int_set_owner_name: Unexpected amount of data returned "
 			  "(expected %i got %i)", 0x4, len);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
@@ -659,22 +668,26 @@ canon_int_get_disk_name (Camera *camera)
 				canon_serial_error_type (camera);
 				return NULL;
 			}
+
+			if (len < 5)
+				return NULL; /* should be GP_ERROR_CORRUPTED_DATA */
+
+			/* this is correct even though it looks a bit funny. canon_serial_dialogue()
+			 * has a static buffer, strdup() part of that buffer and return to our caller.
+			 */
+			msg = strdup ((char *) msg + 4);	/* @@@ should check length */
+			if (!msg) {
+				GP_DEBUG ("canon_int_get_disk_name: could not allocate %i "
+					  "bytes of memory to hold response",
+					  strlen ((char *) msg + 4));
+				return NULL;
+			}
 			break;
 		GP_PORT_DEFAULT_RETURN(NULL)
 	}
 
-	if (camera->port->type == GP_PORT_SERIAL) {
-		/* this is correct even though it looks a bit funny. canon_serial_dialogue()
-		 * has a static buffer, strdup() part of that buffer and return to our caller.
-		 */
-		msg = strdup ((char *) msg + 4);	/* @@@ should check length */
-		if (!msg) {
-			GP_DEBUG ("canon_int_get_disk_name: could not allocate %i "
-				  "bytes of memory to hold response",
-				  strlen ((char *) msg + 4));
-			return NULL;
-		}
-	}
+	if (! msg)
+		return NULL;
 
 	GP_DEBUG ("canon_int_get_disk_name: disk '%s'", msg);
 
@@ -721,10 +734,11 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 		GP_PORT_DEFAULT
 	}
 
-	if (len < 12) {
-		GP_DEBUG ("ERROR: truncated message");
-		return GP_ERROR;
-	}
+	if (len < 0x0c) {
+		GP_DEBUG ("canon_int_get_disk_name_info: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x0c, len);
+		return GP_ERROR_CORRUPTED_DATA;
+ 	}
 	cap = le32atoh (msg + 4);
 	ava = le32atoh (msg + 8);
 	if (capacity)
@@ -1518,7 +1532,7 @@ canon_int_delete_file (Camera *camera, const char *name, const char *dir)
 		/* XXX should mark folder as dirty since we can't be sure if the file
 		 * got deleted or not
 		 */
-		return GP_ERROR;
+		return GP_ERROR_CORRUPTED_DATA;
 	}
 
 	if (msg[0] == 0x29) {
