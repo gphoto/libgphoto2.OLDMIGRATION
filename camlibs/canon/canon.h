@@ -119,8 +119,8 @@ struct _CameraPrivateLibrary
 
 /* A minimum dirent is :
  * 2    attributes + 0x00
- * 4    file date (UNIX localtime)
  * 4    file size
+ * 4    file date (UNIX localtime)
  * 1    empty path '' plus NULL byte
  */
 #define CANON_MINIMUM_DIRENT_SIZE	11
@@ -138,8 +138,8 @@ typedef struct _canon_dirent canon_dirent;
 struct _canon_dirent {
 	uint8_t attrs;           /* one octet for attributes */
 	uint8_t reserved_attrs;  /* one octet that is 0x00 */
-	uint32_t datetime;       /* four octets */
 	uint32_t size;           /* four octets */
+	uint32_t datetime;       /* four octets */
 	char name[0];            /* until \0 character */
 } __attribute__((packed));
 
