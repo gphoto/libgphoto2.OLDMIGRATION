@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto2\n"
-"POT-Creation-Date: 2003-07-27 13:22+0200\n"
+"POT-Creation-Date: 2003-07-30 23:08+0200\n"
 "PO-Revision-Date: 2002-11-21 11:02+0800\n"
 "Last-Translator: Wang Li <charles@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -353,7 +353,7 @@ msgid "Could not create destination directory."
 msgstr "无法创建目标目录。"
 
 # camlibs/canon/library.c:806
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:629
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:627
 msgid "Camera and Driver Configuration"
 msgstr "相机及驱动器配置"
 
@@ -400,7 +400,7 @@ msgid "Firmware revision (readonly)"
 msgstr "固件版本 (只读)"
 
 # camlibs/canon/library.c:863
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:631
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:629
 msgid "Power (readonly)"
 msgstr "电源 (只读)"
 
@@ -2591,7 +2591,7 @@ msgstr "关"
 msgid "Day-lt"
 msgstr "日光"
 
-#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptpcam.c:526
+#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptpcam.c:573
 msgid "Sharpness"
 msgstr ""
 
@@ -3268,7 +3268,7 @@ msgid "Image Quality"
 msgstr "图像质量"
 
 # camlibs/polaroid/pdc700.c:160
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptpcam.c:506
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptpcam.c:553
 msgid "Image Size"
 msgstr "图像大小"
 
@@ -3650,7 +3650,7 @@ msgid "PTP Protocol error, response expected"
 msgstr "PTP 协议错误，需要响应"
 
 # camlibs/ptp/library.c:422
-#: camlibs/ptp2/library.c:560
+#: camlibs/ptp2/library.c:558
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3658,7 +3658,7 @@ msgid ""
 "Enjoy!"
 msgstr "由 Mariusz Woloszyn <emsi@ipartners.pl> 编写。请享用！"
 
-#: camlibs/ptp2/library.c:596
+#: camlibs/ptp2/library.c:594
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3669,27 +3669,27 @@ msgid ""
 msgstr ""
 
 # camlibs/stv0680/library.c:572
-#: camlibs/ptp2/library.c:636
+#: camlibs/ptp2/library.c:634
 #, fuzzy
 msgid "Number of values"
 msgstr "图像数量：%d\n"
 
-#: camlibs/ptp2/library.c:640
+#: camlibs/ptp2/library.c:638
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:653
+#: camlibs/ptp2/library.c:651
 msgid "Current value"
 msgstr ""
 
 # camlibs/canon/library.c:176
-#: camlibs/ptp2/library.c:1095
+#: camlibs/ptp2/library.c:1093
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "关闭相机"
 
 # camlibs/ptp/library.c:918
-#: camlibs/ptp2/library.c:1167 camlibs/ptp/library.c:1065
+#: camlibs/ptp2/library.c:1165 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP 仅为 USB 相机实现。"
 
@@ -3934,194 +3934,194 @@ msgid "PTP: Protocol error, response expected"
 msgstr "PTP 协议错误，需要响应"
 
 # camlibs/ptp/library.c:90
-#: camlibs/ptp2/ptpcam.c:503
+#: camlibs/ptp2/ptpcam.c:550
 #, fuzzy
 msgid "PTP Undefined Property"
 msgstr "未定义的 PTP 错误"
 
 # camlibs/sierra/sierra.c:1830
-#: camlibs/ptp2/ptpcam.c:504
+#: camlibs/ptp2/ptpcam.c:551
 #, fuzzy
 msgid "Battery Level"
 msgstr "%s电池寿命：%i\n"
 
 # frontends/command-line/gphoto2-cmd-capture.c:218
 # libgphoto2/gphoto2-result.c:51
-#: camlibs/ptp2/ptpcam.c:505
+#: camlibs/ptp2/ptpcam.c:552
 #, fuzzy
 msgid "Functional Mode"
 msgstr "操作模式"
 
-#: camlibs/ptp2/ptpcam.c:507
+#: camlibs/ptp2/ptpcam.c:554
 #, fuzzy
 msgid "Compression Setting"
 msgstr "压缩"
 
 # camlibs/sierra/sierra.c:946 camlibs/sierra/sierra.c:1229
 # camlibs/sierra/sierra.c:1423 camlibs/sierra/sierra.c:1646
-#: camlibs/ptp2/ptpcam.c:508 camlibs/sierra/epson-desc.c:229
+#: camlibs/ptp2/ptpcam.c:555 camlibs/sierra/epson-desc.c:229
 #: camlibs/sierra/nikon-desc.c:259 camlibs/sierra/olympus-desc.c:265
 #: camlibs/sierra/sierra.c:992 camlibs/sierra/sierra.c:1275
 #: camlibs/sierra/sierra.c:1469 camlibs/sierra/sierra.c:1692
 msgid "White Balance"
 msgstr "白平衡"
 
-#: camlibs/ptp2/ptpcam.c:509
+#: camlibs/ptp2/ptpcam.c:556
 msgid "RGB Gain"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:510
+#: camlibs/ptp2/ptpcam.c:557
 msgid "F-Number"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:511
+#: camlibs/ptp2/ptpcam.c:558
 msgid "Focal Length"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:512
+#: camlibs/ptp2/ptpcam.c:559
 #, fuzzy
 msgid "Focus Distance"
 msgstr "聚焦位置"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/ptpcam.c:513 camlibs/sierra/nikon-desc.c:296
+#: camlibs/ptp2/ptpcam.c:560 camlibs/sierra/nikon-desc.c:296
 #: camlibs/sierra/olympus-desc.c:282
 msgid "Focus Mode"
 msgstr "聚焦模式"
 
 # camlibs/konica/library.c:770 camlibs/konica/library.c:1002
-#: camlibs/ptp2/ptpcam.c:514
+#: camlibs/ptp2/ptpcam.c:561
 #, fuzzy
 msgid "Exposure Metering Mode"
 msgstr "曝光测定"
 
 # camlibs/sierra/sierra.c:885 camlibs/sierra/sierra.c:1186
 # camlibs/sierra/sierra.c:1395 camlibs/sierra/sierra.c:1626
-#: camlibs/ptp2/ptpcam.c:515 camlibs/sierra/sierra.c:931
+#: camlibs/ptp2/ptpcam.c:562 camlibs/sierra/sierra.c:931
 #: camlibs/sierra/sierra.c:1232 camlibs/sierra/sierra.c:1441
 #: camlibs/sierra/sierra.c:1672
 msgid "Flash Mode"
 msgstr "闪光灯模式"
 
 # camlibs/jd11/jd11.c:207 camlibs/jd11/jd11.c:255
-#: camlibs/ptp2/ptpcam.c:516
+#: camlibs/ptp2/ptpcam.c:563
 #, fuzzy
 msgid "Exposure Time"
 msgstr "闪光灯闪光时间"
 
-#: camlibs/ptp2/ptpcam.c:517
+#: camlibs/ptp2/ptpcam.c:564
 msgid "Exposure Program Mode"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:519
+#: camlibs/ptp2/ptpcam.c:566
 msgid "Exposure Index (film speed ISO)"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:521
+#: camlibs/ptp2/ptpcam.c:568
 #, fuzzy
 msgid "Exposure Bias Compensation"
 msgstr "曝光补偿"
 
 # camlibs/sierra/sierra.c:1581 camlibs/sierra/sierra.c:1754
-#: camlibs/ptp2/ptpcam.c:522
+#: camlibs/ptp2/ptpcam.c:569
 #, fuzzy
 msgid "Date Time"
 msgstr "日期和时间"
 
-#: camlibs/ptp2/ptpcam.c:523
+#: camlibs/ptp2/ptpcam.c:570
 msgid "Pre-Capture Delay"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:524
+#: camlibs/ptp2/ptpcam.c:571
 msgid "Still Capture Mode"
 msgstr ""
 
 # camlibs/sierra/sierra.c:921 camlibs/sierra/sierra.c:932
 # camlibs/sierra/sierra.c:1220
-#: camlibs/ptp2/ptpcam.c:525
+#: camlibs/ptp2/ptpcam.c:572
 #, fuzzy
 msgid "Contrast"
 msgstr "对比度-"
 
-#: camlibs/ptp2/ptpcam.c:527 camlibs/sierra/nikon-desc.c:518
+#: camlibs/ptp2/ptpcam.c:574 camlibs/sierra/nikon-desc.c:518
 #: camlibs/sierra/nikon-desc.c:541
 msgid "Digital Zoom"
 msgstr "数字缩放"
 
 # camlibs/minolta/dimagev/dimagev.c:308
-#: camlibs/ptp2/ptpcam.c:528
+#: camlibs/ptp2/ptpcam.c:575
 #, fuzzy
 msgid "Effect Mode"
 msgstr "录制模式"
 
-#: camlibs/ptp2/ptpcam.c:529
+#: camlibs/ptp2/ptpcam.c:576
 msgid "Burst Number"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:530
+#: camlibs/ptp2/ptpcam.c:577
 msgid "Burst Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:531
+#: camlibs/ptp2/ptpcam.c:578
 msgid "Timelapse Number"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:532
+#: camlibs/ptp2/ptpcam.c:579
 msgid "Timelapse Interval"
 msgstr ""
 
 # camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1268
-#: camlibs/ptp2/ptpcam.c:533
+#: camlibs/ptp2/ptpcam.c:580
 #, fuzzy
 msgid "Focus Metering Mode"
 msgstr "场景测量模式"
 
-#: camlibs/ptp2/ptpcam.c:534
+#: camlibs/ptp2/ptpcam.c:581
 msgid "Upload URL"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:535
+#: camlibs/ptp2/ptpcam.c:582
 msgid "Artist"
 msgstr ""
 
 # camlibs/sierra/sierra.c:918 camlibs/sierra/sierra.c:926
 # camlibs/sierra/sierra.c:1214
-#: camlibs/ptp2/ptpcam.c:536
+#: camlibs/ptp2/ptpcam.c:583
 #, fuzzy
 msgid "Copyright Info"
 msgstr "版权"
 
-#: camlibs/ptp2/ptpcam.c:543
+#: camlibs/ptp2/ptpcam.c:590
 msgid "EK Color Temperature"
 msgstr ""
 
 # camlibs/konica/library.c:729 camlibs/konica/library.c:960
-#: camlibs/ptp2/ptpcam.c:545
+#: camlibs/ptp2/ptpcam.c:592
 #, fuzzy
 msgid "EK Date Time Stamp Format"
 msgstr "日期格式"
 
 # camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1250
 # camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1662
-#: camlibs/ptp2/ptpcam.c:546
+#: camlibs/ptp2/ptpcam.c:593
 #, fuzzy
 msgid "EK Beep Mode"
 msgstr "LED 模式"
 
-#: camlibs/ptp2/ptpcam.c:547
+#: camlibs/ptp2/ptpcam.c:594
 msgid "EK Video Out"
 msgstr ""
 
 # camlibs/dimera/dimera3500.c:539
-#: camlibs/ptp2/ptpcam.c:548
+#: camlibs/ptp2/ptpcam.c:595
 #, fuzzy
 msgid "EK Power Saving"
 msgstr "无电源指示灯"
 
 # camlibs/konica/library.c:710 camlibs/konica/library.c:915
 # camlibs/sierra/sierra.c:1544 camlibs/sierra/sierra.c:1728
-#: camlibs/ptp2/ptpcam.c:549
+#: camlibs/ptp2/ptpcam.c:596
 #, fuzzy
 msgid "EK UI Language"
 msgstr "语言"

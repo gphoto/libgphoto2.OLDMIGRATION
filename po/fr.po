@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
-"POT-Creation-Date: 2003-07-27 13:22+0200\n"
+"POT-Creation-Date: 2003-07-30 23:08+0200\n"
 "PO-Revision-Date: 2003-06-22 23:47+0200\n"
 "Last-Translator: Aurélien Croc <aurelien@ap2c.com>\n"
 "Language-Team: Français\n"
@@ -333,7 +333,7 @@ msgstr "Impossible de créer le dossier \\DCIM."
 msgid "Could not create destination directory."
 msgstr "Impossible d'obtenir le contenu du répertoire destination."
 
-#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:629
+#: camlibs/canon/library.c:1221 camlibs/ptp2/library.c:627
 msgid "Camera and Driver Configuration"
 msgstr "Configuration de l'appareil et du pilote"
 
@@ -370,7 +370,7 @@ msgstr "Mettre l'appareil à la date du PC"
 msgid "Firmware revision (readonly)"
 msgstr "Révision de microcode (lecture seule)"
 
-#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:631
+#: camlibs/canon/library.c:1278 camlibs/ptp2/library.c:629
 msgid "Power (readonly)"
 msgstr "Énergie (lecture seule)"
 
@@ -2275,7 +2275,7 @@ msgstr "Bureau"
 msgid "Day-lt"
 msgstr "Lumière naturelle"
 
-#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptpcam.c:526
+#: camlibs/konica/qm150.c:981 camlibs/ptp2/ptpcam.c:573
 msgid "Sharpness"
 msgstr "Dureté"
 
@@ -2915,7 +2915,7 @@ msgstr ""
 msgid "Image Quality"
 msgstr "Qualité de l'image"
 
-#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptpcam.c:506
+#: camlibs/polaroid/pdc700.c:160 camlibs/ptp2/ptpcam.c:553
 msgid "Image Size"
 msgstr "Taille de l'image"
 
@@ -3236,7 +3236,7 @@ msgstr "PTP Erreur de protocole, données attendues"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP Errur de protocole, réponse attendue"
 
-#: camlibs/ptp2/library.c:560
+#: camlibs/ptp2/library.c:558
 msgid ""
 "PTP2 driver\n"
 "(c)2001-2003 by Mariusz Woloszyn <emsi@ipartners.pl>.\n"
@@ -3246,7 +3246,7 @@ msgstr ""
 "(c) 2001-2003 par Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "Bonne chance !"
 
-#: camlibs/ptp2/library.c:596
+#: camlibs/ptp2/library.c:594
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3261,23 +3261,23 @@ msgstr ""
 "ID étendue du vendeur : 0x%08x\n"
 "Description étendue du vendeur : %s\n"
 
-#: camlibs/ptp2/library.c:636
+#: camlibs/ptp2/library.c:634
 msgid "Number of values"
 msgstr "Nombre de valeurs"
 
-#: camlibs/ptp2/library.c:640
+#: camlibs/ptp2/library.c:638
 msgid "Supported values"
 msgstr "Valeurs supportées"
 
-#: camlibs/ptp2/library.c:653
+#: camlibs/ptp2/library.c:651
 msgid "Current value"
 msgstr "Valeur actuelle"
 
-#: camlibs/ptp2/library.c:1095
+#: camlibs/ptp2/library.c:1093
 msgid "Initializing Camera"
 msgstr "Initialisation de l'appareil photo"
 
-#: camlibs/ptp2/library.c:1167 camlibs/ptp/library.c:1065
+#: camlibs/ptp2/library.c:1165 camlibs/ptp/library.c:1065
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP est implémenté uniquement pour les appareils USB."
 
@@ -3441,155 +3441,155 @@ msgstr "PTP: Erreur de protocole, données attendues"
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP: Erreur de protocole, réponse attendue"
 
-#: camlibs/ptp2/ptpcam.c:503
+#: camlibs/ptp2/ptpcam.c:550
 msgid "PTP Undefined Property"
 msgstr "PTP propriété non définie"
 
-#: camlibs/ptp2/ptpcam.c:504
+#: camlibs/ptp2/ptpcam.c:551
 msgid "Battery Level"
 msgstr "Niveau de la batterie"
 
-#: camlibs/ptp2/ptpcam.c:505
+#: camlibs/ptp2/ptpcam.c:552
 msgid "Functional Mode"
 msgstr "Mode d'opération"
 
-#: camlibs/ptp2/ptpcam.c:507
+#: camlibs/ptp2/ptpcam.c:554
 msgid "Compression Setting"
 msgstr "Configuration de la compression"
 
-#: camlibs/ptp2/ptpcam.c:508 camlibs/sierra/epson-desc.c:229
+#: camlibs/ptp2/ptpcam.c:555 camlibs/sierra/epson-desc.c:229
 #: camlibs/sierra/nikon-desc.c:259 camlibs/sierra/olympus-desc.c:265
 #: camlibs/sierra/sierra.c:992 camlibs/sierra/sierra.c:1275
 #: camlibs/sierra/sierra.c:1469 camlibs/sierra/sierra.c:1692
 msgid "White Balance"
 msgstr "Balance des blancs"
 
-#: camlibs/ptp2/ptpcam.c:509
+#: camlibs/ptp2/ptpcam.c:556
 msgid "RGB Gain"
 msgstr "Gain RVB"
 
-#: camlibs/ptp2/ptpcam.c:510
+#: camlibs/ptp2/ptpcam.c:557
 msgid "F-Number"
 msgstr "Numéro-F"
 
-#: camlibs/ptp2/ptpcam.c:511
+#: camlibs/ptp2/ptpcam.c:558
 msgid "Focal Length"
 msgstr "Longueur de focal"
 
-#: camlibs/ptp2/ptpcam.c:512
+#: camlibs/ptp2/ptpcam.c:559
 msgid "Focus Distance"
 msgstr "Position du focus"
 
-#: camlibs/ptp2/ptpcam.c:513 camlibs/sierra/nikon-desc.c:296
+#: camlibs/ptp2/ptpcam.c:560 camlibs/sierra/nikon-desc.c:296
 #: camlibs/sierra/olympus-desc.c:282
 msgid "Focus Mode"
 msgstr "Mode focus"
 
-#: camlibs/ptp2/ptpcam.c:514
+#: camlibs/ptp2/ptpcam.c:561
 msgid "Exposure Metering Mode"
 msgstr "Mode de mesure de l'exposition"
 
-#: camlibs/ptp2/ptpcam.c:515 camlibs/sierra/sierra.c:931
+#: camlibs/ptp2/ptpcam.c:562 camlibs/sierra/sierra.c:931
 #: camlibs/sierra/sierra.c:1232 camlibs/sierra/sierra.c:1441
 #: camlibs/sierra/sierra.c:1672
 msgid "Flash Mode"
 msgstr "Mode flash"
 
-#: camlibs/ptp2/ptpcam.c:516
+#: camlibs/ptp2/ptpcam.c:563
 msgid "Exposure Time"
 msgstr "Temps d'exposition"
 
-#: camlibs/ptp2/ptpcam.c:517
+#: camlibs/ptp2/ptpcam.c:564
 msgid "Exposure Program Mode"
 msgstr "Mode du programme d'exposition"
 
-#: camlibs/ptp2/ptpcam.c:519
+#: camlibs/ptp2/ptpcam.c:566
 msgid "Exposure Index (film speed ISO)"
 msgstr "Index d'exposition (vitesse ISO du film)"
 
-#: camlibs/ptp2/ptpcam.c:521
+#: camlibs/ptp2/ptpcam.c:568
 msgid "Exposure Bias Compensation"
 msgstr "Compensation de l'exposition"
 
-#: camlibs/ptp2/ptpcam.c:522
+#: camlibs/ptp2/ptpcam.c:569
 msgid "Date Time"
 msgstr "Date heure"
 
-#: camlibs/ptp2/ptpcam.c:523
+#: camlibs/ptp2/ptpcam.c:570
 msgid "Pre-Capture Delay"
 msgstr "Délai de pré-capture"
 
-#: camlibs/ptp2/ptpcam.c:524
+#: camlibs/ptp2/ptpcam.c:571
 msgid "Still Capture Mode"
 msgstr "Mode de capture continue"
 
-#: camlibs/ptp2/ptpcam.c:525
+#: camlibs/ptp2/ptpcam.c:572
 msgid "Contrast"
 msgstr "Contraste"
 
-#: camlibs/ptp2/ptpcam.c:527 camlibs/sierra/nikon-desc.c:518
+#: camlibs/ptp2/ptpcam.c:574 camlibs/sierra/nikon-desc.c:518
 #: camlibs/sierra/nikon-desc.c:541
 msgid "Digital Zoom"
 msgstr "Zoom numérique"
 
-#: camlibs/ptp2/ptpcam.c:528
+#: camlibs/ptp2/ptpcam.c:575
 msgid "Effect Mode"
 msgstr "Mode d'effet"
 
-#: camlibs/ptp2/ptpcam.c:529
+#: camlibs/ptp2/ptpcam.c:576
 msgid "Burst Number"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:530
+#: camlibs/ptp2/ptpcam.c:577
 msgid "Burst Interval"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:531
+#: camlibs/ptp2/ptpcam.c:578
 msgid "Timelapse Number"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:532
+#: camlibs/ptp2/ptpcam.c:579
 msgid "Timelapse Interval"
 msgstr ""
 
 # Translation thanks to Martin Kroeker. [Colin]
-#: camlibs/ptp2/ptpcam.c:533
+#: camlibs/ptp2/ptpcam.c:580
 msgid "Focus Metering Mode"
 msgstr "Mode de mesure du focus"
 
-#: camlibs/ptp2/ptpcam.c:534
+#: camlibs/ptp2/ptpcam.c:581
 msgid "Upload URL"
 msgstr "URL d'envoi"
 
-#: camlibs/ptp2/ptpcam.c:535
+#: camlibs/ptp2/ptpcam.c:582
 msgid "Artist"
 msgstr "Artiste"
 
-#: camlibs/ptp2/ptpcam.c:536
+#: camlibs/ptp2/ptpcam.c:583
 msgid "Copyright Info"
 msgstr "Info Copyright"
 
-#: camlibs/ptp2/ptpcam.c:543
+#: camlibs/ptp2/ptpcam.c:590
 msgid "EK Color Temperature"
 msgstr "Température de la couleur EK"
 
-#: camlibs/ptp2/ptpcam.c:545
+#: camlibs/ptp2/ptpcam.c:592
 msgid "EK Date Time Stamp Format"
 msgstr "Format de date EK"
 
-#: camlibs/ptp2/ptpcam.c:546
+#: camlibs/ptp2/ptpcam.c:593
 msgid "EK Beep Mode"
 msgstr "Mode beep EK"
 
-#: camlibs/ptp2/ptpcam.c:547
+#: camlibs/ptp2/ptpcam.c:594
 msgid "EK Video Out"
 msgstr ""
 
-#: camlibs/ptp2/ptpcam.c:548
+#: camlibs/ptp2/ptpcam.c:595
 msgid "EK Power Saving"
 msgstr "Économie d'énergie EK"
 
-#: camlibs/ptp2/ptpcam.c:549
+#: camlibs/ptp2/ptpcam.c:596
 msgid "EK UI Language"
 msgstr "Langue interface EK"
 
