@@ -202,6 +202,7 @@ static int
 update_disk_cache (Camera *camera)
 {
 	char root[10];		/* D:\ or such */
+	int res;
 
 	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_disk_cache()");
 
@@ -211,14 +212,15 @@ update_disk_cache (Camera *camera)
 		return 0;
 	camera->pl->cached_drive = canon_int_get_disk_name (camera);
 	if (!camera->pl->cached_drive) {
-		gp_camera_status (camera, _("No response"));
+		gp_camera_set_error (camera, _("Could not get disk name: %s"), "No reason available");
 		return 0;
 	}
 	snprintf (root, sizeof (root), "%s\\", camera->pl->cached_drive);
-	if (canon_int_get_disk_name_info (camera, root,
-					  &camera->pl->cached_capacity,
-					  &camera->pl->cached_available) != GP_OK) {
-		gp_camera_status (camera, _("No response"));
+	res = canon_int_get_disk_name_info (camera, root,
+					    &camera->pl->cached_capacity,
+					    &camera->pl->cached_available);
+	if (res != GP_OK) {
+		gp_camera_set_error (camera, _("Could not get disk info: %s"), gp_result_as_string (res));
 		return 0;
 	}
 	camera->pl->cached_disk = 1;
