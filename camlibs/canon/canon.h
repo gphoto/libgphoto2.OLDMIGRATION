@@ -209,7 +209,7 @@ int canon_int_set_owner_name(Camera *camera, const char *name);
 
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 // char *canon2gphotopath(Camera *camera, char *path);
-char *gphoto2canonpath(Camera *camera, char *path);
+const char *gphoto2canonpath (Camera *camera, const char *path);
 const char *canon2gphotopath (Camera *camera, const char *path);
 
 /* not sure whether these belong here :-) */
