@@ -16,8 +16,10 @@ Step 0: Preparing configuration
 ===============================
 
 If you got your copy of gphoto2 packaged as a .tar.gz or .tar.bz2 tarball, 
-skip this step. If you got gphoto2 from CVS, then you will have to prepare
-step 1, the configuration of the sources. 
+SKIP THIS STEP. 
+
+If you got gphoto2 from CVS, then you will have to prepare for step 1,
+the configuration of the sources.
 
 For that, we supply you with a script called 'autogen.sh'.
 
@@ -58,7 +60,9 @@ As to whether 'autogen.sh' does its job, we are not completely sure.
   Redhat Linux 7.3 user Uli says:
   ===============================
 
-    Building currently doesn't work.
+    ./autogen.sh (with your parameters to ./configure)
+
+    (yeah, autogen works again. we fixed the stuff for the 2.1.0 release)
 
 
 Regarding the right version of tools needed to build gphoto2 from CVS, we
