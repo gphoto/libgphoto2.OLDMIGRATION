@@ -329,6 +329,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 				 "called for ILLEGAL function %i! Aborting.", canon_funct);
 		return NULL;
 	}
+
 	GP_DEBUG ("canon_usb_dialogue() cmd 0x%x 0x%x 0x%x (%s), payload = %i bytes",
 		  cmd1, cmd2, cmd3, funct_descr, payload_length);
 
@@ -396,6 +397,7 @@ canon_usb_dialogue (Camera *camera, int canon_funct, int *return_length,
 		return NULL;
 	}
 
+	GP_DEBUG("canon_usb_dialogue: finished successfully (%s)", funct_descr);
 
 	/* if cmd3 equals to 0x202, this is a command that returns L (long) data
 	 * and what we return here is the complete packet (ie. not skipping the
@@ -628,6 +630,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file, char *destname, char *dest
 	gp_camera_message (camera, _("Not implemented!"));
 	return GP_ERROR_NOT_SUPPORTED;
 }
+
 
 int
 canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
