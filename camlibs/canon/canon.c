@@ -166,7 +166,7 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A300",        CANON_PS_A300,          0x04A9, 0x3076, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 	{"Canon:PowerShot S50 (normal mode)",   CANON_PS_S50,   0x04A9, 0x3077, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
-	{"Canon:ZR-70MC",		CANON_ZR70MC,		0x04A9, 0x3078, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
+	{"Canon:ZR70MC",		CANON_ZR70MC,		0x04A9, 0x3078, CAP_SUP, SL_MOVIE_SMALL, SL_THUMB, SL_PICTURE, NULL},
 
 	/* 3078 and 307a are in MacOS Info.plist, but I don't know
 	 * what they are --swestin. */

@@ -103,7 +103,7 @@ typedef enum {
  * @CANON_PS_UNK1: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK2: Unknown camera seen in Mac OS X Image Capture
  * @CANON_PS_UNK3: Unknown camera seen in Mac OS X Image Capture
- * @CANON_ZR70MC: Canon ZR-70MC Mini-DV Camcorder
+ * @CANON_ZR70MC: Canon ZR70MC Mini-DV Camcorder
  * @CANON_PS_UNK5: Unknown camera seen in Mac OS X Image Capture
  * @CANON_EOS_300D: EOS 300D / Digital Rebel / KISS Rebel
  * @CANON_PS_S50: PowerShot S50
