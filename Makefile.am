@@ -29,7 +29,7 @@ doc_DATA = AUTHORS COPYING README
 # It is not sufficient to have these options somewhere in autogen.sh!
 
 # default options for aclocal
-ACLOCAL_AMFLAGS = -I $(top_srcdir)/libgphoto2_port/m4
+ACLOCAL_AMFLAGS = -I libgphoto2_port/m4
 # default options for automake - only required in the top Makefile.am
 AUTOMAKE_OPTIONS = gnu
 
