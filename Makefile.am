@@ -5,7 +5,8 @@
 
 bin_SCRIPTS = gphoto2-config
 
-EXTRA_DIST = HACKING MAINTAINERS  makefile.os2 os2mak.inc TESTERS
+EXTRA_DIST = HACKING MAINTAINERS autogen.sh \
+	makefile.os2 os2mak.inc TESTERS
 
 SUBDIRS = 			\
 	libgphoto2_port 	\
@@ -47,7 +48,7 @@ dist-hook:
 
 dist-bzip2:
 	-chmod -R a+r $(distdir)
-	-$(TAR) chojf $(distdir).tar.bz2 $(distdir)
+	-$(TAR) -c --bzip2 -h -o -f $(distdir).tar.bz2 $(distdir)
 
 if ENABLE_RPM
 
