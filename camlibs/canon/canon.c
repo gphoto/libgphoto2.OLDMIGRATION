@@ -104,6 +104,12 @@ const struct canonCamModelData models[] =
 #undef S1M
 #undef S32K
 
+#ifdef HAVE_TM_GMTOFF
+/* required for time conversions in canon_int_set_time() */
+extern long int timezone;
+#endif
+
+
 /************************************************************************
  * Methods
  ************************************************************************/
@@ -468,17 +474,16 @@ canon_int_set_owner_name (Camera *camera, const char *name)
 /**
  * canon_int_get_time:
  * @camera: camera to get the current time of
- * @Returns: time of camera (local time)
+ * @Returns: time of camera (GMT) (>= 0) or a gphoto2 error code (< 0)
  *
  * Get camera's current time.
  *
  * The camera gives time in little endian format, therefore we need
  * to swap the 4 bytes on big-endian machines.
  *
- * Nota: the time returned is not GMT but local time. Therefore,
- * if you use functions like "ctime", it will be translated to local
- * time _a second time_, and the result will be wrong. Only use functions
- * that don't translate the date into localtime, like "gmtime".
+ * Note: the time returned from the camera is not GMT but local time. 
+ * We convert it to GMT before returning it to simplify time operations 
+ * elsewhere.
  **/
 time_t
 canon_int_get_time (Camera *camera)
@@ -506,41 +511,76 @@ canon_int_get_time (Camera *camera)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 0x10)
-		return GP_ERROR;
+	if (len != 0x10) {
+		GP_DEBUG ("canon_int_get_time: Unexpected amount of data returned "
+			  "(expected %i got %i)", 0x10, len);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	date = (time_t) le32atoh (msg+4);
 
 	/* XXX should strip \n at the end of asctime() return data */
 	GP_DEBUG ("Camera time: %s ", asctime (gmtime (&date)));
-	return date;
+
+	/* convert to GMT before returning */
+	return mktime (gmtime (&date));
 }
 
 
+/**
+ * canon_int_set_time:
+ * @camera: camera to get the current time of
+ * @date: the date to set (in GMT)
+ * @Returns: gphoto2 error code
+ *
+ * Set camera's current time.
+ *
+ * Canon cameras know nothing about time zones so we have to convert it to local
+ * time (but still expressed in UNIX time format (seconds since 1970-01-01).
+ */
+
 int
-canon_int_set_time (Camera *camera)
+canon_int_set_time (Camera *camera, time_t date)
 {
 	unsigned char *msg;
-	int len, i;
-	time_t date;
-	char pcdate[4];
+	int len;
+	char payload[12];
+	time_t new_date;
+	struct tm *tm;
 
-	date = time (NULL);
-	for (i = 0; i < 4; i++)
-		pcdate[i] = (date >> (8 * i)) & 0xff;
+	GP_DEBUG ("canon_int_set_time: %i=0x%x %s", (unsigned int) date, (unsigned int) date, 
+		asctime (localtime (&date)));
 
+	/* call localtime() just to get 'extern long timezone' set */
+	tm = localtime (&date);
+
+	/* convert to local UNIX timestamp since canon cameras know nothing about timezones */
+	/* XXX what about DST? do we need to check for that here? */
+
+#ifdef HAVE_TM_GMTOFF
+	new_date = date + tm->tm_gmtoff;
+	GP_DEBUG ("canon_int_set_time: converted to UTC %i (tm_gmtoff is %i)",
+		  new_date, tm->tm_gmtoff);
+#else
+	new_date = date - timezone;
+	GP_DEBUG ("canon_int_set_time: converted to UTC %i (timezone is %i)",
+		  new_date, timezone);
+#endif
+	
+	memset (payload, 0, sizeof(payload));
+	
+	htole32a (payload, (unsigned int) new_date);
+	
 	switch (camera->port->type) {
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_TIME, &len,
-						  NULL, 0);
+						  payload, sizeof (payload));
 			if (!msg)
 				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
-			msg = canon_serial_dialogue (camera, 0x04, 0x12, &len, pcdate,
-						     sizeof (pcdate),
-						     "\x00\x00\x00\x00\x00\x00\x00\x00", 8,
-						     NULL);
+			msg = canon_serial_dialogue (camera, 0x04, 0x12, &len, payload,
+						     sizeof (payload), NULL);
 			if (!msg) {
 				canon_serial_error_type (camera);
 				return GP_ERROR;
@@ -550,8 +590,11 @@ canon_int_set_time (Camera *camera)
 		GP_PORT_DEFAULT
 	}
 
-	if (len != 0x10)
-		return GP_ERROR;
+	if (len != 0x4) {
+		GP_DEBUG ("canon_int_set_time: Unexpected ammount of data returned "
+			  "(expected %i got %i)", 0x4, len);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 
 	return GP_OK;
 }
