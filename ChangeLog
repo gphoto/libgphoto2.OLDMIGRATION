@@ -1,4 +1,70 @@
+2002-06-25  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* configure.in: 2.1.0 is out.
+
+2002-06-24  Christophe Barbé <christophe.barbe@ufies.org>
+
+	Patch for FreeBSD from Arnaud Launay <asl@launay.org>
+
+	* configure.in: Use -pthread instead of -lc_r, libtool 1.4.2a doesn't like
+		-lc_r (unlike plain 1.4.2).
+
+2002-06-21  Christophe Barbé <christophe.barbe@ufies.org>
+
+   po files from Takeshi AIHANA <aihana@jcom.home.ne.jp>
+
+	* po/ja.po: Update Japan translation.
+	* libgphoto2_port/po/ja.po: Update Japan translation.
+			
+2002-06-19  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* autogen-1.6.sh: autogen file using automake and co version 1.6.
+	* configure.in: 2.1.0rc3 is there.
+	* Makefile.am: Use plain old tar instead of TAR or AMTAR,
+	   Add CHANGES in EXTRA_DIST.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* Makefile.am: Remove autogen.sh from EXTRA_DIST.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
+	* configure.in: Make the check for cdk.h search in $ac_default_prefix.
+	  Make checks for libjpeg, libexif, libcdk, etc. consistent.
+
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
+ 	Suggestion from Hans Ulrich Niedermann <gp@n-dimensional.de>:
+
+	* autogen.sh: Remove the call to configure.
+
+2002-06-18  Christophe Barbé <christophe.barbe@ufies.org>
+
+   po file from Fabian Mandelbaum <fabman@mandrakesoft.com>
+
+	* po/es.po: Spanish translation.
+
+2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* configure.in : 2.1.0rc2 and a few merges from the main branch.
+	* Makefile.am: autogen.sh is back in EXTRA_DIST.
+
+2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
+
+	Patch by Arnaud Launay <asl@launay.org>
+
+	* doc/Makefile.am : Don't try to move figures when fig2dev is not there.
+
+2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* Makefile.am: Removed autogen.sh from EXTRA_DIST.
+
+2002-06-17  Christophe Barbé <christophe.barbe@ufies.org>
+
+	* configure.in: version 2.1.0rc1 (and branch creation).
+
 2002-06-17  Mariusz Woloszyn <emsi@ipartners.pl>
+
 	* doc/FAQ: Added "gphoto2 does not work..." general question
 
 2002-06-15  Lutz Müller <lutz@users.sourceforge.net>

@@ -69,12 +69,14 @@ do
     gettextize --force --copy $gettext_opt;			\
     test -f po/Makevars.template &&				\
     cp po/Makevars.template po/Makevars;			\
-    echo "Running aclocal $ACLOCAL_FLAGS";			\
-    aclocal $ACLOCAL_FLAGS;					\
+	 echo "Running libtoolize";			\
+    libtoolize --copy --force
+	 echo "Running aclocal-1.6 $ACLOCAL_FLAGS";			\
+    aclocal-1.6 $ACLOCAL_FLAGS;					\
     echo "Running autoheader";					\
     autoheader;							\
-    echo "Running automake --add-missing --gnu $am_opt";	\
-    automake --add-missing --gnu $am_opt;			\
+    echo "Running automake-1.6 --add-missing --gnu $am_opt";	\
+    automake-1.6 --add-missing --gnu $am_opt;			\
     echo "Running autoconf";					\
     autoconf;							\
    )
