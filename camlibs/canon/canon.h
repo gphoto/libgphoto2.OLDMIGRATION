@@ -91,7 +91,7 @@ struct _CameraPrivateLibrary
 	char firmwrev[4];	/* Firmware revision */
 	int A5;
 	char psa50_id[200];	/* some models may have a lot to report */
-	int canon_comm_method;	// FIXME: obsolete. use camera->port->type instead
+	// int canon_comm_method;	// FIXME: obsolete. use camera->port->type instead
 	unsigned char psa50_eot[8];
 
 	int receive_error;
