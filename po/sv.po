@@ -4,12 +4,13 @@
 # Stefan Björnelund <stefanb@update.uu.se> 2002.
 # Sverker Wiberg <sverkerw@update.uu.se> 2002.
 #
+# Please leave these here: äåö
 msgid ""
 msgstr ""
 "Project-Id-Version: gphoto 0.4.3\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
-"POT-Creation-Date: 2003-10-18 21:21+0200\n"
-"PO-Revision-Date: 2003-01-09 08:13+0100\n"
+"POT-Creation-Date: 2004-01-14 15:24+0100\n"
+"PO-Revision-Date: 2004-01-14 15:00+0100\n"
 "Last-Translator: Stefan Björnelund <stefanb@update.uu.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -57,40 +58,40 @@ msgstr ""
 "Implementerat med hjälp av dokument från\n"
 "nätet. Med tillstånd från Vision."
 
-#: camlibs/canon/canon.c:477
+#: camlibs/canon/canon.c:482
 #, fuzzy, c-format
 msgid "Could not create directory %s."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/canon/canon.c:480
+#: camlibs/canon/canon.c:485
 #, fuzzy, c-format
 msgid "Could not remove directory %s."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/canon/canon.c:822 camlibs/canon/canon.c:1044
+#: camlibs/canon/canon.c:827 camlibs/canon/canon.c:1047
 #: camlibs/canon/usb.c:229
 msgid "lock keys failed."
 msgstr ""
 
-#: camlibs/canon/canon.c:885 camlibs/canon/canon.c:886
+#: camlibs/canon/canon.c:890 camlibs/canon/canon.c:891
 msgid "*UNKNOWN*"
 msgstr ""
 
-#: camlibs/canon/canon.c:993
+#: camlibs/canon/canon.c:996
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
 "status %i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1074
+#: camlibs/canon/canon.c:1077
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
 "i"
 msgstr ""
 
-#: camlibs/canon/canon.c:1193
+#: camlibs/canon/canon.c:1196
 #, fuzzy, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximum 30 characters are "
@@ -98,38 +99,38 @@ msgid ""
 msgstr ""
 "Namnet '%s' (%i tecken) är för långt (%i tecken), maximalt 30 tecken tillåts."
 
-#: camlibs/canon/canon.c:1716
+#: camlibs/canon/canon.c:1719
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 
-#: camlibs/canon/canon.c:1738
+#: camlibs/canon/canon.c:1741
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 
-#: camlibs/canon/canon.c:1823
+#: camlibs/canon/canon.c:1826
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr ""
 
-#: camlibs/canon/canon.c:2134
+#: camlibs/canon/canon.c:2137
 msgid "File protected."
 msgstr "Filen skyddad."
 
-#: camlibs/canon/canon.c:2205
+#: camlibs/canon/canon.c:2208
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 
-#: camlibs/canon/canon.c:2230
+#: camlibs/canon/canon.c:2233
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr ""
 
-#: camlibs/canon/canon.h:200 camlibs/canon/canon.h:214
+#: camlibs/canon/canon.h:214 camlibs/canon/canon.h:228
 #, c-format
 msgid "NULL parameter \"%s\" in %s line %i"
 msgstr ""
 
-#: camlibs/canon/canon.h:397
+#: camlibs/canon/canon.h:409
 #, c-format
 msgid ""
 "Don't know how to handle camera->port->type value %i aka 0x%xin %s line %i."
@@ -324,7 +325,7 @@ msgstr "Kunde inte skapa \\DCIM-katalogen."
 msgid "Could not create destination directory."
 msgstr "Kunde inte skapa destinationskatalogen."
 
-#: camlibs/canon/library.c:1249 camlibs/ptp2/library.c:707
+#: camlibs/canon/library.c:1249 camlibs/ptp2/library.c:721
 msgid "Camera and Driver Configuration"
 msgstr "Kamera- och drivrutinskonfiguration"
 
@@ -361,8 +362,8 @@ msgstr "Sätt kamerans datum till datorns datum"
 msgid "Firmware revision (readonly)"
 msgstr "Fastvarurevision (skrivskyddad)"
 
-#: camlibs/canon/library.c:1306 camlibs/ptp2/library.c:709
-#: camlibs/ptp2/library.c:740
+#: camlibs/canon/library.c:1306 camlibs/ptp2/library.c:723
+#: camlibs/ptp2/library.c:754
 msgid "Power (readonly)"
 msgstr "Kraft (skrivskyddad)"
 
@@ -635,100 +636,100 @@ msgid "Camera not ready, get_battery failed: %s"
 msgstr ""
 "Kamera ej redo, flera 'Identifiera kamera'-förfrågningar misslyckades: %s\""
 
-#: camlibs/canon/usb.c:351 camlibs/canon/usb.c:377 camlibs/canon/usb.c:426
+#: camlibs/canon/usb.c:351 camlibs/canon/usb.c:379 camlibs/canon/usb.c:428
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected amount of data returned (%i bytes, expected %"
 "i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:414
+#: camlibs/canon/usb.c:416
 #, c-format
 msgid ""
 "canon_usb_lock_keys: Unexpected return of %i bytes (expected %i) from \"get "
 "picture abilities.\""
 msgstr ""
 
-#: camlibs/canon/usb.c:470
+#: camlibs/canon/usb.c:472
 #, c-format
 msgid ""
 "canon_usb_unlock_keys: Unexpected amount of data returned (%i bytes, "
 "expected %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:521
+#: camlibs/canon/usb.c:523
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_pipe: interrupt read failed after %i tries, \"%s\""
 msgstr ""
 
-#: camlibs/canon/usb.c:574
+#: camlibs/canon/usb.c:576
 #, c-format
 msgid ""
 "canon_usb_poll_interrupt_multiple: interrupt read failed after %i tries, \"%s"
 "\""
 msgstr ""
 
-#: camlibs/canon/usb.c:672
+#: camlibs/canon/usb.c:674
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for thumbnail size packet"
 msgstr ""
 
-#: camlibs/canon/usb.c:683
+#: camlibs/canon/usb.c:685
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: bogus length 0x%04x for full image size packet"
 msgstr ""
 
-#: camlibs/canon/usb.c:703
+#: camlibs/canon/usb.c:705
 msgid "canon_usb_capture_dialogue: first interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:711
+#: camlibs/canon/usb.c:713
 msgid "canon_usb_capture_dialogue: second interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:721
+#: camlibs/canon/usb.c:723
 #, c-format
 msgid ""
 "canon_usb_capture_dialogue: photographic failure signaled, code = 0x%08x"
 msgstr ""
 
-#: camlibs/canon/usb.c:739
+#: camlibs/canon/usb.c:741
 msgid "canon_usb_capture_dialogue: third EOS interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:766
+#: camlibs/canon/usb.c:768
 msgid "canon_usb_capture_dialogue: fourth EOS interrupt read out of sequence"
 msgstr ""
 
-#: camlibs/canon/usb.c:921
+#: camlibs/canon/usb.c:923
 #, c-format
 msgid "canon_usb_dialogue: payload too big, won't fit into buffer (%i > %i)"
 msgstr ""
 
-#: camlibs/canon/usb.c:1075
+#: camlibs/canon/usb.c:1077
 msgid "Receiving data..."
 msgstr "Tar emot data..."
 
-#: camlibs/canon/usb.c:1356 camlibs/canon/usb.c:1431 camlibs/canon/usb.c:1452
+#: camlibs/canon/usb.c:1358 camlibs/canon/usb.c:1433 camlibs/canon/usb.c:1454
 #, c-format
 msgid "Out of memory: %d bytes needed."
 msgstr ""
 
-#: camlibs/canon/usb.c:1442
+#: camlibs/canon/usb.c:1444
 #, fuzzy, c-format
 msgid "Couldn't read from file \"%s\""
 msgstr "Kunde inte få tag på disk info: %s"
 
-#: camlibs/canon/usb.c:1485 camlibs/canon/usb.c:1496 camlibs/canon/usb.c:1532
-#: camlibs/canon/usb.c:1543 camlibs/canon/usb.c:1554
+#: camlibs/canon/usb.c:1487 camlibs/canon/usb.c:1498 camlibs/canon/usb.c:1534
+#: camlibs/canon/usb.c:1545 camlibs/canon/usb.c:1556
 #, fuzzy
 msgid "File upload failed."
 msgstr "Laddar upp fil..."
 
-#: camlibs/canon/usb.c:1575
+#: camlibs/canon/usb.c:1577
 msgid ""
 "File was too big. You may have to turn your camera off and back on before "
 "uploading more files."
@@ -736,51 +737,51 @@ msgstr ""
 "Filen var för stor. Du kan behöva stänga av kameran och slå på den ingen "
 "innan du kan ladda upp mer filer."
 
-#: camlibs/canon/usb.c:1621
+#: camlibs/canon/usb.c:1623
 #, c-format
 msgid ""
 "canon_usb_get_dirents: Couldn't fit payload into buffer, '%.96s' (truncated) "
 "too long."
 msgstr ""
 
-#: camlibs/canon/usb.c:1638
+#: camlibs/canon/usb.c:1640
 #, c-format
 msgid ""
 "canon_usb_get_dirents: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
 
-#: camlibs/canon/usb.c:1688
+#: camlibs/canon/usb.c:1690
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: Couldn't fit payload into buffer, "
 "'%.96s' (truncated) too long."
 msgstr ""
 
-#: camlibs/canon/usb.c:1707
+#: camlibs/canon/usb.c:1709
 #, c-format
 msgid ""
 "canon_usb_list_all_dirs: canon_usb_long_dialogue failed to fetch direntries, "
 "returned %i"
 msgstr ""
 
-#: camlibs/canon/usb.c:1759
+#: camlibs/canon/usb.c:1761
 msgid "canon_usb_set_file_attributes: canon_usb_dialogue failed"
 msgstr ""
 
-#: camlibs/canon/usb.c:1766
+#: camlibs/canon/usb.c:1768
 #, c-format
 msgid ""
 "canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%"
 "08x from camera"
 msgstr ""
 
-#: camlibs/canon/usb.c:1837
+#: camlibs/canon/usb.c:1839
 #, c-format
 msgid "Detected a '%s'."
 msgstr "Detekterade ett '%s'."
 
-#: camlibs/canon/usb.c:1843
+#: camlibs/canon/usb.c:1845
 #, c-format
 msgid "Name \"%s\" from camera does not match any known camera"
 msgstr ""
@@ -978,7 +979,7 @@ msgstr "Slut på minne"
 
 #: camlibs/dimera/dimera3500.c:567 camlibs/dimera/dimera3500.c:603
 #: camlibs/konica/qm150.c:259 camlibs/panasonic/coolshot/library.c:375
-#: camlibs/ricoh/g3.c:258 camlibs/samsung/samsung.c:214
+#: camlibs/ricoh/g3.c:281 camlibs/samsung/samsung.c:214
 #: camlibs/sipix/web2.c:175 camlibs/smal/ultrapocket.c:127
 #: camlibs/smal/ultrapocket.c:173
 msgid "Downloading image..."
@@ -997,8 +998,8 @@ msgid "Problem taking live image"
 msgstr "Problem med att ta aktuell bild"
 
 #: camlibs/dimera/dimera3500.c:771 camlibs/kodak/dc210/dc210.c:168
-#: camlibs/polaroid/pdc700.c:982 camlibs/sierra/sierra.c:827
-#: camlibs/sierra/sierra.c:1405 camlibs/sierra/sierra-desc.c:192
+#: camlibs/polaroid/pdc700.c:982 camlibs/sierra/sierra.c:828
+#: camlibs/sierra/sierra.c:1406 camlibs/sierra/sierra-desc.c:192
 msgid "Camera Configuration"
 msgstr "Kamerakonfiguration"
 
@@ -1148,7 +1149,7 @@ msgid "Camera sent unexpected byte 0x%02x."
 msgstr "Kameran skickade oväntad byte 0x%02x."
 
 #: camlibs/fuji/fuji.c:317 camlibs/konica/lowlevel.c:382
-#: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:252
+#: camlibs/polaroid/pdc700.c:314 camlibs/ricoh/g3.c:275
 msgid "Downloading..."
 msgstr "Nerladdning..."
 
@@ -1201,7 +1202,7 @@ msgstr "Konfiguration för din FUJI kamera"
 
 #: camlibs/fuji/library.c:370 camlibs/fuji/library.c:403
 #: camlibs/ricoh/library.c:445 camlibs/ricoh/library.c:447
-#: camlibs/sierra/sierra.c:1633 camlibs/sierra/sierra.c:1806
+#: camlibs/sierra/sierra.c:1634 camlibs/sierra/sierra.c:1807
 msgid "Date & Time"
 msgstr "Datum & Tid"
 
@@ -1435,17 +1436,17 @@ msgstr "Foto"
 
 #: camlibs/kodak/dc210/dc210.c:220 camlibs/kodak/dc210/dc210.c:379
 #: camlibs/konica/qm150.c:1039 camlibs/ricoh/library.c:499
-#: camlibs/sierra/sierra.c:1075 camlibs/sierra/sierra.c:1335
+#: camlibs/sierra/sierra.c:1076 camlibs/sierra/sierra.c:1336
 msgid "Zoom"
 msgstr "Zoom"
 
 #: camlibs/kodak/dc210/dc210.c:227 camlibs/kodak/dc210/dc210.c:241
 #: camlibs/konica/qm150.c:1025 camlibs/ricoh/library.c:498
-#: camlibs/sierra/epson-desc.c:218 camlibs/sierra/nikon-desc.c:289
-#: camlibs/sierra/olympus-desc.c:328 camlibs/sierra/sierra.c:1030
-#: camlibs/sierra/sierra.c:1035 camlibs/sierra/sierra.c:1306
-#: camlibs/sierra/sierra.c:1502 camlibs/sierra/sierra.c:1505
-#: camlibs/sierra/sierra.c:1718
+#: camlibs/sierra/epson-desc.c:218 camlibs/sierra/nikon-desc.c:290
+#: camlibs/sierra/olympus-desc.c:328 camlibs/sierra/sierra.c:1031
+#: camlibs/sierra/sierra.c:1036 camlibs/sierra/sierra.c:1307
+#: camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1506
+#: camlibs/sierra/sierra.c:1719
 msgid "Macro"
 msgstr "Makro"
 
@@ -1490,25 +1491,25 @@ msgstr "Exponerings kompensation"
 #: camlibs/sierra/olympus-desc.c:150 camlibs/sierra/olympus-desc.c:194
 #: camlibs/sierra/olympus-desc.c:226 camlibs/sierra/olympus-desc.c:274
 #: camlibs/sierra/olympus-desc.c:291 camlibs/sierra/olympus-desc.c:310
-#: camlibs/sierra/olympus-desc.c:329 camlibs/sierra/olympus-desc.c:514
-#: camlibs/sierra/sierra.c:838 camlibs/sierra/sierra.c:844
-#: camlibs/sierra/sierra.c:878 camlibs/sierra/sierra.c:884
-#: camlibs/sierra/sierra.c:938 camlibs/sierra/sierra.c:945
-#: camlibs/sierra/sierra.c:999 camlibs/sierra/sierra.c:1006
-#: camlibs/sierra/sierra.c:1173 camlibs/sierra/sierra.c:1202
-#: camlibs/sierra/sierra.c:1242 camlibs/sierra/sierra.c:1285
-#: camlibs/sierra/sierra.c:1448 camlibs/sierra/sierra.c:1454
-#: camlibs/sierra/sierra.c:1476 camlibs/sierra/sierra.c:1481
-#: camlibs/sierra/sierra.c:1681 camlibs/sierra/sierra.c:1701
+#: camlibs/sierra/olympus-desc.c:329 camlibs/sierra/olympus-desc.c:530
+#: camlibs/sierra/sierra.c:839 camlibs/sierra/sierra.c:845
+#: camlibs/sierra/sierra.c:879 camlibs/sierra/sierra.c:885
+#: camlibs/sierra/sierra.c:939 camlibs/sierra/sierra.c:946
+#: camlibs/sierra/sierra.c:1000 camlibs/sierra/sierra.c:1007
+#: camlibs/sierra/sierra.c:1174 camlibs/sierra/sierra.c:1203
+#: camlibs/sierra/sierra.c:1243 camlibs/sierra/sierra.c:1286
+#: camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1455
+#: camlibs/sierra/sierra.c:1477 camlibs/sierra/sierra.c:1482
+#: camlibs/sierra/sierra.c:1682 camlibs/sierra/sierra.c:1702
 msgid "Auto"
 msgstr "Auto"
 
 #: camlibs/kodak/dc210/dc210.c:256 camlibs/kodak/dc210/dc210.c:263
 #: camlibs/sierra/epson-desc.c:152 camlibs/sierra/nikon-desc.c:201
-#: camlibs/sierra/olympus-desc.c:275 camlibs/sierra/sierra.c:939
-#: camlibs/sierra/sierra.c:947 camlibs/sierra/sierra.c:1244
-#: camlibs/sierra/sierra.c:1449 camlibs/sierra/sierra.c:1456
-#: camlibs/sierra/sierra.c:1683
+#: camlibs/sierra/olympus-desc.c:275 camlibs/sierra/sierra.c:940
+#: camlibs/sierra/sierra.c:948 camlibs/sierra/sierra.c:1245
+#: camlibs/sierra/sierra.c:1450 camlibs/sierra/sierra.c:1457
+#: camlibs/sierra/sierra.c:1684
 msgid "Force"
 msgstr "Tvinga"
 
@@ -1530,9 +1531,9 @@ msgstr "Röda ögon reduktion"
 #: camlibs/konica/qm150.c:870 camlibs/konica/qm150.c:1027
 #: camlibs/konica/qm150.c:1034 camlibs/konica/qm150.c:1041
 #: camlibs/konica/qm150.c:1048 camlibs/ricoh/library.c:338
-#: camlibs/ricoh/library.c:369 camlibs/sierra/nikon-desc.c:270
-#: camlibs/sierra/sierra.c:1055 camlibs/sierra/sierra.c:1061
-#: camlibs/sierra/sierra.c:1324
+#: camlibs/ricoh/library.c:369 camlibs/sierra/nikon-desc.c:271
+#: camlibs/sierra/sierra.c:1056 camlibs/sierra/sierra.c:1062
+#: camlibs/sierra/sierra.c:1325
 msgid "On"
 msgstr "På"
 
@@ -1548,14 +1549,14 @@ msgstr "På"
 #: camlibs/konica/qm150.c:1045 camlibs/ricoh/library.c:339
 #: camlibs/ricoh/library.c:368 camlibs/ricoh/library.c:376
 #: camlibs/sierra/epson-desc.c:153 camlibs/sierra/nikon-desc.c:202
-#: camlibs/sierra/nikon-desc.c:269 camlibs/sierra/nikon-desc.c:324
+#: camlibs/sierra/nikon-desc.c:270 camlibs/sierra/nikon-desc.c:325
 #: camlibs/sierra/olympus-desc.c:276 camlibs/sierra/olympus-desc.c:349
-#: camlibs/sierra/olympus-desc.c:497 camlibs/sierra/olympus-desc.c:547
-#: camlibs/sierra/sierra.c:940 camlibs/sierra/sierra.c:949
-#: camlibs/sierra/sierra.c:1056 camlibs/sierra/sierra.c:1059
-#: camlibs/sierra/sierra.c:1246 camlibs/sierra/sierra.c:1326
-#: camlibs/sierra/sierra.c:1450 camlibs/sierra/sierra.c:1458
-#: camlibs/sierra/sierra.c:1685
+#: camlibs/sierra/olympus-desc.c:513 camlibs/sierra/olympus-desc.c:563
+#: camlibs/sierra/sierra.c:941 camlibs/sierra/sierra.c:950
+#: camlibs/sierra/sierra.c:1057 camlibs/sierra/sierra.c:1060
+#: camlibs/sierra/sierra.c:1247 camlibs/sierra/sierra.c:1327
+#: camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1459
+#: camlibs/sierra/sierra.c:1686
 msgid "Off"
 msgstr "Av"
 
@@ -1975,8 +1976,8 @@ msgstr "Bildspelsintervall"
 
 #: camlibs/konica/library.c:718 camlibs/konica/library.c:932
 #: camlibs/konica/qm150.c:777 camlibs/ricoh/library.c:495
-#: camlibs/sierra/sierra.c:837 camlibs/sierra/sierra.c:1169
-#: camlibs/sierra/sierra.c:1520 camlibs/sierra/sierra.c:1729
+#: camlibs/sierra/sierra.c:838 camlibs/sierra/sierra.c:1170
+#: camlibs/sierra/sierra.c:1521 camlibs/sierra/sierra.c:1730
 msgid "Resolution"
 msgstr "Upplösning"
 
@@ -2000,8 +2001,8 @@ msgid "Localization"
 msgstr "Lokalisering"
 
 #: camlibs/konica/library.c:744 camlibs/konica/library.c:951
-#: camlibs/sierra/epson-desc.c:246 camlibs/sierra/nikon-desc.c:399
-#: camlibs/sierra/sierra.c:1596 camlibs/sierra/sierra.c:1780
+#: camlibs/sierra/epson-desc.c:246 camlibs/sierra/nikon-desc.c:400
+#: camlibs/sierra/sierra.c:1597 camlibs/sierra/sierra.c:1781
 msgid "Language"
 msgstr "Språk"
 
@@ -2069,8 +2070,8 @@ msgid "Focus"
 msgstr "Fokus"
 
 #: camlibs/konica/library.c:813 camlibs/konica/library.c:820
-#: camlibs/sierra/epson-desc.c:170 camlibs/sierra/sierra.c:1477
-#: camlibs/sierra/sierra.c:1483 camlibs/sierra/sierra.c:1703
+#: camlibs/sierra/epson-desc.c:170 camlibs/sierra/sierra.c:1478
+#: camlibs/sierra/sierra.c:1484 camlibs/sierra/sierra.c:1704
 msgid "Fixed"
 msgstr "Fast"
 
@@ -2093,14 +2094,14 @@ msgstr "Självutlösare (endast nästa bild)"
 #: camlibs/konica/qm150.c:1098 camlibs/konica/qm150.c:1105
 #: camlibs/minolta/dimagev/dimagev.c:405 camlibs/ricoh/library.c:348
 #: camlibs/sierra/epson-desc.c:219 camlibs/sierra/nikon-desc.c:219
-#: camlibs/sierra/nikon-desc.c:290 camlibs/sierra/olympus-desc.c:256
-#: camlibs/sierra/olympus-desc.c:351 camlibs/sierra/sierra.c:908
-#: camlibs/sierra/sierra.c:915 camlibs/sierra/sierra.c:969
-#: camlibs/sierra/sierra.c:976 camlibs/sierra/sierra.c:1031
-#: camlibs/sierra/sierra.c:1037 camlibs/sierra/sierra.c:1221
-#: camlibs/sierra/sierra.c:1264 camlibs/sierra/sierra.c:1308
-#: camlibs/sierra/sierra.c:1503 camlibs/sierra/sierra.c:1507
-#: camlibs/sierra/sierra.c:1720
+#: camlibs/sierra/nikon-desc.c:291 camlibs/sierra/olympus-desc.c:256
+#: camlibs/sierra/olympus-desc.c:351 camlibs/sierra/sierra.c:909
+#: camlibs/sierra/sierra.c:916 camlibs/sierra/sierra.c:970
+#: camlibs/sierra/sierra.c:977 camlibs/sierra/sierra.c:1032
+#: camlibs/sierra/sierra.c:1038 camlibs/sierra/sierra.c:1222
+#: camlibs/sierra/sierra.c:1265 camlibs/sierra/sierra.c:1309
+#: camlibs/sierra/sierra.c:1504 camlibs/sierra/sierra.c:1508
+#: camlibs/sierra/sierra.c:1721
 msgid "Normal"
 msgstr "Normal"
 
@@ -2171,21 +2172,21 @@ msgid "No answer from the camera."
 msgstr "Ingen svar från kamera"
 
 #: camlibs/konica/qm150.c:779 camlibs/konica/qm150.c:787
-#: camlibs/sierra/nikon-desc.c:169 camlibs/sierra/sierra.c:879
-#: camlibs/sierra/sierra.c:886 camlibs/sierra/sierra.c:1204
+#: camlibs/sierra/nikon-desc.c:169 camlibs/sierra/sierra.c:880
+#: camlibs/sierra/sierra.c:887 camlibs/sierra/sierra.c:1205
 msgid "Low"
 msgstr "Låg"
 
 #: camlibs/konica/qm150.c:780 camlibs/konica/qm150.c:790
-#: camlibs/sierra/nikon-desc.c:170 camlibs/sierra/sierra.c:880
-#: camlibs/sierra/sierra.c:888 camlibs/sierra/sierra.c:1206
+#: camlibs/sierra/nikon-desc.c:170 camlibs/sierra/sierra.c:881
+#: camlibs/sierra/sierra.c:889 camlibs/sierra/sierra.c:1207
 msgid "Medium"
 msgstr "Medium"
 
 #: camlibs/konica/qm150.c:781 camlibs/konica/qm150.c:784
-#: camlibs/sierra/sierra.c:840 camlibs/sierra/sierra.c:848
-#: camlibs/sierra/sierra.c:881 camlibs/sierra/sierra.c:890
-#: camlibs/sierra/sierra.c:1177 camlibs/sierra/sierra.c:1208
+#: camlibs/sierra/sierra.c:841 camlibs/sierra/sierra.c:849
+#: camlibs/sierra/sierra.c:882 camlibs/sierra/sierra.c:891
+#: camlibs/sierra/sierra.c:1178 camlibs/sierra/sierra.c:1209
 msgid "High"
 msgstr "Hög"
 
@@ -2261,8 +2262,8 @@ msgstr "Svartvit"
 
 #: camlibs/konica/qm150.c:1004 camlibs/konica/qm150.c:1020
 #: camlibs/ricoh/library.c:331 camlibs/sierra/olympus-desc.c:258
-#: camlibs/sierra/sierra.c:910 camlibs/sierra/sierra.c:919
-#: camlibs/sierra/sierra.c:1225
+#: camlibs/sierra/sierra.c:911 camlibs/sierra/sierra.c:920
+#: camlibs/sierra/sierra.c:1226
 msgid "Sepia"
 msgstr "Sepiabrunt"
 
@@ -2306,12 +2307,12 @@ msgid "AC"
 msgstr ""
 
 #: camlibs/konica/qm150.c:1145 camlibs/minolta/dimagev/dimagev.c:306
-#: camlibs/sierra/nikon-desc.c:326
+#: camlibs/sierra/nikon-desc.c:327
 msgid "Play"
 msgstr "Spela upp"
 
 #: camlibs/konica/qm150.c:1147 camlibs/minolta/dimagev/dimagev.c:306
-#: camlibs/sierra/nikon-desc.c:325
+#: camlibs/sierra/nikon-desc.c:326
 msgid "Record"
 msgstr "Spela in"
 
@@ -2440,15 +2441,15 @@ msgid "No"
 msgstr "Nej"
 
 #: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/nikon-desc.c:249
-#: camlibs/sierra/sierra.c:1522 camlibs/sierra/sierra.c:1529
-#: camlibs/sierra/sierra.c:1734
+#: camlibs/sierra/sierra.c:1523 camlibs/sierra/sierra.c:1530
+#: camlibs/sierra/sierra.c:1735
 msgid "Fine"
 msgstr "Fin"
 
-#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:839
-#: camlibs/sierra/sierra.c:846 camlibs/sierra/sierra.c:1175
-#: camlibs/sierra/sierra.c:1521 camlibs/sierra/sierra.c:1527
-#: camlibs/sierra/sierra.c:1732
+#: camlibs/minolta/dimagev/dimagev.c:305 camlibs/sierra/sierra.c:840
+#: camlibs/sierra/sierra.c:847 camlibs/sierra/sierra.c:1176
+#: camlibs/sierra/sierra.c:1522 camlibs/sierra/sierra.c:1528
+#: camlibs/sierra/sierra.c:1733
 msgid "Standard"
 msgstr "Standard"
 
@@ -2810,7 +2811,7 @@ msgstr ""
 msgid "Model: %x, %x, %x, %x"
 msgstr ""
 
-#: camlibs/polaroid/pdc640.c:887
+#: camlibs/polaroid/pdc640.c:895
 msgid ""
 "Download program for GrandTek 98x based cameras. Originally written by Chris "
 "Byrne <adapt@ihug.co.nz>, and adapted for gphoto2 by Lutz Mueller "
@@ -2852,18 +2853,18 @@ msgid "superfine"
 msgstr "extrafin"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/sierra/epson-desc.c:116
-#: camlibs/sierra/sierra.c:1420 camlibs/sierra/sierra.c:1434
-#: camlibs/sierra/sierra.c:1669
+#: camlibs/sierra/sierra.c:1421 camlibs/sierra/sierra.c:1435
+#: camlibs/sierra/sierra.c:1670
 msgid "auto"
 msgstr "auto"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
-#: camlibs/sierra/nikon-desc.c:530 camlibs/sierra/nikon-desc.c:535
+#: camlibs/sierra/nikon-desc.c:531 camlibs/sierra/nikon-desc.c:536
 msgid "on"
 msgstr "på"
 
 #: camlibs/polaroid/pdc700.c:169 camlibs/polaroid/pdc700.c:170
-#: camlibs/sierra/nikon-desc.c:529 camlibs/sierra/nikon-desc.c:534
+#: camlibs/sierra/nikon-desc.c:530 camlibs/sierra/nikon-desc.c:535
 msgid "off"
 msgstr "av"
 
@@ -3140,7 +3141,7 @@ msgstr "PTP protokollfel, data föråldrat"
 msgid "PTP Protocol error, response expected"
 msgstr "PTP protokollfel, svar förväntat"
 
-#: camlibs/ptp2/library.c:595
+#: camlibs/ptp2/library.c:605
 #, fuzzy
 msgid ""
 "PTP2 driver\n"
@@ -3148,7 +3149,7 @@ msgid ""
 "Enjoy!"
 msgstr "Skrivet av Mariusz Woloszyn <emsi@ipartners.pl>. Njut!"
 
-#: camlibs/ptp2/library.c:670
+#: camlibs/ptp2/library.c:684
 #, c-format
 msgid ""
 "Model: %s\n"
@@ -3158,309 +3159,309 @@ msgid ""
 "Vendor extension description: %s\n"
 msgstr ""
 
-#: camlibs/ptp2/library.c:718
+#: camlibs/ptp2/library.c:732
 #, fuzzy
 msgid "Number of values"
 msgstr "Antal bilder: %d\n"
 
-#: camlibs/ptp2/library.c:722
+#: camlibs/ptp2/library.c:736
 msgid "Supported values"
 msgstr ""
 
-#: camlibs/ptp2/library.c:731
+#: camlibs/ptp2/library.c:745
 msgid "Current value"
 msgstr ""
 
-#: camlibs/ptp2/library.c:1218
+#: camlibs/ptp2/library.c:1232
 #, fuzzy
 msgid "Initializing Camera"
 msgstr "Stänger av kameran"
 
-#: camlibs/ptp2/library.c:1291
+#: camlibs/ptp2/library.c:1305
 msgid "PTP is implemented for USB cameras only."
 msgstr "PTP endast implementerat för USB kamror."
 
-#: camlibs/ptp2/ptp.c:904
+#: camlibs/ptp2/ptp.c:1345
 #, fuzzy
 msgid "PTP: Undefined Error"
 msgstr "PTP odefinierat fel"
 
-#: camlibs/ptp2/ptp.c:905
+#: camlibs/ptp2/ptp.c:1346
 #, fuzzy
 msgid "PTP: OK!"
 msgstr "PTP OK!"
 
-#: camlibs/ptp2/ptp.c:906
+#: camlibs/ptp2/ptp.c:1347
 #, fuzzy
 msgid "PTP: General Error"
 msgstr "PTP generellt fel"
 
-#: camlibs/ptp2/ptp.c:907
+#: camlibs/ptp2/ptp.c:1348
 #, fuzzy
 msgid "PTP: Session Not Open"
 msgstr "PTP sessionen inte öppen"
 
-#: camlibs/ptp2/ptp.c:908
+#: camlibs/ptp2/ptp.c:1349
 #, fuzzy
 msgid "PTP: Invalid Transaction ID"
 msgstr "PTP ogiltig transaktion"
 
-#: camlibs/ptp2/ptp.c:909
+#: camlibs/ptp2/ptp.c:1350
 #, fuzzy
 msgid "PTP: Operation Not Supported"
 msgstr "PTP operationen stöds ej"
 
-#: camlibs/ptp2/ptp.c:910
+#: camlibs/ptp2/ptp.c:1351
 #, fuzzy
 msgid "PTP: Parameter Not Supported"
 msgstr "PTP parameter stöds ej"
 
-#: camlibs/ptp2/ptp.c:911
+#: camlibs/ptp2/ptp.c:1352
 #, fuzzy
 msgid "PTP: Incomplete Transfer"
 msgstr "PTP ofullständig överföring"
 
-#: camlibs/ptp2/ptp.c:912
+#: camlibs/ptp2/ptp.c:1353
 #, fuzzy
 msgid "PTP: Invalid Storage ID"
 msgstr "PTP ogiltig lagrings ID"
 
-#: camlibs/ptp2/ptp.c:913
+#: camlibs/ptp2/ptp.c:1354
 #, fuzzy
 msgid "PTP: Invalid Object Handle"
 msgstr "PTP ogiltigt objekt hantag"
 
-#: camlibs/ptp2/ptp.c:914
+#: camlibs/ptp2/ptp.c:1355
 #, fuzzy
 msgid "PTP: Device Prop Not Supported"
 msgstr "PTP enhet egenskap stöds ej"
 
-#: camlibs/ptp2/ptp.c:915
+#: camlibs/ptp2/ptp.c:1356
 #, fuzzy
 msgid "PTP: Invalid Object Format Code"
 msgstr "PTP ogiltigt objektformatkod"
 
-#: camlibs/ptp2/ptp.c:916
+#: camlibs/ptp2/ptp.c:1357
 #, fuzzy
 msgid "PTP: Store Full"
 msgstr "PTP lagring full"
 
-#: camlibs/ptp2/ptp.c:917
+#: camlibs/ptp2/ptp.c:1358
 #, fuzzy
 msgid "PTP: Object Write Protected"
 msgstr "PTP objekt skrivskyddat"
 
-#: camlibs/ptp2/ptp.c:918
+#: camlibs/ptp2/ptp.c:1359
 #, fuzzy
 msgid "PTP: Store Read Only"
 msgstr "PTP lagring skrivskyddad"
 
-#: camlibs/ptp2/ptp.c:919
+#: camlibs/ptp2/ptp.c:1360
 #, fuzzy
 msgid "PTP: Access Denied"
 msgstr "PTP åtkomst nekad"
 
-#: camlibs/ptp2/ptp.c:920
+#: camlibs/ptp2/ptp.c:1361
 #, fuzzy
 msgid "PTP: No Thumbnail Present"
 msgstr "PTP ingen minibild tillgänglig"
 
-#: camlibs/ptp2/ptp.c:921
+#: camlibs/ptp2/ptp.c:1362
 #, fuzzy
 msgid "PTP: Self Test Failed"
 msgstr "PTP självtest misslyckades"
 
-#: camlibs/ptp2/ptp.c:922
+#: camlibs/ptp2/ptp.c:1363
 #, fuzzy
 msgid "PTP: Partial Deletion"
 msgstr "PTP delvis radering"
 
-#: camlibs/ptp2/ptp.c:923
+#: camlibs/ptp2/ptp.c:1364
 #, fuzzy
 msgid "PTP: Store Not Available"
 msgstr "PTP lagring inte tillgänglig"
 
-#: camlibs/ptp2/ptp.c:925
+#: camlibs/ptp2/ptp.c:1366
 #, fuzzy
 msgid "PTP: Specification By Format Unsupported"
 msgstr "PTP specifikation av format stöds ej"
 
-#: camlibs/ptp2/ptp.c:926
+#: camlibs/ptp2/ptp.c:1367
 #, fuzzy
 msgid "PTP: No Valid Object Info"
 msgstr "PTP ingen giltig objekt information"
 
-#: camlibs/ptp2/ptp.c:927
+#: camlibs/ptp2/ptp.c:1368
 #, fuzzy
 msgid "PTP: Invalid Code Format"
 msgstr "PTP ogiltig format kod"
 
-#: camlibs/ptp2/ptp.c:928
+#: camlibs/ptp2/ptp.c:1369
 #, fuzzy
 msgid "PTP: Unknown Vendor Code"
 msgstr "PTP okänd tillvekarkod"
 
-#: camlibs/ptp2/ptp.c:930
+#: camlibs/ptp2/ptp.c:1371
 #, fuzzy
 msgid "PTP: Capture Already Terminated"
 msgstr "PTP fotografering redan avslutad"
 
-#: camlibs/ptp2/ptp.c:931
+#: camlibs/ptp2/ptp.c:1372
 #, fuzzy
 msgid "PTP: Device Bus"
 msgstr "PTP enhets buss"
 
-#: camlibs/ptp2/ptp.c:932
+#: camlibs/ptp2/ptp.c:1373
 #, fuzzy
 msgid "PTP: Invalid Parent Object"
 msgstr "PTP ogiltigt förändra objekt"
 
-#: camlibs/ptp2/ptp.c:933
+#: camlibs/ptp2/ptp.c:1374
 #, fuzzy
 msgid "PTP: Invalid Device Prop Format"
 msgstr "PTP ogiltig enhets parameter format"
 
-#: camlibs/ptp2/ptp.c:934
+#: camlibs/ptp2/ptp.c:1375
 #, fuzzy
 msgid "PTP: Invalid Device Prop Value"
 msgstr "PTP ogiltigt enhets parameter värde"
 
-#: camlibs/ptp2/ptp.c:935
+#: camlibs/ptp2/ptp.c:1376
 #, fuzzy
 msgid "PTP: Invalid Parameter"
 msgstr "PTP ogiltig parameter"
 
-#: camlibs/ptp2/ptp.c:936
+#: camlibs/ptp2/ptp.c:1377
 #, fuzzy
 msgid "PTP: Session Already Opened"
 msgstr "PTP sessionen redan öppen"
 
-#: camlibs/ptp2/ptp.c:937
+#: camlibs/ptp2/ptp.c:1378
 #, fuzzy
 msgid "PTP: Transaction Canceled"
 msgstr "PTP transaktionen avbruten"
 
-#: camlibs/ptp2/ptp.c:939
+#: camlibs/ptp2/ptp.c:1380
 #, fuzzy
 msgid "PTP: Specification Of Destination Unsupported"
 msgstr "PTP specifikationen av mottagare stöds ej"
 
-#: camlibs/ptp2/ptp.c:940
+#: camlibs/ptp2/ptp.c:1381
 #, fuzzy
 msgid "PTP: EK Filename Required"
 msgstr "PTP EK filnamn krävs"
 
-#: camlibs/ptp2/ptp.c:941
+#: camlibs/ptp2/ptp.c:1382
 #, fuzzy
 msgid "PTP: EK Filename Conflicts"
 msgstr "PTP EK filnamns konflikt"
 
-#: camlibs/ptp2/ptp.c:942
+#: camlibs/ptp2/ptp.c:1383
 #, fuzzy
 msgid "PTP: EK Filename Invalid"
 msgstr "PTP EK filnamn ogiltigt"
 
-#: camlibs/ptp2/ptp.c:944
+#: camlibs/ptp2/ptp.c:1385
 #, fuzzy
 msgid "PTP: I/O error"
 msgstr "PTP I/O fel"
 
-#: camlibs/ptp2/ptp.c:945
+#: camlibs/ptp2/ptp.c:1386
 #, fuzzy
 msgid "PTP: Error: bad parameter"
 msgstr "PTP fel: felaktig parameter"
 
-#: camlibs/ptp2/ptp.c:946
+#: camlibs/ptp2/ptp.c:1387
 #, fuzzy
 msgid "PTP: Protocol error, data expected"
 msgstr "PTP protokollfel, data föråldrat"
 
-#: camlibs/ptp2/ptp.c:947
+#: camlibs/ptp2/ptp.c:1388
 #, fuzzy
 msgid "PTP: Protocol error, response expected"
 msgstr "PTP protokollfel, svar förväntat"
 
-#: camlibs/ricoh/g3.c:254
+#: camlibs/ricoh/g3.c:277
 #, fuzzy
 msgid "Downloading movie..."
 msgstr "Nerladdning av fil..."
 
-#: camlibs/ricoh/g3.c:260
+#: camlibs/ricoh/g3.c:283
 #, fuzzy
 msgid "Downloading audio..."
 msgstr "Nerladdning..."
 
-#: camlibs/ricoh/g3.c:275
+#: camlibs/ricoh/g3.c:298
 #, fuzzy
 msgid "Downloading EXIF data..."
 msgstr "Nerladdning av data..."
 
-#: camlibs/ricoh/g3.c:277 camlibs/ricoh/g3.c:296
+#: camlibs/ricoh/g3.c:300 camlibs/ricoh/g3.c:319
 #, fuzzy, c-format
 msgid "No EXIF data available for %s."
 msgstr "ej tillgänglig: %s"
 
-#: camlibs/ricoh/g3.c:381
+#: camlibs/ricoh/g3.c:405
 #, fuzzy
 msgid "Could not delete file."
 msgstr "Kunde inte hitta filen '%s'."
 
-#: camlibs/ricoh/g3.c:408
+#: camlibs/ricoh/g3.c:432
 #, fuzzy
 msgid "Could not remove directory."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/ricoh/g3.c:435
+#: camlibs/ricoh/g3.c:459
 #, fuzzy
 msgid "Could not create directory."
 msgstr "Kunde inte skapa \\DCIM-katalogen."
 
-#: camlibs/ricoh/g3.c:454
+#: camlibs/ricoh/g3.c:478
 #, fuzzy, c-format
 msgid "Version: %s\n"
 msgstr "Version: "
 
-#: camlibs/ricoh/g3.c:459
+#: camlibs/ricoh/g3.c:483
 #, fuzzy, c-format
 msgid "RTC Status: %d\n"
 msgstr "Kortstatus:\t\t"
 
-#: camlibs/ricoh/g3.c:465
+#: camlibs/ricoh/g3.c:489
 #, fuzzy, c-format
 msgid "Camera time: %s %s\n"
 msgstr "%sKamera ID: %s\n"
 
-#: camlibs/ricoh/g3.c:471
+#: camlibs/ricoh/g3.c:495
 #, fuzzy, c-format
 msgid "Camera ID: %s\n"
 msgstr "%sKamera ID: %s\n"
 
-#: camlibs/ricoh/g3.c:477
+#: camlibs/ricoh/g3.c:501
 #, fuzzy
 msgid "No SD Card inserted.\n"
 msgstr "Kort stöds ej."
 
-#: camlibs/ricoh/g3.c:480
+#: camlibs/ricoh/g3.c:504
 #, fuzzy, c-format
 msgid "SD Card ID: %s\n"
 msgstr "%sKamera ID: %s\n"
 
-#: camlibs/ricoh/g3.c:488
+#: camlibs/ricoh/g3.c:512
 #, fuzzy, c-format
 msgid "Photos on camera: %d\n"
 msgstr "Minne i kameran: %d Mbit.\n"
 
-#: camlibs/ricoh/g3.c:494
+#: camlibs/ricoh/g3.c:518
 #, c-format
 msgid "SD memory: %d MB total, %d MB free.\n"
 msgstr ""
 
-#: camlibs/ricoh/g3.c:501
+#: camlibs/ricoh/g3.c:525
 #, c-format
 msgid "Internal memory: %d MB total, %d MB free.\n"
 msgstr ""
 
-#: camlibs/ricoh/g3.c:511
+#: camlibs/ricoh/g3.c:535
 msgid ""
 "Ricoh Caplio G3.\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
@@ -3540,8 +3541,8 @@ msgstr "Utomhus"
 
 #: camlibs/ricoh/library.c:328 camlibs/sierra/nikon-desc.c:251
 #: camlibs/sierra/olympus-desc.c:293 camlibs/sierra/olympus-desc.c:312
-#: camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1010
-#: camlibs/sierra/sierra.c:1289
+#: camlibs/sierra/sierra.c:1002 camlibs/sierra/sierra.c:1011
+#: camlibs/sierra/sierra.c:1290
 msgid "Fluorescent"
 msgstr "Lysrör"
 
@@ -3577,8 +3578,8 @@ msgstr "Bild & Ljud"
 msgid "Character & Sound"
 msgstr "Karaktär & Ljud"
 
-#: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1078
-#: camlibs/sierra/sierra.c:1084
+#: camlibs/ricoh/library.c:377 camlibs/sierra/sierra.c:1079
+#: camlibs/sierra/sierra.c:1085
 msgid "2x"
 msgstr "2x"
 
@@ -3751,23 +3752,23 @@ msgid "Aperature Settings"
 msgstr "Bildinställningar"
 
 #: camlibs/sierra/epson-desc.c:142 camlibs/sierra/nikon-desc.c:191
-#: camlibs/sierra/olympus-desc.c:265 camlibs/sierra/sierra.c:907
-#: camlibs/sierra/sierra.c:1217 camlibs/sierra/sierra.c:1546
-#: camlibs/sierra/sierra.c:1747
+#: camlibs/sierra/olympus-desc.c:265 camlibs/sierra/sierra.c:908
+#: camlibs/sierra/sierra.c:1218 camlibs/sierra/sierra.c:1547
+#: camlibs/sierra/sierra.c:1748
 msgid "Color Mode"
 msgstr "Färgläge"
 
-#: camlibs/sierra/epson-desc.c:154 camlibs/sierra/sierra.c:941
-#: camlibs/sierra/sierra.c:951 camlibs/sierra/sierra.c:1248
-#: camlibs/sierra/sierra.c:1451 camlibs/sierra/sierra.c:1460
-#: camlibs/sierra/sierra.c:1687
+#: camlibs/sierra/epson-desc.c:154 camlibs/sierra/sierra.c:942
+#: camlibs/sierra/sierra.c:952 camlibs/sierra/sierra.c:1249
+#: camlibs/sierra/sierra.c:1452 camlibs/sierra/sierra.c:1461
+#: camlibs/sierra/sierra.c:1688
 msgid "Red-eye Reduction"
 msgstr "Röda-Ögon Reduktion"
 
-#: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:942
-#: camlibs/sierra/sierra.c:953 camlibs/sierra/sierra.c:1250
-#: camlibs/sierra/sierra.c:1452 camlibs/sierra/sierra.c:1462
-#: camlibs/sierra/sierra.c:1689
+#: camlibs/sierra/epson-desc.c:155 camlibs/sierra/sierra.c:943
+#: camlibs/sierra/sierra.c:954 camlibs/sierra/sierra.c:1251
+#: camlibs/sierra/sierra.c:1453 camlibs/sierra/sierra.c:1463
+#: camlibs/sierra/sierra.c:1690
 msgid "Slow Sync"
 msgstr "Långsam Synk"
 
@@ -3776,15 +3777,15 @@ msgstr "Långsam Synk"
 msgid "Flash Settings"
 msgstr "Blixtinställningar"
 
-#: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1478
-#: camlibs/sierra/sierra.c:1485 camlibs/sierra/sierra.c:1705
+#: camlibs/sierra/epson-desc.c:171 camlibs/sierra/sierra.c:1479
+#: camlibs/sierra/sierra.c:1486 camlibs/sierra/sierra.c:1706
 msgid "Custom"
 msgstr "Annan"
 
 #: camlibs/sierra/epson-desc.c:176 camlibs/sierra/nikon-desc.c:259
 #: camlibs/sierra/olympus-desc.c:300 camlibs/sierra/olympus-desc.c:319
-#: camlibs/sierra/sierra.c:998 camlibs/sierra/sierra.c:1281
-#: camlibs/sierra/sierra.c:1475 camlibs/sierra/sierra.c:1698
+#: camlibs/sierra/sierra.c:999 camlibs/sierra/sierra.c:1282
+#: camlibs/sierra/sierra.c:1476 camlibs/sierra/sierra.c:1699
 msgid "White Balance"
 msgstr "Vitbalans"
 
@@ -3796,64 +3797,66 @@ msgstr "Värd kraft besparing (sekunder)"
 msgid "Camera power save (seconds)"
 msgstr "Kamera kraft besparing (skrivskyddad)"
 
-#: camlibs/sierra/epson-desc.c:224 camlibs/sierra/sierra.c:1029
-#: camlibs/sierra/sierra.c:1302 camlibs/sierra/sierra.c:1501
-#: camlibs/sierra/sierra.c:1714
+#: camlibs/sierra/epson-desc.c:224 camlibs/sierra/sierra.c:1030
+#: camlibs/sierra/sierra.c:1303 camlibs/sierra/sierra.c:1502
+#: camlibs/sierra/sierra.c:1715
 msgid "Lens Mode"
 msgstr "Linsläge"
 
-#: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1597
-#: camlibs/sierra/sierra.c:1606 camlibs/sierra/sierra.c:1783
+#: camlibs/sierra/epson-desc.c:233 camlibs/sierra/sierra.c:1598
+#: camlibs/sierra/sierra.c:1607 camlibs/sierra/sierra.c:1784
 msgid "Korean"
 msgstr "Koreanska"
 
-#: camlibs/sierra/epson-desc.c:234 camlibs/sierra/nikon-desc.c:384
-#: camlibs/sierra/sierra.c:1598 camlibs/sierra/sierra.c:1608
-#: camlibs/sierra/sierra.c:1785
+#: camlibs/sierra/epson-desc.c:234 camlibs/sierra/nikon-desc.c:385
+#: camlibs/sierra/sierra.c:1599 camlibs/sierra/sierra.c:1609
+#: camlibs/sierra/sierra.c:1786
 msgid "English"
 msgstr "Engelska"
 
-#: camlibs/sierra/epson-desc.c:235 camlibs/sierra/nikon-desc.c:385
-#: camlibs/sierra/sierra.c:1599 camlibs/sierra/sierra.c:1610
-#: camlibs/sierra/sierra.c:1787
+#: camlibs/sierra/epson-desc.c:235 camlibs/sierra/nikon-desc.c:386
+#: camlibs/sierra/sierra.c:1600 camlibs/sierra/sierra.c:1611
+#: camlibs/sierra/sierra.c:1788
 msgid "French"
 msgstr "Franska"
 
-#: camlibs/sierra/epson-desc.c:236 camlibs/sierra/nikon-desc.c:386
-#: camlibs/sierra/sierra.c:1600 camlibs/sierra/sierra.c:1612
-#: camlibs/sierra/sierra.c:1789
+#: camlibs/sierra/epson-desc.c:236 camlibs/sierra/nikon-desc.c:387
+#: camlibs/sierra/sierra.c:1601 camlibs/sierra/sierra.c:1613
+#: camlibs/sierra/sierra.c:1790
 msgid "German"
 msgstr "Tyska"
 
-#: camlibs/sierra/epson-desc.c:237 camlibs/sierra/sierra.c:1601
-#: camlibs/sierra/sierra.c:1614 camlibs/sierra/sierra.c:1791
+#: camlibs/sierra/epson-desc.c:237 camlibs/sierra/sierra.c:1602
+#: camlibs/sierra/sierra.c:1615 camlibs/sierra/sierra.c:1792
 msgid "Italian"
 msgstr "Italienska"
 
-#: camlibs/sierra/epson-desc.c:238 camlibs/sierra/sierra.c:1602
-#: camlibs/sierra/sierra.c:1616 camlibs/sierra/sierra.c:1793
+#: camlibs/sierra/epson-desc.c:238 camlibs/sierra/sierra.c:1603
+#: camlibs/sierra/sierra.c:1617 camlibs/sierra/sierra.c:1794
 msgid "Japanese"
 msgstr "Japanska"
 
-#: camlibs/sierra/epson-desc.c:239 camlibs/sierra/sierra.c:1603
-#: camlibs/sierra/sierra.c:1618 camlibs/sierra/sierra.c:1795
+#: camlibs/sierra/epson-desc.c:239 camlibs/sierra/sierra.c:1604
+#: camlibs/sierra/sierra.c:1619 camlibs/sierra/sierra.c:1796
 msgid "Spanish"
 msgstr "Spanska"
 
-#: camlibs/sierra/epson-desc.c:240 camlibs/sierra/sierra.c:1604
-#: camlibs/sierra/sierra.c:1620 camlibs/sierra/sierra.c:1797
+#: camlibs/sierra/epson-desc.c:240 camlibs/sierra/sierra.c:1605
+#: camlibs/sierra/sierra.c:1621 camlibs/sierra/sierra.c:1798
 msgid "Portugese"
 msgstr "Portugiska"
 
-#: camlibs/sierra/epson-desc.c:278 camlibs/sierra/nikon-desc.c:589
-#: camlibs/sierra/olympus-desc.c:620 camlibs/sierra/olympus-desc.c:631
-#: camlibs/sierra/sierra.c:828 camlibs/sierra/sierra.c:1495
+#: camlibs/sierra/epson-desc.c:278 camlibs/sierra/nikon-desc.c:590
+#: camlibs/sierra/olympus-desc.c:636 camlibs/sierra/olympus-desc.c:686
+#: camlibs/sierra/olympus-desc.c:697 camlibs/sierra/sierra.c:829
+#: camlibs/sierra/sierra.c:1496
 msgid "Picture Settings"
 msgstr "Bildinställningar"
 
-#: camlibs/sierra/epson-desc.c:282 camlibs/sierra/nikon-desc.c:593
-#: camlibs/sierra/olympus-desc.c:624 camlibs/sierra/olympus-desc.c:638
-#: camlibs/sierra/sierra.c:1100 camlibs/sierra/sierra.c:1562
+#: camlibs/sierra/epson-desc.c:282 camlibs/sierra/nikon-desc.c:594
+#: camlibs/sierra/olympus-desc.c:640 camlibs/sierra/olympus-desc.c:690
+#: camlibs/sierra/olympus-desc.c:704 camlibs/sierra/sierra.c:1101
+#: camlibs/sierra/sierra.c:1563
 msgid "Camera Settings"
 msgstr "Kamerainställningar"
 
@@ -3879,7 +3882,7 @@ msgstr ""
 "  vanligen skriv ett brev till <gphoto-devel@lists.sourceforge.net> (på "
 "Engelska)\n"
 
-#: camlibs/sierra/library.c:144 camlibs/sierra/library.c:1353
+#: camlibs/sierra/library.c:144 camlibs/sierra/library.c:1355
 msgid "No memory card present"
 msgstr "Inget minnes kort isatt."
 
@@ -3965,7 +3968,7 @@ msgstr "För många försök misslyckades."
 msgid "Sending data..."
 msgstr "Hämtar data..."
 
-#: camlibs/sierra/library.c:1202
+#: camlibs/sierra/library.c:1200
 #, fuzzy, c-format
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact %s."
@@ -3973,14 +3976,14 @@ msgstr ""
 "rekursiva anrop stöds ej av sierra drivrutinen.  Vänligen kontakta <gphoto-"
 "devel@gphoto.org>."
 
-#: camlibs/sierra/library.c:1251
+#: camlibs/sierra/library.c:1255
 #, fuzzy, c-format
 msgid "Could not get string register %i. Please contact %s."
 msgstr ""
 "Kunde inte hämta sträng register %i. Vänligen kontakta <gphoto-devel@gphoto."
 "org>."
 
-#: camlibs/sierra/library.c:1484
+#: camlibs/sierra/library.c:1486
 #, fuzzy, c-format
 msgid "Expected 32 bytes, got %i. Please contact %s."
 msgstr ""
@@ -4008,13 +4011,13 @@ msgstr ""
 msgid "Slow-sync"
 msgstr "Långsam Synk"
 
-#: camlibs/sierra/nikon-desc.c:220 camlibs/sierra/sierra.c:972
-#: camlibs/sierra/sierra.c:982 camlibs/sierra/sierra.c:1270
+#: camlibs/sierra/nikon-desc.c:220 camlibs/sierra/sierra.c:973
+#: camlibs/sierra/sierra.c:983 camlibs/sierra/sierra.c:1271
 msgid "Contrast+"
 msgstr "Kontrast+"
 
-#: camlibs/sierra/nikon-desc.c:221 camlibs/sierra/sierra.c:973
-#: camlibs/sierra/sierra.c:984 camlibs/sierra/sierra.c:1272
+#: camlibs/sierra/nikon-desc.c:221 camlibs/sierra/sierra.c:974
+#: camlibs/sierra/sierra.c:985 camlibs/sierra/sierra.c:1273
 msgid "Contrast-"
 msgstr "Kontrast-"
 
@@ -4038,113 +4041,114 @@ msgid "Preset"
 msgstr "Portugiska"
 
 #: camlibs/sierra/nikon-desc.c:254 camlibs/sierra/olympus-desc.c:295
-#: camlibs/sierra/olympus-desc.c:314 camlibs/sierra/sierra.c:1003
-#: camlibs/sierra/sierra.c:1015 camlibs/sierra/sierra.c:1293
+#: camlibs/sierra/olympus-desc.c:314 camlibs/sierra/sierra.c:1004
+#: camlibs/sierra/sierra.c:1016 camlibs/sierra/sierra.c:1294
 msgid "Cloudy"
 msgstr "Mulet"
 
-#: camlibs/sierra/nikon-desc.c:271
+#: camlibs/sierra/nikon-desc.c:272
 msgid "Blink"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:276
+#: camlibs/sierra/nikon-desc.c:277
 msgid "LED Mode"
 msgstr "LED-läge"
 
-#: camlibs/sierra/nikon-desc.c:291
+#: camlibs/sierra/nikon-desc.c:292
 #, fuzzy
 msgid "Infinity"
 msgstr "Oändlighet/fiskögeobjektiv"
 
-#: camlibs/sierra/nikon-desc.c:296 camlibs/sierra/olympus-desc.c:335
+#: camlibs/sierra/nikon-desc.c:297 camlibs/sierra/olympus-desc.c:335
 msgid "Focus Mode"
 msgstr "Fokusläge"
 
-#: camlibs/sierra/nikon-desc.c:327
+#: camlibs/sierra/nikon-desc.c:328
 msgid "Preview Thumbnail"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:328
+#: camlibs/sierra/nikon-desc.c:329
 msgid "Next"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:329
+#: camlibs/sierra/nikon-desc.c:330
 msgid "Previous"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:343
+#: camlibs/sierra/nikon-desc.c:344
 msgid "Operation Mode"
 msgstr "Operationsläge."
 
-#: camlibs/sierra/nikon-desc.c:357 camlibs/sierra/olympus-desc.c:371
-#: camlibs/sierra/sierra.c:1135 camlibs/sierra/sierra.c:1374
+#: camlibs/sierra/nikon-desc.c:358 camlibs/sierra/olympus-desc.c:371
+#: camlibs/sierra/sierra.c:1136 camlibs/sierra/sierra.c:1375
 msgid "LCD Brightness"
 msgstr "LCD Ljusstyrka"
 
-#: camlibs/sierra/nikon-desc.c:372 camlibs/sierra/olympus-desc.c:413
+#: camlibs/sierra/nikon-desc.c:373 camlibs/sierra/olympus-desc.c:413
 msgid "LCD Auto Shut Off (seconds)"
 msgstr "LCD Automatisk avstängning (sekunder)"
 
-#: camlibs/sierra/nikon-desc.c:424 camlibs/sierra/nikon-desc.c:447
+#: camlibs/sierra/nikon-desc.c:425 camlibs/sierra/nikon-desc.c:448
 #: camlibs/sierra/olympus-desc.c:457
 msgid "Exposure Compensation"
 msgstr "Exponeringskompensation"
 
-#: camlibs/sierra/nikon-desc.c:456
+#: camlibs/sierra/nikon-desc.c:457
 msgid "Center-Weighted"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:457 camlibs/sierra/olympus-desc.c:466
+#: camlibs/sierra/nikon-desc.c:458 camlibs/sierra/olympus-desc.c:466
 msgid "Spot"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:458 camlibs/sierra/olympus-desc.c:467
+#: camlibs/sierra/nikon-desc.c:459 camlibs/sierra/olympus-desc.c:467
 msgid "Matrix"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:459
+#: camlibs/sierra/nikon-desc.c:460
 msgid "Spot-AF"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:464 camlibs/sierra/olympus-desc.c:472
+#: camlibs/sierra/nikon-desc.c:465 camlibs/sierra/olympus-desc.c:472
 msgid "Exposure Metering"
 msgstr "Exponeringsmätning"
 
-#: camlibs/sierra/nikon-desc.c:482 camlibs/sierra/olympus-desc.c:488
+#: camlibs/sierra/nikon-desc.c:483 camlibs/sierra/olympus-desc.c:488
+#: camlibs/sierra/olympus-desc.c:504
 msgid "Zoom (in millimeters)"
 msgstr "Zoom (i millimeter)"
 
-#: camlibs/sierra/nikon-desc.c:508
+#: camlibs/sierra/nikon-desc.c:509
 #, fuzzy
 msgid "none"
 msgstr "Ingen"
 
-#: camlibs/sierra/nikon-desc.c:511
+#: camlibs/sierra/nikon-desc.c:512
 msgid "AE-lock"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:512
+#: camlibs/sierra/nikon-desc.c:513
 #, fuzzy
 msgid "Fisheye"
 msgstr "Filtyp"
 
-#: camlibs/sierra/nikon-desc.c:513
+#: camlibs/sierra/nikon-desc.c:514
 msgid "Wide"
 msgstr ""
 
-#: camlibs/sierra/nikon-desc.c:518 camlibs/sierra/nikon-desc.c:541
+#: camlibs/sierra/nikon-desc.c:519 camlibs/sierra/nikon-desc.c:542
 msgid "Digital Zoom"
 msgstr "Digital Zoom"
 
-#: camlibs/sierra/nikon-desc.c:523
+#: camlibs/sierra/nikon-desc.c:524
 msgid "Misc exposure/lense settings"
 msgstr "Diverse exponerings- och linsinställningar"
 
-#: camlibs/sierra/nikon-desc.c:546
+#: camlibs/sierra/nikon-desc.c:547
 msgid "Auto exposure lock"
 msgstr "Auto exponeringslås"
 
-#: camlibs/sierra/nikon-desc.c:600
+#: camlibs/sierra/nikon-desc.c:601
 msgid ""
 "Nikon Coolpix 880:\n"
 "    Camera configuration (or preferences):\n"
@@ -4174,7 +4178,7 @@ msgstr ""
 "        Sätt kameran i 'M'-läge för att sätta\n"
 "        slutarhastigheten.\n"
 
-#: camlibs/sierra/nikon-desc.c:619
+#: camlibs/sierra/nikon-desc.c:620
 #, fuzzy
 msgid ""
 "Nikon Coolpix 995:\n"
@@ -4210,8 +4214,8 @@ msgid "Daylight"
 msgstr "Dagsljus"
 
 #: camlibs/sierra/olympus-desc.c:294 camlibs/sierra/olympus-desc.c:313
-#: camlibs/sierra/sierra.c:1002 camlibs/sierra/sierra.c:1012
-#: camlibs/sierra/sierra.c:1291
+#: camlibs/sierra/sierra.c:1003 camlibs/sierra/sierra.c:1013
+#: camlibs/sierra/sierra.c:1292
 msgid "Tungsten"
 msgstr "Glödlampa"
 
@@ -4228,23 +4232,23 @@ msgstr ""
 msgid "LCD Mode"
 msgstr "LCD-läge"
 
-#: camlibs/sierra/olympus-desc.c:505
+#: camlibs/sierra/olympus-desc.c:521
 msgid "Digital zoom"
 msgstr "Digital zoom"
 
-#: camlibs/sierra/olympus-desc.c:522
+#: camlibs/sierra/olympus-desc.c:538
 msgid "ISO Speed"
 msgstr "ISO hastighet"
 
-#: camlibs/sierra/olympus-desc.c:538
+#: camlibs/sierra/olympus-desc.c:554
 msgid "Focus position"
 msgstr "Fokusläge"
 
-#: camlibs/sierra/olympus-desc.c:555
+#: camlibs/sierra/olympus-desc.c:571
 msgid "Time format"
 msgstr "Tidsformat"
 
-#: camlibs/sierra/olympus-desc.c:645
+#: camlibs/sierra/olympus-desc.c:711
 msgid ""
 "Some notes about Olympus cameras:\n"
 "(1) Camera Configuration:\n"
@@ -4280,7 +4284,41 @@ msgstr ""
 "    kamerans knappar. Om du hamnar i detta läge, bör du\n"
 "    återansluta kameran till PC:n och ändra LCD till 'Av'."
 
-#: camlibs/sierra/olympus-desc.c:666
+#: camlibs/sierra/olympus-desc.c:732
+#, fuzzy
+msgid ""
+"Olympus 750 Ultra Zoom:\n"
+"(1) Olympus 750UZ has a USB PC Control mode. In order\n"
+"    to use this mode, the camera must be switched\n"
+"    into 'USB PC control mode'. To get to the menu\n"
+"    for switching modes, turn on the camera, open\n"
+"    the memory card access door and then press and\n"
+"    hold both the 'OK' and 'quickview' buttons until the\n"
+"    camera control menu appears. Set it to control mode.\n"
+"(2) If you switch the 'LCD mode' to 'Monitor' or\n"
+"    'Normal', don't forget to switch it back to 'Off'\n"
+"    before disconnectig. Otherwise you cannot use\n"
+"    the camera's buttons. If you end up with this\n"
+"    state, you should reconnect the camera to the\n"
+"    PC and switch LCD to 'Off'."
+msgstr ""
+"Några noteringa om Olympus kameror (och andra?):\n"
+"(1) Kamera-konfiguration:\n"
+"    Ett värde av 0 innebär standardvärdet (auto)\n"
+"(2) Olympus C-3040Z (och möjligen också C-2040Z och andra)\n"
+"    har ett USB PC-kontroll-läge. För att använda detta\n"
+"    läge, måste kameran vara inställd på 'USB PC control mode'.\n"
+"    För att komma till menyn för att byta lägen, öppna\n"
+"    luckan för minneskortet och tryck och håll nere\n"
+"    båda menyknapparna och LCD knapparna tills kamera kontroll\n"
+"    menyn framträder. Sätt den till på ('ON').\n"
+"(3) Om du byter 'LCD-läge' till 'Monitor' eller\n"
+"    'Normal', glöm inte att byta tillbaka till 'Av'\n"
+"    innan du kopplar loss kameran. Annars kan du inte använda\n"
+"    kamerans knappar. Om du hamnar i detta läge, bör du\n"
+"    återansluta kameran till PC:n och ändra LCD till 'Av'."
+
+#: camlibs/sierra/olympus-desc.c:750
 #, fuzzy
 msgid ""
 "Default sierra driver:\n"
@@ -4311,115 +4349,115 @@ msgstr ""
 "    kod för att stödja en komplett konfiguration,\n"
 "    vänligen kontakta gphoto-devel@gphoto.net\n"
 
-#: camlibs/sierra/sierra.c:685 camlibs/soundvision/soundvision.c:411
+#: camlibs/sierra/sierra.c:686 camlibs/soundvision/soundvision.c:411
 msgid "The file to be uploaded has a null length"
 msgstr "Filen som skall laddas upp har längd noll"
 
-#: camlibs/sierra/sierra.c:699
+#: camlibs/sierra/sierra.c:700
 msgid "Not enough memory available on the memory card"
 msgstr "Inte tillräckligt med minne tillgängligt på minneskortet"
 
-#: camlibs/sierra/sierra.c:706
+#: camlibs/sierra/sierra.c:707
 msgid "Cannot retrieve the name of the folder containing the pictures"
 msgstr "Kan inte hämta namnet på mappen som innehåller bilderna"
 
-#: camlibs/sierra/sierra.c:713
+#: camlibs/sierra/sierra.c:714
 #, c-format
 msgid "Upload is supported into the '%s' folder only"
 msgstr "Uppladdning stöds endast till '%s' mappen."
 
-#: camlibs/sierra/sierra.c:841 camlibs/sierra/sierra.c:850
-#: camlibs/sierra/sierra.c:1179
+#: camlibs/sierra/sierra.c:842 camlibs/sierra/sierra.c:851
+#: camlibs/sierra/sierra.c:1180
 msgid "Best"
 msgstr "Bäst"
 
-#: camlibs/sierra/sierra.c:853 camlibs/sierra/sierra.c:893
-#: camlibs/sierra/sierra.c:926 camlibs/sierra/sierra.c:956
-#: camlibs/sierra/sierra.c:987 camlibs/sierra/sierra.c:1018
-#: camlibs/sierra/sierra.c:1042 camlibs/sierra/sierra.c:1064
-#: camlibs/sierra/sierra.c:1093 camlibs/sierra/sierra.c:1437
-#: camlibs/sierra/sierra.c:1465 camlibs/sierra/sierra.c:1488
-#: camlibs/sierra/sierra.c:1510 camlibs/sierra/sierra.c:1536
-#: camlibs/sierra/sierra.c:1555 camlibs/sierra/sierra.c:1623
+#: camlibs/sierra/sierra.c:854 camlibs/sierra/sierra.c:894
+#: camlibs/sierra/sierra.c:927 camlibs/sierra/sierra.c:957
+#: camlibs/sierra/sierra.c:988 camlibs/sierra/sierra.c:1019
+#: camlibs/sierra/sierra.c:1043 camlibs/sierra/sierra.c:1065
+#: camlibs/sierra/sierra.c:1094 camlibs/sierra/sierra.c:1438
+#: camlibs/sierra/sierra.c:1466 camlibs/sierra/sierra.c:1489
+#: camlibs/sierra/sierra.c:1511 camlibs/sierra/sierra.c:1537
+#: camlibs/sierra/sierra.c:1556 camlibs/sierra/sierra.c:1624
 #, c-format
 msgid "%i (unknown)"
 msgstr "%i (okänd)"
 
-#: camlibs/sierra/sierra.c:865 camlibs/sierra/sierra.c:1189
+#: camlibs/sierra/sierra.c:866 camlibs/sierra/sierra.c:1190
 msgid "Shutter Speed (microseconds, 0 auto)"
 msgstr "Slutartid (mikrosekunder, 0 auto)"
 
-#: camlibs/sierra/sierra.c:877 camlibs/sierra/sierra.c:1198
-#: camlibs/sierra/sierra.c:1413 camlibs/sierra/sierra.c:1654
+#: camlibs/sierra/sierra.c:878 camlibs/sierra/sierra.c:1199
+#: camlibs/sierra/sierra.c:1414 camlibs/sierra/sierra.c:1655
 msgid "Aperture"
 msgstr "Bländare"
 
-#: camlibs/sierra/sierra.c:909 camlibs/sierra/sierra.c:917
-#: camlibs/sierra/sierra.c:1223
+#: camlibs/sierra/sierra.c:910 camlibs/sierra/sierra.c:918
+#: camlibs/sierra/sierra.c:1224
 msgid "Black/White"
 msgstr "Svartvitt"
 
-#: camlibs/sierra/sierra.c:911 camlibs/sierra/sierra.c:921
-#: camlibs/sierra/sierra.c:1227
+#: camlibs/sierra/sierra.c:912 camlibs/sierra/sierra.c:922
+#: camlibs/sierra/sierra.c:1228
 msgid "White Board"
 msgstr "Vit tavla"
 
-#: camlibs/sierra/sierra.c:912 camlibs/sierra/sierra.c:923
-#: camlibs/sierra/sierra.c:1229
+#: camlibs/sierra/sierra.c:913 camlibs/sierra/sierra.c:924
+#: camlibs/sierra/sierra.c:1230
 msgid "Black Board"
 msgstr "Svart tavla"
 
-#: camlibs/sierra/sierra.c:937 camlibs/sierra/sierra.c:1238
-#: camlibs/sierra/sierra.c:1447 camlibs/sierra/sierra.c:1678
+#: camlibs/sierra/sierra.c:938 camlibs/sierra/sierra.c:1239
+#: camlibs/sierra/sierra.c:1448 camlibs/sierra/sierra.c:1679
 msgid "Flash Mode"
 msgstr "Blixt Läge"
 
-#: camlibs/sierra/sierra.c:967 camlibs/sierra/sierra.c:1260
+#: camlibs/sierra/sierra.c:968 camlibs/sierra/sierra.c:1261
 msgid "Brightness/Contrast"
 msgstr "Ljusstyrka/Kontrast"
 
-#: camlibs/sierra/sierra.c:970 camlibs/sierra/sierra.c:978
-#: camlibs/sierra/sierra.c:1266
+#: camlibs/sierra/sierra.c:971 camlibs/sierra/sierra.c:979
+#: camlibs/sierra/sierra.c:1267
 msgid "Bright+"
 msgstr "Ljus+"
 
-#: camlibs/sierra/sierra.c:971 camlibs/sierra/sierra.c:980
-#: camlibs/sierra/sierra.c:1268
+#: camlibs/sierra/sierra.c:972 camlibs/sierra/sierra.c:981
+#: camlibs/sierra/sierra.c:1269
 msgid "Bright-"
 msgstr "Ljus-"
 
-#: camlibs/sierra/sierra.c:1000 camlibs/sierra/sierra.c:1008
-#: camlibs/sierra/sierra.c:1287
+#: camlibs/sierra/sierra.c:1001 camlibs/sierra/sierra.c:1009
+#: camlibs/sierra/sierra.c:1288
 msgid "Skylight"
 msgstr "Dagsljus"
 
-#: camlibs/sierra/sierra.c:1032 camlibs/sierra/sierra.c:1039
-#: camlibs/sierra/sierra.c:1310
+#: camlibs/sierra/sierra.c:1033 camlibs/sierra/sierra.c:1040
+#: camlibs/sierra/sierra.c:1311
 msgid "Infinity/Fish-eye"
 msgstr "Oändlighet/fiskögeobjektiv"
 
-#: camlibs/sierra/sierra.c:1053 camlibs/sierra/sierra.c:1320
+#: camlibs/sierra/sierra.c:1054 camlibs/sierra/sierra.c:1321
 msgid "Spot Metering Mode"
 msgstr "Punktmätningsläge"
 
-#: camlibs/sierra/sierra.c:1076 camlibs/sierra/sierra.c:1082
+#: camlibs/sierra/sierra.c:1077 camlibs/sierra/sierra.c:1083
 msgid "1x"
 msgstr "1x"
 
-#: camlibs/sierra/sierra.c:1077 camlibs/sierra/sierra.c:1087
+#: camlibs/sierra/sierra.c:1078 camlibs/sierra/sierra.c:1088
 msgid "1.6x"
 msgstr "1.6x"
 
-#: camlibs/sierra/sierra.c:1079 camlibs/sierra/sierra.c:1090
+#: camlibs/sierra/sierra.c:1080 camlibs/sierra/sierra.c:1091
 msgid "2.5x"
 msgstr "2.5x"
 
-#: camlibs/sierra/sierra.c:1107 camlibs/sierra/sierra.c:1354
-#: camlibs/sierra/sierra.c:1569 camlibs/sierra/sierra.c:1761
+#: camlibs/sierra/sierra.c:1108 camlibs/sierra/sierra.c:1355
+#: camlibs/sierra/sierra.c:1570 camlibs/sierra/sierra.c:1762
 msgid "Auto Off (host) (in seconds)"
 msgstr "Auto av (värd) (i sekunder)"
 
-#: camlibs/sierra/sierra.c:1109 camlibs/sierra/sierra.c:1571
+#: camlibs/sierra/sierra.c:1110 camlibs/sierra/sierra.c:1572
 msgid ""
 "How long will it take until the camera powers off when connected to the "
 "computer?"
@@ -4427,12 +4465,12 @@ msgstr ""
 "Hur lång tid tar det tills kameran stänger av sig när den är ansluten till "
 "datorn?"
 
-#: camlibs/sierra/sierra.c:1121 camlibs/sierra/sierra.c:1364
-#: camlibs/sierra/sierra.c:1583 camlibs/sierra/sierra.c:1771
+#: camlibs/sierra/sierra.c:1122 camlibs/sierra/sierra.c:1365
+#: camlibs/sierra/sierra.c:1584 camlibs/sierra/sierra.c:1772
 msgid "Auto Off (field) (in seconds)"
 msgstr "Auto av (fält) (i sekunder)"
 
-#: camlibs/sierra/sierra.c:1123 camlibs/sierra/sierra.c:1585
+#: camlibs/sierra/sierra.c:1124 camlibs/sierra/sierra.c:1586
 msgid ""
 "How long will it take until the camera powers off when not connected to the "
 "computer?"
@@ -4440,125 +4478,125 @@ msgstr ""
 "Hur lång tid tar det tills kameran stänger av sig när den inte ansluten till "
 "datorn?"
 
-#: camlibs/sierra/sierra.c:1145 camlibs/sierra/sierra.c:1383
+#: camlibs/sierra/sierra.c:1146 camlibs/sierra/sierra.c:1384
 msgid "LCD Auto Off (in seconds)"
 msgstr "Auto av (i sekunder)"
 
-#: camlibs/sierra/sierra.c:1407
+#: camlibs/sierra/sierra.c:1408
 msgid "Shot Settings"
 msgstr "Foto-inställningar"
 
-#: camlibs/sierra/sierra.c:1414 camlibs/sierra/sierra.c:1422
-#: camlibs/sierra/sierra.c:1657
+#: camlibs/sierra/sierra.c:1415 camlibs/sierra/sierra.c:1423
+#: camlibs/sierra/sierra.c:1658
 msgid "F2"
 msgstr "F2"
 
-#: camlibs/sierra/sierra.c:1415 camlibs/sierra/sierra.c:1424
-#: camlibs/sierra/sierra.c:1659
+#: camlibs/sierra/sierra.c:1416 camlibs/sierra/sierra.c:1425
+#: camlibs/sierra/sierra.c:1660
 msgid "F2.3"
 msgstr "F2.3"
 
-#: camlibs/sierra/sierra.c:1416 camlibs/sierra/sierra.c:1426
-#: camlibs/sierra/sierra.c:1661
+#: camlibs/sierra/sierra.c:1417 camlibs/sierra/sierra.c:1427
+#: camlibs/sierra/sierra.c:1662
 msgid "F2.8"
 msgstr "F2.8"
 
-#: camlibs/sierra/sierra.c:1417 camlibs/sierra/sierra.c:1428
-#: camlibs/sierra/sierra.c:1663
+#: camlibs/sierra/sierra.c:1418 camlibs/sierra/sierra.c:1429
+#: camlibs/sierra/sierra.c:1664
 msgid "F4"
 msgstr "F4"
 
-#: camlibs/sierra/sierra.c:1418 camlibs/sierra/sierra.c:1430
-#: camlibs/sierra/sierra.c:1665
+#: camlibs/sierra/sierra.c:1419 camlibs/sierra/sierra.c:1431
+#: camlibs/sierra/sierra.c:1666
 msgid "F5.6"
 msgstr "F5.6"
 
-#: camlibs/sierra/sierra.c:1419 camlibs/sierra/sierra.c:1432
-#: camlibs/sierra/sierra.c:1667
+#: camlibs/sierra/sierra.c:1420 camlibs/sierra/sierra.c:1433
+#: camlibs/sierra/sierra.c:1668
 msgid "F8"
 msgstr "F8"
 
-#: camlibs/sierra/sierra.c:1523 camlibs/sierra/sierra.c:1531
-#: camlibs/sierra/sierra.c:1736
+#: camlibs/sierra/sierra.c:1524 camlibs/sierra/sierra.c:1532
+#: camlibs/sierra/sierra.c:1737
 msgid "SuperFine"
 msgstr "SuperFin"
 
-#: camlibs/sierra/sierra.c:1524 camlibs/sierra/sierra.c:1533
-#: camlibs/sierra/sierra.c:1738
+#: camlibs/sierra/sierra.c:1525 camlibs/sierra/sierra.c:1534
+#: camlibs/sierra/sierra.c:1739
 msgid "HyPict"
 msgstr "HyPict"
 
-#: camlibs/sierra/sierra.c:1547 camlibs/sierra/sierra.c:1550
-#: camlibs/sierra/sierra.c:1750
+#: camlibs/sierra/sierra.c:1548 camlibs/sierra/sierra.c:1551
+#: camlibs/sierra/sierra.c:1751
 msgid "color"
 msgstr "färger"
 
-#: camlibs/sierra/sierra.c:1548 camlibs/sierra/sierra.c:1552
-#: camlibs/sierra/sierra.c:1752
+#: camlibs/sierra/sierra.c:1549 camlibs/sierra/sierra.c:1553
+#: camlibs/sierra/sierra.c:1753
 msgid "black & white"
 msgstr "svartvitt"
 
-#: camlibs/sierra/sierra.c:1854
+#: camlibs/sierra/sierra.c:1855
 msgid "Note: no memory card present, some values may be invalid\n"
 msgstr ""
 "Notera: inget minneskort tillgängligt, vissa värden kan vara ogiltiga\n"
 
-#: camlibs/sierra/sierra.c:1862
+#: camlibs/sierra/sierra.c:1863
 #, c-format
 msgid "%sCamera Model: %s\n"
 msgstr "%sKameramodell: %s\n"
 
-#: camlibs/sierra/sierra.c:1864
+#: camlibs/sierra/sierra.c:1865
 #, c-format
 msgid "%sManufacturer: %s\n"
 msgstr "%sTillverkare: %s\n"
 
-#: camlibs/sierra/sierra.c:1866
+#: camlibs/sierra/sierra.c:1867
 #, c-format
 msgid "%sCamera ID: %s\n"
 msgstr "%sKamera ID: %s\n"
 
-#: camlibs/sierra/sierra.c:1868
+#: camlibs/sierra/sierra.c:1869
 #, c-format
 msgid "%sSerial Number: %s\n"
 msgstr "%sSerienummer: %s\n"
 
-#: camlibs/sierra/sierra.c:1870
+#: camlibs/sierra/sierra.c:1871
 #, c-format
 msgid "%sSoftware Rev.: %s\n"
 msgstr "%sMjukvaru-revision: %s\n"
 
-#: camlibs/sierra/sierra.c:1874
+#: camlibs/sierra/sierra.c:1875
 #, c-format
 msgid "%sFrames Taken: %i\n"
 msgstr "%sbilder tagna: %i\n"
 
-#: camlibs/sierra/sierra.c:1876
+#: camlibs/sierra/sierra.c:1877
 #, c-format
 msgid "%sFrames Left: %i\n"
 msgstr "%sbilder kvar: %i\n"
 
-#: camlibs/sierra/sierra.c:1878
+#: camlibs/sierra/sierra.c:1879
 #, c-format
 msgid "%sBattery Life: %i\n"
 msgstr "%sBatteritid: %i\n"
 
-#: camlibs/sierra/sierra.c:1880
+#: camlibs/sierra/sierra.c:1881
 #, c-format
 msgid "%sMemory Left: %i bytes\n"
 msgstr "%sMinne kvar: %i byte\n"
 
-#: camlibs/sierra/sierra.c:1885
+#: camlibs/sierra/sierra.c:1886
 #, c-format
 msgid "%sDate: %s"
 msgstr "%sDatum: %s"
 
-#: camlibs/sierra/sierra.c:1901
+#: camlibs/sierra/sierra.c:1902
 #, fuzzy
 msgid "No camera manual available.\n"
 msgstr "Kameran ej tillgänglig"
 
-#: camlibs/sierra/sierra.c:1908
+#: camlibs/sierra/sierra.c:1909
 #, fuzzy, c-format
 msgid ""
 "Some notes about Epson cameras:\n"
@@ -4580,7 +4618,7 @@ msgstr ""
 "  vanligen skriv ett brev till <gphoto-devel@lists.sourceforge.net> (på "
 "Engelska)\n"
 
-#: camlibs/sierra/sierra.c:1920
+#: camlibs/sierra/sierra.c:1921
 msgid ""
 "Some notes about Olympus cameras (and others?):\n"
 "(1) Camera Configuration:\n"
@@ -4616,7 +4654,7 @@ msgstr ""
 "    kamerans knappar. Om du hamnar i detta läge, bör du\n"
 "    återansluta kameran till PC:n och ändra LCD till 'Av'."
 
-#: camlibs/sierra/sierra.c:1949
+#: camlibs/sierra/sierra.c:1950
 msgid ""
 "sierra SPARClite library\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
@@ -4887,12 +4925,12 @@ msgstr ""
 "Carsten Weinholz <c.weinholz@netcologne.de>\n"
 "Utökad för Aiptek PenCam och andra STM USB dubbel-läges kameror."
 
-#: camlibs/sx330z/library.c:137
+#: camlibs/sx330z/library.c:138
 #, c-format
 msgid "Getting information on %i files..."
 msgstr "Hämtar information om %i filer..."
 
-#: camlibs/sx330z/library.c:251
+#: camlibs/sx330z/library.c:252
 msgid ""
 "(Traveler) SX330z Library (And other Aldi-cams).\n"
 "Even other Vendors like Jenoptik, Skanhex, Maginon should work.\n"
@@ -4900,7 +4938,7 @@ msgid ""
 "Dominik Kuhlen <kinimod@users.sourceforge.net>\n"
 msgstr ""
 
-#: camlibs/sx330z/library.c:290
+#: camlibs/sx330z/library.c:291
 msgid "sx330z is USB only"
 msgstr "sx330z är USB enbart"
 
@@ -4929,54 +4967,54 @@ msgstr "Ett fel uppstod i io-biblioteket ('%s'): %s"
 msgid "No additional information available."
 msgstr "Ingen ytterligare information tillgänglig."
 
-#: libgphoto2/gphoto2-camera.c:684
+#: libgphoto2/gphoto2-camera.c:686
 msgid "Could not detect any camera"
 msgstr "Kunde inte finna någon kamera."
 
-#: libgphoto2/gphoto2-camera.c:706
+#: libgphoto2/gphoto2-camera.c:708
 msgid "You have to set the port prior initialization of the camera."
 msgstr "Du måste sätta porten innan du initialiserar kameran."
 
-#: libgphoto2/gphoto2-camera.c:732
+#: libgphoto2/gphoto2-camera.c:734
 #, c-format
 msgid "Could not load required camera driver '%s' (%s)."
 msgstr "Kunde inte ladda nödvändig kameradrivrutin '%s' (%s)."
 
-#: libgphoto2/gphoto2-camera.c:741
+#: libgphoto2/gphoto2-camera.c:743
 #, c-format
 msgid "Could not load required camera driver '%s'."
 msgstr "Kunde inte ladda nödvändig kameradrivrutin '%s'."
 
-#: libgphoto2/gphoto2-camera.c:761
+#: libgphoto2/gphoto2-camera.c:763
 #, c-format
 msgid "Camera driver '%s' is missing the 'camera_init' function."
 msgstr "Kameradrivrutinen '%s' saknar 'camera_init' funktionen."
 
-#: libgphoto2/gphoto2-camera.c:821
+#: libgphoto2/gphoto2-camera.c:823
 msgid "This camera does not offer any configuration options."
 msgstr "Denna kamera erbjuder inga konfigurationsalternativ."
 
-#: libgphoto2/gphoto2-camera.c:853
+#: libgphoto2/gphoto2-camera.c:855
 msgid "This camera does not support setting configuration options."
 msgstr "Denna kamera stödjer inte sättning av konfigurationsparametrar."
 
-#: libgphoto2/gphoto2-camera.c:885
+#: libgphoto2/gphoto2-camera.c:887
 msgid "This camera does not support summaries."
 msgstr "Denna kamera stödjer inte sammanfattningar."
 
-#: libgphoto2/gphoto2-camera.c:916
+#: libgphoto2/gphoto2-camera.c:918
 msgid "This camera does not offer a manual."
 msgstr "Denna kamera erbjuder inte en bruksanvisning."
 
-#: libgphoto2/gphoto2-camera.c:947
+#: libgphoto2/gphoto2-camera.c:949
 msgid "This camera does not provide information about the driver."
 msgstr "Denna kamera erbjuder inte information om drivrutinen."
 
-#: libgphoto2/gphoto2-camera.c:981
+#: libgphoto2/gphoto2-camera.c:983
 msgid "This camera can not capture."
 msgstr "Denna kamera kan inte ta bilder."
 
-#: libgphoto2/gphoto2-camera.c:1014
+#: libgphoto2/gphoto2-camera.c:1016
 msgid "This camera can not capture previews."
 msgstr "Denna kamera kan inte ta förgranskningsbilder."
 
@@ -5130,18 +5168,22 @@ msgid "Directory exists"
 msgstr "Katalogen finns"
 
 #: libgphoto2/gphoto2-result.c:50
+msgid "I/O in progress"
+msgstr ""
+
+#: libgphoto2/gphoto2-result.c:51
 msgid "Path not absolute"
 msgstr "Sökvägen är inte absolut"
 
-#: libgphoto2/gphoto2-result.c:51
+#: libgphoto2/gphoto2-result.c:52
 msgid "Operation cancelled"
 msgstr "Operationen avbruten."
 
-#: libgphoto2/gphoto2-result.c:76
+#: libgphoto2/gphoto2-result.c:77
 msgid "Unknown camera library error"
 msgstr "Okänt kamerabiblioteksfel"
 
-#: libgphoto2/gphoto2-result.c:82
+#: libgphoto2/gphoto2-result.c:83
 msgid "Unknown error"
 msgstr "Okänt fel"
 
