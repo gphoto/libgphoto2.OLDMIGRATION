@@ -1452,3 +1452,10 @@ camera_init (Camera *camera)
 	/* NOT REACHED */
 	return GP_ERROR;
 }
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

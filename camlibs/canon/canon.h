@@ -231,3 +231,10 @@ void debug_fileinfo (CameraFileInfo * info);
 #define GP_MODULE "canon"
 
 #endif /* _LIBRARY_H */
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

@@ -55,3 +55,10 @@ void clear_readiness (Camera *camera);
  * End of file: canon.h
  *
  ****************************************************************************/
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

@@ -176,3 +176,10 @@ const char *filename2mimetype(const char *filename)
  * End of file: util.c
  *
  ****************************************************************************/
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

@@ -130,3 +130,10 @@ int canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
  * End of file: serial.h
  *
  ****************************************************************************/
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
