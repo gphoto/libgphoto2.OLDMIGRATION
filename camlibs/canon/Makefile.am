@@ -7,7 +7,9 @@ camlib_LTLIBRARIES = libgphoto2_canon.la
 
 CFLAGS = @CFLAGS@ -g -Wall
 LDFLAGS = @LDFLAGS@ -g
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/libgphoto2
+INCLUDES =                                              \
+        -I$(top_srcdir)/libgphoto2_port/libgphoto2_port \
+        -I$(top_srcdir)/libgphoto2
 
 libgphoto2_canon_la_SOURCES =\
  canon.c canon.h\
@@ -17,8 +19,5 @@ libgphoto2_canon_la_SOURCES =\
  crc.c crc.h \
  util.c util.h
 
-libgphoto2_canon_la_LDFLAGS =\
- -module -avoid-version -g\
- -L$(shell pwd)/$(top_builddir)/libgphoto2/@dotlibs@
-
-libgphoto2_canon_la_LIBADD = -lgphoto2
+libgphoto2_canon_la_LDFLAGS = -module -avoid-version
+libgphoto2_canon_la_LIBADD = $(top_builddir)/libgphoto2/libgphoto2.la
