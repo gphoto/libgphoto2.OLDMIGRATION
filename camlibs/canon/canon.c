@@ -164,10 +164,10 @@ const struct canonCamModelData models[] = {
 	{"Canon:PowerShot A300",        CANON_PS_A300,          0x04A9, 0x3076, CAP_SUP, S99M, S32K, S2M, NULL},
 	{"Canon:PowerShot S50 (normal mode)",   CANON_PS_S50,   0x04A9, 0x3077, CAP_SUP, S99M, S32K, S2M, NULL},
 
+	{"Canon:ZR-70MC",		CANON_ZR70MC,		0x04A9, 0x3078, CAP_SUP, S10M, S32K, S2M, NULL},
+
 	/* 3078 and 307a are in MacOS Info.plist, but I don't know
 	 * what they are --swestin. */
-	{"Canon:PowerShot unknown 4",		CANON_PS_UNK4,	0x04A9, 0x3078, CAP_SUP, S10M, S32K, S2M, NULL},
-
 	{"Canon:PowerShot unknown 5",		CANON_PS_UNK5,	0x04A9, 0x307a, CAP_SUP, S10M, S32K, S2M, NULL},
 	/* MV630i seems to be a DV camcorder */
 	{"Canon:MV630i",		CANON_MV630I,		0x04A9, 0x307b, CAP_SUP, S99M, S32K, S2M, NULL},
