@@ -106,14 +106,16 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
+	char *cached_drive;	/* usually something like C: */
+	int cached_ready;       /* whether the camera is ready to rock */
+
 /*
- * Directory access may be rather expensive, so we cache some information.
- * The first variable in each block indicates whether the block is valid.
+ * Directory access may be rather expensive, so we cached some information.
+ * This is now done by libgphoto2, so we are continuously removing this stuff.
+ * So the following variables are OBSOLETE.
  */
 
-	int cached_ready;
 	int cached_disk;
-	char *cached_drive; /* usually something like C: */
 	int cached_capacity;
 	int cached_available;
 	int cached_dir;
