@@ -54,6 +54,15 @@
 #include "canon.h"
 #include "serial.h"
 
+#define OTHER_PORT_TYPE_RETURN(RETVAL) \
+		default: \
+			gp_camera_set_error (camera, "Don't know how to handle " \
+					     "camera->port->type value %i aka 0x%x" \
+					     "in %s line %i.", camera->port->type, \
+					     camera->port->type, __FILE__, __LINE__); \
+			return (RETVAL);
+
+#define OTHER_PORT_TYPE OTHER_PORT_TYPE_RETURN(GP_ERROR_NOT_SUPPORTED)
 
 /*
  * does operations on a directory based on the value
@@ -134,34 +143,38 @@ canon_int_identify_camera (Camera *camera)
 	unsigned char *msg;
 	int len;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_int_identify_camera() called");
+	GP_DEBUG ("canon_int_identify_camera() called");
 
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
-			len = 0x4c;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_IDENTIFY_CAMERA,
 						  &len, NULL, 0);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0x01, 0x12, &len, NULL);
+			if (!msg) {
+				gp_debug_printf (GP_DEBUG_LOW, "canon",
+						 "canon_int_identify_camera: " "msg error");
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 
 	}
 
-	if (!msg) {
-		gp_debug_printf (GP_DEBUG_LOW, "canon",
-				 "canon_int_identify_camera: " "msg error");
-		canon_serial_error_type (camera);
+	if (len != 0x4c)
 		return GP_ERROR;
-	}
 
 	/* Store these values in our "camera" structure: */
 	memcpy (camera->pl->firmwrev, (char *) msg + 8, 4);
 	strncpy (camera->pl->ident, (char *) msg + 12, 30);
 	strncpy (camera->pl->owner, (char *) msg + 44, 30);
-	gp_debug_printf (GP_DEBUG_HIGH, "canon", "canon_int_identify_camera: "
-			 "ident '%s' owner '%s'", camera->pl->ident, camera->pl->owner);
+
+	GP_DEBUG ("canon_int_identify_camera: ident '%s' owner '%s'", camera->pl->ident,
+		  camera->pl->owner);
 
 	return GP_OK;
 }
@@ -181,29 +194,35 @@ canon_int_get_battery (Camera *camera, int *pwr_status, int *pwr_source)
 	unsigned char *msg;
 	int len;
 
+	GP_DEBUG ("canon_int_get_battery()");
+
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
-			len = 0x8;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_POWER_STATUS,
 						  &len, NULL, 0);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0x0a, 0x12, &len, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
+
 			break;
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
+	if (len != 8)
 		return GP_ERROR;
-	}
 
 	if (pwr_status)
 		*pwr_status = msg[4];
 	if (pwr_source)
 		*pwr_source = msg[7];
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "Status: %i / Source: %i\n", *pwr_status,
-			 *pwr_source);
+	GP_DEBUG ("canon_int_get_battery: Status: %i / Source: %i\n", *pwr_status,
+		  *pwr_source);
 	return GP_OK;
 }
 
@@ -353,22 +372,27 @@ canon_int_get_time (Camera *camera)
 	int t;
 	time_t date;
 
+	GP_DEBUG ("canon_int_get_time()");
+
 	switch (camera->pl->canon_comm_method) {
 		case CANON_USB:
-			len = 0x10;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_GET_TIME, &len,
 						  NULL, 0);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case CANON_SERIAL_RS232:
 		default:
 			msg = canon_serial_dialogue (camera, 0x03, 0x12, &len, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
+	if (len != 0x10)
 		return GP_ERROR;
-	}
 
 	/* XXX will fail when sizeof(int) != 4. Should use u_int32_t or
 	 * something instead. Investigate portability issues.
@@ -378,7 +402,7 @@ canon_int_get_time (Camera *camera)
 	date = (time_t) byteswap32 (t);
 
 	/* XXX should strip \n at the end of asctime() return data */
-	gp_debug_printf (GP_DEBUG_HIGH, "canon", "Camera time: %s ", asctime (gmtime (&date)));
+	GP_DEBUG ("Camera time: %s ", asctime (gmtime (&date)));
 	return date;
 }
 
@@ -395,364 +419,29 @@ canon_int_set_time (Camera *camera)
 	for (i = 0; i < 4; i++)
 		pcdate[i] = (date >> (8 * i)) & 0xff;
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
-			len = 0x10;
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_SET_TIME, &len,
 						  NULL, 0);
+			if (!msg)
+				return GP_ERROR;
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x04, 0x12, &len, pcdate,
 						     sizeof (pcdate),
 						     "\x00\x00\x00\x00\x00\x00\x00\x00", 8,
 						     NULL);
-			break;
-	}
-
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return 0;
-	}
-
-	return 1;
-}
-
-/**
- * canon_int_serial_ready:
- * @camera: camera to get ready
- * @Returns: gphoto2 error code
- *
- * serial part of canon_int_ready
- **/
-int
-canon_int_serial_ready (Camera *camera)
-{
-	unsigned char type, seq;
-	int good_ack, speed, try, len;
-	char *pkt;
-	int res;
-
-	GP_DEBUG ("canon_int_ready()");
-
-	serial_set_timeout (camera->port, 900);	// 1 second is the delay for awakening the camera
-	serial_flush_input (camera->port);
-	serial_flush_output (camera->port);
-
-	camera->pl->receive_error = NOERROR;
-
-	/* First of all, we must check if the camera is already on */
-	/*      cts=canon_serial_get_cts();
-	   gp_debug_printf(GP_DEBUG_LOW,"canon","cts : %i\n",cts);
-	   if (cts==32) {  CTS == 32  when the camera is connected. */
-	if (camera->pl->first_init == 0) {
-		/* FIXME: There was
-		   && camera->pl->cached_ready == 1) {
-		   here once */
-
-		/* First case, the serial speed of the camera is the same as
-		 * ours, so let's try to send a ping packet : */
-		if (!canon_serial_send_packet
-		    (camera, PKT_EOT, camera->pl->seq_tx,
-		     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
-			return GP_ERROR;
-		good_ack = canon_serial_wait_for_ack (camera);
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "good_ack = %i\n", good_ack);
-		if (good_ack == 0) {
-			/* no answer from the camera, let's try
-			 * at the speed saved in the settings... */
-			speed = camera->pl->speed;
-			if (speed != 9600) {
-				if (!canon_serial_change_speed (camera->port, speed)) {
-					gp_camera_status (camera, _("Error changing speed."));
-					gp_debug_printf (GP_DEBUG_LOW, "canon",
-							 "speed changed.\n");
-				}
-			}
-			if (!canon_serial_send_packet
-			    (camera, PKT_EOT, camera->pl->seq_tx,
-			     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
-				return GP_ERROR;
-			good_ack = canon_serial_wait_for_ack (camera);
-			if (good_ack == 0) {
-				gp_camera_status (camera, _("Resetting protocol..."));
-				canon_serial_off (camera);
-				sleep (3);	/* The camera takes a while to switch off */
-				return canon_int_ready (camera);
-			}
-			if (good_ack == -1) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon", "Received a NACK !\n");
+			if (!msg) {
+				canon_serial_error_type (camera);
 				return GP_ERROR;
 			}
-			gp_camera_status (camera, _("Camera OK.\n"));
-			return 1;
-		}
-		if (good_ack == -1) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "Received a NACK !\n");
-			return GP_ERROR;
-		}
-		gp_debug_printf (GP_DEBUG_LOW, "canon", "Camera replied to ping, proceed.\n");
-		return GP_OK;
-	}
 
-	/* Camera was off... */
-
-	gp_camera_status (camera, _("Looking for camera ..."));
-	gp_camera_progress (camera, 0);
-	if (camera->pl->receive_error == FATAL_ERROR) {
-		/* we try to recover from an error
-		   we go back to 9600bps */
-		if (!canon_serial_change_speed (camera->port, 9600)) {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: Error changing speed");
-			return GP_ERROR;
-		}
-		camera->pl->receive_error = NOERROR;
-	}
-	for (try = 1; try < MAX_TRIES; try++) {
-		gp_camera_progress (camera, (try / (float) MAX_TRIES));
-		if (canon_serial_send
-		    (camera, "\x55\x55\x55\x55\x55\x55\x55\x55", 8, USLEEP1) < 0) {
-			gp_camera_status (camera, _("Communication error 1"));
-			return GP_ERROR;
-		}
-		pkt = canon_serial_recv_frame (camera, &len);
-		if (pkt)
 			break;
+		OTHER_PORT_TYPE;
 	}
-	if (try == MAX_TRIES) {
-		gp_camera_status (camera, _("No response from camera"));
+
+	if (len != 0x10)
 		return GP_ERROR;
-	}
-	if (!pkt) {
-		gp_camera_status (camera, _("No response from camera"));
-		return GP_ERROR;
-	}
-	if (len < 40 && strncmp (pkt + 26, "Canon", 5)) {
-		gp_camera_status (camera, _("Unrecognized response"));
-		return GP_ERROR;
-	}
-	strncpy (camera->pl->psa50_id, pkt + 26, sizeof (camera->pl->psa50_id) - 1);
-
-	GP_DEBUG ("psa50_id : '%s'", camera->pl->psa50_id);
-
-	camera->pl->first_init = 0;
-
-	if (!strcmp ("DE300 Canon Inc.", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "PowerShot A5");
-		camera->pl->model = CANON_PS_A5;
-		if (camera->pl->speed > 57600)
-			camera->pl->slow_send = 1;
-		camera->pl->A5 = 1;
-	} else if (!strcmp ("Canon PowerShot A5 Zoom", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "PowerShot A5 Zoom");
-		camera->pl->model = CANON_PS_A5_ZOOM;
-		if (camera->pl->speed > 57600)
-			camera->pl->slow_send = 1;
-		camera->pl->A5 = 1;
-	} else if (!strcmp ("Canon PowerShot A50", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot A50");
-		camera->pl->model = CANON_PS_A50;
-		if (camera->pl->speed > 57600)
-			camera->pl->slow_send = 1;
-	} else if (!strcmp ("Canon PowerShot S20", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot S20");
-		camera->pl->model = CANON_PS_S20;
-	} else if (!strcmp ("Canon PowerShot G1", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot G1");
-		camera->pl->model = CANON_PS_G1;
-	} else if (!strcmp ("Canon PowerShot A10", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot A10");
-		camera->pl->model = CANON_PS_A10;
-	} else if (!strcmp ("Canon PowerShot A20", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot A20");
-		camera->pl->model = CANON_PS_A20;
-	} else if (!strcmp ("Canon EOS D30", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a EOS D30");
-		camera->pl->model = CANON_EOS_D30;
-	} else if (!strcmp ("Canon PowerShot Pro90 IS", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot Pro90 IS");
-		camera->pl->model = CANON_PS_PRO90_IS;
-	} else if (!strcmp ("Canon PowerShot Pro70", camera->pl->psa50_id)) {
-		gp_camera_status (camera, "Detected a PowerShot Pro70");
-		camera->pl->model = CANON_PS_A70;
-	} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->psa50_id))
-		   || (!strcmp ("Canon IXY DIGITAL", camera->pl->psa50_id))
-		   || (!strcmp ("Canon PowerShot S100", camera->pl->psa50_id))
-		   || (!strcmp ("Canon DIGITAL IXUS v", camera->pl->psa50_id))) {
-		gp_camera_status (camera,
-				  "Detected a Digital IXUS series / IXY DIGITAL / PowerShot S100 series");
-		camera->pl->model = CANON_PS_S100;
-	} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->psa50_id))
-		   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->psa50_id))
-		   || (!strcmp ("Canon PowerShot S300", camera->pl->psa50_id))) {
-		gp_camera_status (camera,
-				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / PowerShot S300");
-		camera->pl->model = CANON_PS_S300;
-	} else {
-		gp_camera_status (camera, "Detected a PowerShot S10");
-		camera->pl->model = CANON_PS_S10;
-	}
-
-	//  5 seconds  delay should  be enough for   big flash cards.   By
-	// experience, one or two seconds is too  little, as a large flash
-	// card needs more access time.
-	serial_set_timeout (camera->port, 5000);
-	(void) canon_serial_recv_packet (camera, &type, &seq, NULL);
-	if (type != PKT_EOT || seq) {
-		gp_camera_status (camera, _("Bad EOT"));
-		return GP_ERROR;
-	}
-	camera->pl->seq_tx = 0;
-	camera->pl->seq_rx = 1;
-	if (!canon_serial_send_frame (camera, "\x00\x05\x00\x00\x00\x00\xdb\xd1", 8)) {
-		gp_camera_status (camera, _("Communication error 2"));
-		return GP_ERROR;
-	}
-	res = 0;
-	switch (camera->pl->speed) {
-		case 9600:
-			res = canon_serial_send_frame (camera, SPEED_9600, 12);
-			break;
-		case 19200:
-			res = canon_serial_send_frame (camera, SPEED_19200, 12);
-			break;
-		case 38400:
-			res = canon_serial_send_frame (camera, SPEED_38400, 12);
-			break;
-		case 57600:
-			res = canon_serial_send_frame (camera, SPEED_57600, 12);
-			break;
-		case 115200:
-			res = canon_serial_send_frame (camera, SPEED_115200, 12);
-			break;
-	}
-
-	if (!res || !canon_serial_send_frame (camera, "\x00\x04\x01\x00\x00\x00\x24\xc6", 8)) {
-		gp_camera_status (camera, _("Communication error 3"));
-		return GP_ERROR;
-	}
-	speed = camera->pl->speed;
-	gp_camera_status (camera, _("Changing speed... wait..."));
-	if (!canon_serial_wait_for_ack (camera))
-		return GP_ERROR;
-	if (speed != 9600) {
-		if (!canon_serial_change_speed (camera->port, speed)) {
-			gp_camera_status (camera, _("Error changing speed"));
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "ERROR: Error changing speed");
-		} else {
-			gp_debug_printf (GP_DEBUG_LOW, "canon", "speed changed\n");
-		}
-
-	}
-	for (try = 1; try < MAX_TRIES; try++) {
-		canon_serial_send_packet (camera, PKT_EOT, camera->pl->seq_tx,
-					  camera->pl->psa50_eot + PKT_HDR_LEN, 0);
-		if (!canon_serial_wait_for_ack (camera)) {
-			gp_camera_status (camera,
-					  _
-					  ("Error waiting ACK during initialization retrying"));
-		} else
-			break;
-	}
-
-	if (try == MAX_TRIES) {
-		gp_camera_status (camera, _("Error waiting ACK during initialization"));
-		return GP_ERROR;
-	}
-
-	gp_camera_status (camera, _("Connected to camera"));
-	/* Now is a good time to ask the camera for its owner
-	 * name (and Model String as well)  */
-	canon_int_identify_camera (camera);
-	canon_int_get_time (camera);
-
-	return GP_OK;
-}
-
-/**
- * canon_int_usb_ready:
- * @camera: camera to get ready
- * @Returns: gphoto2 error code
- *
- * USB part of canon_int_ready
- **/
-int
-canon_int_usb_ready (Camera *camera)
-{
-	int res;
-
-	GP_DEBUG ("canon_int_usb_ready()");
-
-	res = canon_int_identify_camera (camera);
-	if (res != GP_OK) {
-		gp_camera_set_error (camera, "Camera not ready, "
-				     "identify camera request failed (returned %i)", res);
-		return GP_ERROR;
-	}
-	if (!strcmp ("Canon PowerShot S20", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot S20");
-		camera->pl->model = CANON_PS_S20;
-	} else if (!strcmp ("Canon PowerShot S10", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot S10");
-		camera->pl->model = CANON_PS_S10;
-	} else if (!strcmp ("Canon PowerShot S30", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot S30");
-		camera->pl->model = CANON_PS_S30;
-	} else if (!strcmp ("Canon PowerShot S40", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot S40");
-		camera->pl->model = CANON_PS_S40;
-	} else if (!strcmp ("Canon PowerShot G1", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot G1");
-		camera->pl->model = CANON_PS_G1;
-	} else if (!strcmp ("Canon PowerShot G2", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot G2");
-		camera->pl->model = CANON_PS_G2;
-	} else if ((!strcmp ("Canon DIGITAL IXUS", camera->pl->ident))
-		   || (!strcmp ("Canon IXY DIGITAL", camera->pl->ident))
-		   || (!strcmp ("Canon PowerShot S110", camera->pl->ident))
-		   || (!strcmp ("Canon PowerShot S100", camera->pl->ident))
-		   || (!strcmp ("Canon DIGITAL IXUS v", camera->pl->ident))) {
-		gp_camera_status (camera,
-				  "Detected a Digital IXUS series / IXY DIGITAL / PowerShot S100 series");
-		camera->pl->model = CANON_PS_S100;
-	} else if ((!strcmp ("Canon DIGITAL IXUS 300", camera->pl->ident))
-		   || (!strcmp ("Canon IXY DIGITAL 300", camera->pl->ident))
-		   || (!strcmp ("Canon PowerShot S300", camera->pl->ident))) {
-		gp_camera_status (camera,
-				  "Detected a Digital IXUS 300 / IXY DIGITAL 300 / PowerShot S300");
-		camera->pl->model = CANON_PS_S300;
-	} else if (!strcmp ("Canon PowerShot A10", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot A10");
-		camera->pl->model = CANON_PS_A10;
-	} else if (!strcmp ("Canon PowerShot A20", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot A20");
-		camera->pl->model = CANON_PS_A20;
-	} else if (!strcmp ("Canon EOS D30", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a EOS D30");
-		camera->pl->model = CANON_EOS_D30;
-	} else if (!strcmp ("Canon PowerShot Pro90 IS", camera->pl->ident)) {
-		gp_camera_status (camera, "Detected a PowerShot Pro90 IS");
-		camera->pl->model = CANON_PS_PRO90_IS;
-	} else {
-		gp_camera_set_error (camera, "Unknown camera! (%s)", camera->pl->ident);
-		return GP_ERROR;
-	}
-
-	res = canon_usb_keylock (camera);
-	if (res != GP_OK) {
-		gp_camera_set_error (camera, "Camera not ready, "
-				     "could not lock camera keys (returned %i)", res);
-		return res;
-	}
-
-	res = canon_int_get_time (camera);
-	if (res == GP_ERROR) {
-		gp_camera_set_error (camera, "Camera not ready, "
-				     "get time request failed (returned %i)", res);
-		return GP_ERROR;
-	}
-
-	gp_camera_status (camera, _("Connected to camera"));
 
 	return GP_OK;
 }
@@ -771,18 +460,14 @@ canon_int_ready (Camera *camera)
 
 	GP_DEBUG ("canon_int_ready()");
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
-			res = canon_int_usb_ready (camera);
+	switch (camera->port->type) {
+		case GP_PORT_USB:
+			res = canon_usb_ready (camera);
 			break;
-		case CANON_SERIAL_RS232:
-			res = canon_int_serial_ready (camera);
+		case GP_PORT_SERIAL:
+			res = canon_serial_ready (camera);
 			break;
-		default:
-			gp_camera_set_error (camera,
-					     "Unknown canon_comm_method in canon_int_ready()");
-			res = GP_ERROR;
-			break;
+		OTHER_PORT_TYPE;
 	}
 
 	return (res);
@@ -804,8 +489,8 @@ canon_int_get_disk_name (Camera *camera)
 
 	GP_DEBUG ("canon_int_get_disk_name()");
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			res = canon_usb_long_dialogue (camera,
 						       CANON_USB_FUNCTION_FLASH_DEVICE_IDENT,
 						       &msg, &len, 1024, NULL, 0, 0);
@@ -815,16 +500,16 @@ canon_int_get_disk_name (Camera *camera)
 				return NULL;
 			}
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x0a, 0x11, &len, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return NULL;
+			}
 			break;
+		OTHER_PORT_TYPE_RETURN(NULL);
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return NULL;
-	}
 	if (camera->pl->canon_comm_method == CANON_SERIAL_RS232) {
 		/* this is correct even though it looks a bit funny. canon_serial_dialogue()
 		 * has a static buffer, strdup() part of that buffer and return to our caller.
@@ -878,26 +563,23 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 		case GP_PORT_USB:
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DISK_INFO, &len,
 						  name, strlen (name) + 1);
+			if (!msg)
+				return GP_ERROR;
 			break;
 		case GP_PORT_SERIAL:
 			msg = canon_serial_dialogue (camera, 0x09, 0x11, &len, name,
 						     strlen (name) + 1, NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
-		default:
-			gp_camera_set_error (camera, "Don't know how to handle "
-					     "camera->port->type value %i "
-					     "in %s line %i.", camera->port->type,
-					     __FILE__, __LINE__);
-			return GP_ERROR_BAD_PARAMETERS;
+		OTHER_PORT_TYPE;
 	}
 
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return 0;	/* FALSE */
-	}
 	if (len < 12) {
 		GP_DEBUG ("ERROR: truncated message");
-		return 0;	/* FALSE */
+		return GP_ERROR;
 	}
 	cap = get_int (msg + 4);
 	ava = get_int (msg + 8);
@@ -909,7 +591,7 @@ canon_int_get_disk_name_info (Camera *camera, const char *name, int *capacity, i
 	GP_DEBUG ("canon_int_get_disk_name_info: capacity %i kb, available %i kb",
 		  cap > 0 ? (cap / 1024) : 0, ava > 0 ? (ava / 1024) : 0);
 
-	return 1;		/* TRUE */
+	return GP_OK;
 }
 
 
@@ -1055,11 +737,7 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 			res = canon_serial_get_dirents (camera, &dirent_data, &dirents_length,
 							canonfolder);
 			break;
-		default:
-			gp_camera_set_error (camera, "can_int_list_dir: "
-					     "called for a camera->port->type we do not "
-					     "know how to handle");
-			return GP_ERROR_BAD_PARAMETERS;
+		OTHER_PORT_TYPE;
 	}
 	if (res != GP_OK)
 		return res;
@@ -1290,10 +968,7 @@ canon_int_get_file (Camera *camera, const char *name, unsigned char **data, int 
 		case GP_PORT_SERIAL:
  		        return canon_serial_get_file (camera, name, data, length);
 			break;
-	        default:
-			gp_camera_set_error(camera,"Unknown camera->port->type 0x%x at %s line %i", 
-					    camera->port->type, __FILE__, __LINE__);
-			return GP_ERROR_NOT_SUPPORTED;
+		OTHER_PORT_TYPE;
 	}
 	/* never reached */
 	return GP_ERROR;
@@ -1452,8 +1127,7 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 		case GP_PORT_SERIAL:
 			res = canon_serial_get_thumbnail (camera, name, &data, length);
 			break;
-		default:
-			return GP_ERROR_BAD_PARAMETERS;
+		OTHER_PORT_TYPE;
 	}
 	if (res != GP_OK) {
 		GP_DEBUG ("canon_port_get_thumbnail() failed, "
@@ -1521,39 +1195,102 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
 	return GP_ERROR;
 }
 
+/**
+ * canon_int_thumbnail_file_name:
+ * @filename: file name on camera
+ * @Returns: file name of corresponding thumbnail if it exists, NULL else
+ *
+ * Determine name of corresponding thumbnail file.
+ *
+ * XXX We should use information about the camera type to
+ * determine for what kinds of files the thumbnail is located
+ * in an extra file. Until then, we just replace .XXX by .THM
+ * and return that string.
+ **/
+const char *
+canon_int_thumbnail_file_name (Camera *camera, const char *filename)
+{
+	static char buf[300];
+	char *p;
+
+	if (strncpy (buf, filename, sizeof(buf)) < 0) {
+		GP_DEBUG ("Buffer too small in %s line %i.", 
+			  __FILE__, __LINE__);
+		return NULL;
+	}
+	if ((p = strchr(buf, '.')) == NULL) {
+		GP_DEBUG ("No '.' found in filename '%s' in %s line %i.",
+			  filename, __FILE__, __LINE__);
+		return NULL;
+	}
+	if (((p - buf) < sizeof(buf) - 4) && strncpy (p, ".THM", 4)) {
+		GP_DEBUG ("Thumbnail name for '%s' is '%s'",
+			  filename, buf);
+		return buf;
+	} else {
+		GP_DEBUG ("Thumbnail name for filename '%s' doesnt fit in %s line %i.",
+			  filename, __FILE__, __LINE__);
+		return NULL;
+	}
+	/* never reached */
+	return NULL;
+}
+
+/**
+ * canon_int_delete_file:
+ * @camera: the camera to work on
+ * @folder: the canon path of the folder where the file to delete is located
+ * @filename: the name of the file in the folder
+ *
+ * Deletes the file named @filename in the folder @folder.
+ **/
 int
-canon_int_delete_file (Camera *camera, const char *name, const char *dir)
+canon_int_delete_file (Camera *camera, const char *folder, const char *filename)
 {
 	unsigned char payload[300];
 	unsigned char *msg;
 	int len, payload_length;
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
-			memcpy (payload, dir, strlen (dir) + 1);
-			memcpy (payload + strlen (dir) + 1, name, strlen (name) + 1);
-			payload_length = strlen (dir) + strlen (name) + 2;
-			len = 0x4;
+	switch (camera->port->type) {
+		case GP_PORT_USB:
+			memccpy (payload, folder, strlen (folder) + 1, sizeof(payload));
+			memccpy (payload + strlen(folder) + 1, filename, 
+				 strlen (filename) + 1, sizeof(payload) - strlen(folder) - 1);
+			payload_length = strlen (folder) + strlen(filename) + 2;
 			msg = canon_usb_dialogue (camera, CANON_USB_FUNCTION_DELETE_FILE, &len,
 						  payload, payload_length);
+			if (! msg)
+				return GP_ERROR;
 			break;
-		case CANON_SERIAL_RS232:
-		default:
-			msg = canon_serial_dialogue (camera, 0xd, 0x11, &len, dir,
-						     strlen (dir) + 1, name, strlen (name) + 1,
+		case GP_PORT_SERIAL:
+			msg = canon_serial_dialogue (camera, 0xd, 0x11, &len,
+						     folder, strlen (folder) + 1,
+						     filename, strlen (filename) + 1,
 						     NULL);
+			if (!msg) {
+				canon_serial_error_type (camera);
+				return GP_ERROR;
+			}
 			break;
+		OTHER_PORT_TYPE;
 	}
-	if (!msg) {
-		canon_serial_error_type (camera);
-		return -1;
+	
+	if (len != 4) {
+		/* XXX should mark folder as dirty since we can't be sure if the file
+		 * got deleted or not
+		 */
+		return GP_ERROR;
 	}
+	
 	if (msg[0] == 0x29) {
 		gp_camera_message (camera, _("File protected"));
-		return -1;
+		return GP_ERROR;
 	}
 
-	return 0;
+	/* XXX we should mark folder as dirty, re-read it and check if the file
+	 * is gone or not.
+	 */
+	return GP_OK;
 }
 
 /*
@@ -1564,14 +1301,14 @@ int
 canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath)
 {
 
-	switch (camera->pl->canon_comm_method) {
-		case CANON_USB:
+	switch (camera->port->type) {
+		case GP_PORT_USB:
 			return canon_usb_put_file (camera, file, destname, destpath);
 			break;
-		case CANON_SERIAL_RS232:
-		default:
+		case GP_PORT_SERIAL:
 			return canon_serial_put_file (camera, file, destname, destpath);
 			break;
+		OTHER_PORT_TYPE;
 	}
 }
 
