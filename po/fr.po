@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: <gphoto-translation@lists.sourceforge.net>\n"
-"POT-Creation-Date: 2004-01-14 15:24+0100\n"
+"POT-Creation-Date: 2004-01-18 17:27+0100\n"
 "PO-Revision-Date: 2003-06-22 23:47+0200\n"
 "Last-Translator: Aurélien Croc <aurelien@ap2c.com>\n"
 "Language-Team: Français\n"
@@ -61,26 +61,26 @@ msgstr ""
 "Mis en oeuvre en utilisant des documents trouvés sur\n"
 "le web. Permission accordée par Vision."
 
-#: camlibs/canon/canon.c:482
+#: camlibs/canon/canon.c:484
 #, c-format
 msgid "Could not create directory %s."
 msgstr "Impossible de créer le dossier %s."
 
-#: camlibs/canon/canon.c:485
+#: camlibs/canon/canon.c:487
 #, c-format
 msgid "Could not remove directory %s."
 msgstr "Impossible de supprimer le dossier %s."
 
-#: camlibs/canon/canon.c:827 camlibs/canon/canon.c:1047
+#: camlibs/canon/canon.c:829 camlibs/canon/canon.c:1049
 #: camlibs/canon/usb.c:229
 msgid "lock keys failed."
 msgstr "Clefs de blocage manquées."
 
-#: camlibs/canon/canon.c:890 camlibs/canon/canon.c:891
+#: camlibs/canon/canon.c:892 camlibs/canon/canon.c:893
 msgid "*UNKNOWN*"
 msgstr "*INCONNU*"
 
-#: camlibs/canon/canon.c:996
+#: camlibs/canon/canon.c:998
 #, c-format
 msgid ""
 "canon_int_capture_image: initial canon_usb_list_all_dirs() failed with "
@@ -89,7 +89,7 @@ msgstr ""
 "canon_int_capture_image: appel initial à canon_usb_list_all_dirs() en erreur "
 "avec un état %i"
 
-#: camlibs/canon/canon.c:1077
+#: camlibs/canon/canon.c:1079
 #, c-format
 msgid ""
 "canon_int_capture_image: final canon_usb_list_all_dirs() failed with status %"
@@ -98,7 +98,7 @@ msgstr ""
 "canon_int_capture_image: appel final à canon_usb_list_all_dirs() en erreur "
 "avec un état %i"
 
-#: camlibs/canon/canon.c:1196
+#: camlibs/canon/canon.c:1198
 #, c-format
 msgid ""
 "Name '%s' (%i characters) too long (%i chars), maximum 30 characters are "
@@ -107,33 +107,33 @@ msgstr ""
 "Le nom '%s' (%i caractères) est trop long (%i car.), seuls 30 caractères "
 "sont permis."
 
-#: camlibs/canon/canon.c:1719
+#: camlibs/canon/canon.c:1721
 #, c-format
 msgid "canon_int_list_dir: ERROR: initial message too short (%i < minimum %i)"
 msgstr ""
 "canon_int_list_dir: ERREUR: message initial trop court (%i < minimum %i)"
 
-#: camlibs/canon/canon.c:1741
+#: camlibs/canon/canon.c:1743
 msgid ""
 "canon_int_list_dir: Reached end of packet while examining the first dirent"
 msgstr ""
 "canon_int_list_dir: fin du paquet atteinte en examinant la première entrée"
 
-#: camlibs/canon/canon.c:1826
+#: camlibs/canon/canon.c:1828
 msgid "canon_int_list_dir: truncated directory entry encountered"
 msgstr "canon_int_list_dir: rencontre d'une entrée de répertoire tronquée"
 
-#: camlibs/canon/canon.c:2137
+#: camlibs/canon/canon.c:2139
 msgid "File protected."
 msgstr "Fichier protégé en écriture."
 
-#: camlibs/canon/canon.c:2208
+#: camlibs/canon/canon.c:2210
 msgid "Could not extract JPEG thumbnail from data: Data is not JFIF"
 msgstr ""
 "Impossible d'extraire la vignette JPEG des données: les données ne sont pas "
 "en JFIF"
 
-#: camlibs/canon/canon.c:2233
+#: camlibs/canon/canon.c:2235
 msgid "Could not extract JPEG thumbnail from data: No beginning/end"
 msgstr "Impossible d'extraire la vignette JPEG des données: pas de début/fin"
 
@@ -169,10 +169,10 @@ msgstr ""
 "#########################\n"
 
 #: camlibs/canon/library.c:134
+#, fuzzy
 msgid ""
-"For the A50, 115200 may not be faster than 57600\n"
-"Folders are NOT supported\n"
-"if you experience a lot of serial transmission errors, try to have your "
+"For the A50, using 115200 may effectively be slower than using 57600\n"
+"If you experience a lot of serial transmission errors, try to have your "
 "computer as idle as possible\n"
 " (i.e. no disk activity)\n"
 msgstr ""
@@ -181,49 +181,49 @@ msgstr ""
 "si vous rencontrez beaucoup d'erreurs de transmission, essayez d'avoir votre "
 "ordinateur aussi calme que possible (c-à-d sans activité disque)\n"
 
-#: camlibs/canon/library.c:249 camlibs/canon/library.c:1339
-#: camlibs/canon/library.c:1352
+#: camlibs/canon/library.c:248 camlibs/canon/library.c:1338
+#: camlibs/canon/library.c:1351
 msgid "Camera unavailable"
 msgstr "Appareil non disponible"
 
-#: camlibs/canon/library.c:268
+#: camlibs/canon/library.c:267
 msgid "Switching Camera Off"
 msgstr "Extinction de l'appareil"
 
-#: camlibs/canon/library.c:328 camlibs/canon/library.c:362
+#: camlibs/canon/library.c:327 camlibs/canon/library.c:361
 msgid "Error capturing image"
 msgstr "Erreur lors de la capture de l'image"
 
-#: camlibs/canon/library.c:418
+#: camlibs/canon/library.c:417
 #, c-format
 msgid "Could not get disk name: %s"
 msgstr "Ne peut obtenir le nom du disque : %s"
 
-#: camlibs/canon/library.c:419
+#: camlibs/canon/library.c:418
 msgid "No reason available"
 msgstr "Raison inconnue"
 
-#: camlibs/canon/library.c:426
+#: camlibs/canon/library.c:425
 #, c-format
 msgid "Could not get disk info: %s"
 msgstr "Ne peut obtenir d'information sur le disque : %s"
 
-#: camlibs/canon/library.c:490
+#: camlibs/canon/library.c:489
 #, c-format
 msgid "Internal error #1 in get_file_func() (%s line %i)"
 msgstr "Erreur interne #1 dans get_file_func() (%s ligne %i)"
 
-#: camlibs/canon/library.c:513
+#: camlibs/canon/library.c:512
 #, c-format
 msgid "No audio file could be found for %s"
 msgstr "Impossible de trouver un fichier audio pour %s"
 
-#: camlibs/canon/library.c:561 camlibs/canon/library.c:599
+#: camlibs/canon/library.c:560 camlibs/canon/library.c:598
 #, c-format
 msgid "%s is a file type for which no thumbnail is provided"
 msgstr "%s est un type de fichier pour lequel il n'est pas proposé de vignette"
 
-#: camlibs/canon/library.c:769
+#: camlibs/canon/library.c:768
 #, c-format
 msgid ""
 "  Drive %s\n"
@@ -234,35 +234,35 @@ msgstr ""
 "  %11s octets au total\n"
 "  %11s octets disponibles"
 
-#: camlibs/canon/library.c:777 camlibs/canon/library.c:783
-#: camlibs/canon/library.c:1294 camlibs/canon/library.c:1300
+#: camlibs/canon/library.c:776 camlibs/canon/library.c:782
+#: camlibs/canon/library.c:1293 camlibs/canon/library.c:1299
 msgid "AC adapter"
 msgstr "Transformateur"
 
-#: camlibs/canon/library.c:777 camlibs/canon/library.c:783
-#: camlibs/canon/library.c:1294 camlibs/canon/library.c:1300
+#: camlibs/canon/library.c:776 camlibs/canon/library.c:782
+#: camlibs/canon/library.c:1293 camlibs/canon/library.c:1299
 msgid "on battery"
 msgstr "sur piles"
 
-#: camlibs/canon/library.c:779 camlibs/canon/library.c:1296
+#: camlibs/canon/library.c:778 camlibs/canon/library.c:1295
 msgid "power OK"
 msgstr "énergie OK"
 
-#: camlibs/canon/library.c:779 camlibs/canon/library.c:1296
+#: camlibs/canon/library.c:778 camlibs/canon/library.c:1295
 msgid "power bad"
 msgstr "énergie NOK"
 
-#: camlibs/canon/library.c:787
+#: camlibs/canon/library.c:786
 #, c-format
 msgid "not available: %s"
 msgstr "Indisponible : %s"
 
-#: camlibs/canon/library.c:813
+#: camlibs/canon/library.c:812
 #, c-format
 msgid "%s (host time %s%i seconds)"
 msgstr "%s (heure du PC %s%i secondes)"
 
-#: camlibs/canon/library.c:823
+#: camlibs/canon/library.c:822
 #, c-format
 msgid ""
 "\n"
@@ -289,7 +289,7 @@ msgstr ""
 "\n"
 "Heure : %s\n"
 
-#: camlibs/canon/library.c:840
+#: camlibs/canon/library.c:839
 msgid ""
 "Canon PowerShot series driver by\n"
 "Wolfgang G. Reissnegger,\n"
@@ -307,26 +307,26 @@ msgstr ""
 "Ajouts pour le modèle A5 par Ole W. Saastad\n"
 "Holger Klemm\n"
 
-#: camlibs/canon/library.c:879
+#: camlibs/canon/library.c:878
 msgid "Error deleting file"
 msgstr "Erreur à l'effacement du fichier"
 
-#: camlibs/canon/library.c:895
+#: camlibs/canon/library.c:894
 msgid "Error deleting associated thumbnail file"
 msgstr "Erreur à l'effacement de la vignette associée"
 
-#: camlibs/canon/library.c:1024 camlibs/canon/library.c:1151
+#: camlibs/canon/library.c:1023 camlibs/canon/library.c:1150
 msgid ""
 "Speeds greater than 57600 are not supported for uploading to this camera"
 msgstr ""
 "Les vitesses supérieures à 57600 ne sont pas gérées pour télécharger vers "
 "l'appareil"
 
-#: camlibs/canon/library.c:1041 camlibs/canon/library.c:1168
+#: camlibs/canon/library.c:1040 camlibs/canon/library.c:1167
 msgid "Could not get flash drive letter"
 msgstr "Ne peut obtenir la lettre du disque flash"
 
-#: camlibs/canon/library.c:1084 camlibs/canon/library.c:1191
+#: camlibs/canon/library.c:1083 camlibs/canon/library.c:1190
 msgid ""
 "Could not upload, no free folder name available!\n"
 "999CANON folder name exists and has an AUT_9999.JPG picture in it."
@@ -334,85 +334,85 @@ msgstr ""
 "Impossible de télécharger, pas de répertoire libre !\n"
 "Le répertoire 999CANON existe et contient déjà une image AUT_9999.JPG."
 
-#: camlibs/canon/library.c:1106 camlibs/canon/library.c:1211
+#: camlibs/canon/library.c:1105 camlibs/canon/library.c:1210
 msgid "Could not create \\DCIM directory."
 msgstr "Impossible de créer le dossier \\DCIM."
 
-#: camlibs/canon/library.c:1112 camlibs/canon/library.c:1217
+#: camlibs/canon/library.c:1111 camlibs/canon/library.c:1216
 msgid "Could not create destination directory."
 msgstr "Impossible d'obtenir le contenu du répertoire destination."
 
-#: camlibs/canon/library.c:1249 camlibs/ptp2/library.c:721
+#: camlibs/canon/library.c:1248 camlibs/ptp2/library.c:721
 msgid "Camera and Driver Configuration"
 msgstr "Configuration de l'appareil et du pilote"
 
-#: camlibs/canon/library.c:1251 camlibs/polaroid/pdc700.c:984
+#: camlibs/canon/library.c:1250 camlibs/polaroid/pdc700.c:984
 msgid "Camera"
 msgstr "Appareil"
 
-#: camlibs/canon/library.c:1254
+#: camlibs/canon/library.c:1253
 msgid "Camera Model (readonly)"
 msgstr "Modèle de l'appareil (lecture seule)"
 
-#: camlibs/canon/library.c:1258 camlibs/canon/library.c:1335
+#: camlibs/canon/library.c:1257 camlibs/canon/library.c:1334
 msgid "Owner name"
 msgstr "Nom du propriétaire"
 
-#: camlibs/canon/library.c:1265 camlibs/canon/library.c:1269
-#: camlibs/canon/library.c:1274
+#: camlibs/canon/library.c:1264 camlibs/canon/library.c:1268
+#: camlibs/canon/library.c:1273
 msgid "Date and Time (readonly)"
 msgstr "Date et heure (lecture seule)"
 
-#: camlibs/canon/library.c:1270
+#: camlibs/canon/library.c:1269
 msgid "Error"
 msgstr "Erreur"
 
-#: camlibs/canon/library.c:1275 camlibs/canon/library.c:1302
+#: camlibs/canon/library.c:1274 camlibs/canon/library.c:1301
 msgid "Unavailable"
 msgstr "Indisponible"
 
-#: camlibs/canon/library.c:1279 camlibs/canon/library.c:1348
+#: camlibs/canon/library.c:1278 camlibs/canon/library.c:1347
 msgid "Set camera date to PC date"
 msgstr "Mettre l'appareil à la date du PC"
 
-#: camlibs/canon/library.c:1282
+#: camlibs/canon/library.c:1281
 msgid "Firmware revision (readonly)"
 msgstr "Révision de microcode (lecture seule)"
 
-#: camlibs/canon/library.c:1306 camlibs/ptp2/library.c:723
+#: camlibs/canon/library.c:1305 camlibs/ptp2/library.c:723
 #: camlibs/ptp2/library.c:754
 msgid "Power (readonly)"
 msgstr "Énergie (lecture seule)"
 
-#: camlibs/canon/library.c:1310
+#: camlibs/canon/library.c:1309
 msgid "Driver"
 msgstr "Pilote"
 
-#: camlibs/canon/library.c:1313 camlibs/canon/library.c:1362
+#: camlibs/canon/library.c:1312 camlibs/canon/library.c:1361
 msgid "List all files"
 msgstr "Liste de tous les fichiers"
 
-#: camlibs/canon/library.c:1318 camlibs/canon/library.c:1370
+#: camlibs/canon/library.c:1317 camlibs/canon/library.c:1369
 msgid "Keep filename on upload"
 msgstr "Conserver le nom du fichier lors du chargement"
 
-#: camlibs/canon/library.c:1342
+#: camlibs/canon/library.c:1341
 msgid "Owner name changed"
 msgstr "Le nom du propriétaire a changé"
 
-#: camlibs/canon/library.c:1344
+#: camlibs/canon/library.c:1343
 msgid "could not change owner name"
 msgstr "ne peut changer le nom du propriétaire"
 
-#: camlibs/canon/library.c:1355
+#: camlibs/canon/library.c:1354
 msgid "time set"
 msgstr "heure mise à jour"
 
-#: camlibs/canon/library.c:1357
+#: camlibs/canon/library.c:1356
 msgid "could not set time"
 msgstr "ne peut mettre à l'heure"
 
-#: camlibs/canon/library.c:1573
+#: camlibs/canon/library.c:1572
 #, c-format
 msgid "Unsupported port type %i = 0x%x given. Initialization impossible."
 msgstr "Port de type non géré, reçu %i = 0x%x. Initialisation impossible."
@@ -1319,7 +1319,7 @@ msgid "Unsupported port type: %d.This driver only works with USBcameras.\n"
 msgstr ""
 "Type de port non géré : %d. Ce pilote ne marche qu'avec des appareils USB.\n"
 
-#: camlibs/gsmart300/library.c:216 camlibs/spca50x/library.c:604
+#: camlibs/gsmart300/library.c:216 camlibs/spca50x/library.c:610
 msgid "Could not reset camera.\n"
 msgstr "Impossible de remettre l'appareil à zéro.\n"
 
