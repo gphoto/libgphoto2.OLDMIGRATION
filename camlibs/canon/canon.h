@@ -10,6 +10,11 @@
 #ifndef _LIBRARY_H
 #define _LIBRARY_H
 
+/* ISO C99: 7.18 Integer types <stdint.h> */
+#include <stdint.h>
+
+#include <gphoto2.h>
+
 /* Defines for error handling */
 #define NOERROR		0
 #define ERROR_RECEIVED	1
@@ -87,6 +92,11 @@ struct _CameraPrivateLibrary
 	unsigned char seq_tx;
 	unsigned char seq_rx;
 
+
+	/* this has nothing to do with CameraFilesystem and will
+	   therefore probably remain here */
+	int cached_ready;   /* whether canon_int_ready has already been called */
+
 /*
  * Directory access may be rather expensive, so we cached some
  * information in the past. This is now done with the CameraFileSystem
@@ -95,10 +105,9 @@ struct _CameraPrivateLibrary
  * The first variable in each block indicates whether the block is valid.
  */
 
+	char *cached_drive; /* usually something like C: or D: */
 #ifdef OBSOLETE
-	int cached_ready;
 	int cached_disk;
-	char *cached_drive; /* usually something like C: */
 	int cached_capacity;
 	int cached_available;
 	int cached_dir;
@@ -116,6 +125,23 @@ struct _CameraPrivateLibrary
  */
 #define CANON_MINIMUM_DIRENT_SIZE	11
 
+/**
+ * canon_dirent :
+ *
+ * makes symbolic interpretation of a dirent as delivered by the
+ * camera easier and more understandable
+ *
+ * XXX: is __attribute__((packed)) portable or do we require gcc anyway?
+ */
+
+typedef struct _canon_dirent canon_dirent;
+struct _canon_dirent {
+	uint8_t attrs;           /* one octet for attributes */
+	uint8_t reserved_attrs;  /* one octet that is 0x00 */
+	uint32_t datetime;       /* four octets */
+	uint32_t size;           /* four octets */
+	char name[0];            /* until \0 character */
+} __attribute__((packed));
 
 
 /*
@@ -127,10 +153,8 @@ struct _CameraPrivateLibrary
 #define DIR_CREATE 0
 #define DIR_REMOVE 1
 
-
-typedef unsigned long u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#define CANON_LIST_FILES   (1 << 0)
+#define CANON_LIST_FOLDERS (1 << 1)
 
 #ifndef byteswap32
 #ifdef __sparc
@@ -170,7 +194,7 @@ int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,
  *
  */
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
-int canon_int_list_directory(Camera *camera, CameraFilesystem *fs, CameraList *filelist, char *folder);
+int canon_int_list_directory(Camera *camera, const char *folder, CameraList *list, const int flags);
 unsigned char *canon_int_get_thumbnail(Camera *camera, const char *name,int *length);
 int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
 int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
@@ -184,12 +208,16 @@ int canon_int_identify_camera(Camera *camera);
 int canon_int_set_owner_name(Camera *camera, const char *name);
 
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
-char *canon2gphotopath(char *path);
-char *gphoto2canonpath(char *path);
+// char *canon2gphotopath(Camera *camera, char *path);
+char *gphoto2canonpath(Camera *camera, char *path);
+const char *canon2gphotopath (Camera *camera, const char *path);
 
 /* not sure whether these belong here :-) */
 int canon_int_serial_ready (Camera *camera);
 int canon_int_usb_ready (Camera *camera);
+
+/* display fileinfo with gp_log */
+void debug_fileinfo (CameraFileInfo *info);
 
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
