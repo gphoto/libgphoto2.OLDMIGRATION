@@ -230,6 +230,9 @@ if $try_pkgconfig; then
 		pkgconfig_msg="yes"
 	fi
 fi
+# guessing directory to install *.pc into
+pkgconfigdir='${libdir}/pkgconfig'
+AC_SUBST(pkgconfigdir)
 
 dnl ---------------------------------------------------------------------------
 dnl libexif: The CameraFilesystem can use libexif for extracting thumbnails
@@ -416,4 +419,7 @@ echo "
 Please check whether the configuration I detected matches what you
 would like to have. E.g. make sure that USB support is there if you
 intend to use USB cameras with $PACKAGE.
+
+Please also check that PKG_CONFIG_PATH contains ${pkgconfigdir} 
+before compiling any libgphoto2 frontend.
 "
