@@ -1342,9 +1342,10 @@ static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileInfo * info, void *data)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon get_info_func() "
-			 "called for '%s'/'%s'", folder, filename);
+	GP_DEBUG ("get_info_func() "
+		  "called for '%s'/'%s'", folder, filename);
 
+#ifdef PERHAPS_OBSOLETE
 	info->preview.fields = GP_FILE_INFO_TYPE;
 
 	/* thumbnails are always jpeg on Canon Cameras */
@@ -1355,13 +1356,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	// | GP_FILE_INFO_PERMISSIONS | GP_FILE_INFO_SIZE;
 	//info->file.fields.permissions = 
 
-	if (is_movie (filename))
-		strcpy (info->file.type, GP_MIME_AVI);
-	else if (is_image (filename))
-		strcpy (info->file.type, GP_MIME_JPEG);
-	else
-		/* May no be correct behaviour ... */
-		strcpy (info->file.type, "unknown");
+	strncpy (info->file.type, filename2mimetype(filename), 
+		 sizeof(info->file.type));
+#endif
 
 	strcpy (info->file.name, filename);
 
