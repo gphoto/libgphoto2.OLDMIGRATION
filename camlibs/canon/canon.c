@@ -1202,14 +1202,9 @@ canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, 
 
 			if (is_file) {
 				/* determine file type based on file name */
-				if (is_movie (info.file.name))
-					strncpy (info.file.type, GP_MIME_AVI, sizeof(info.file.type));
-				else if (is_jpeg (info.file.name))
-					strncpy (info.file.type, GP_MIME_JPEG, sizeof(info.file.type));
-				else if (is_crw (info.file.name))
-					strncpy (info.file.type, GP_MIME_CRW, sizeof(info.file.type));
-				else
-					strncpy (info.file.type, GP_MIME_UNKNOWN, sizeof(info.file.type));			
+
+				strncpy (info.file.type, filename2mimetype (info.file.name),
+					 sizeof(info.file.type));
 				info.file.fields |= GP_FILE_INFO_TYPE;
 				
 				if ((dirent->attrs && CANON_ATTR_DOWNLOADED) == 0)
