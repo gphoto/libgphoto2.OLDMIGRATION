@@ -369,7 +369,7 @@ canon_int_set_owner_name (Camera *camera, const char *name)
  * The camera gives time in little endian format, therefore we need
  * to swap the 4 bytes on big-endian machines.
  *
- * Nota: the time returned is not GMT but local time. Therefore,
+ * Note: the time returned is not GMT but local time. Therefore,
  * if you use functions like "ctime", it will be translated to local
  * time _a second time_, and the result will be wrong. Only use functions
  * that don't translate the date into localtime, like "gmtime".
