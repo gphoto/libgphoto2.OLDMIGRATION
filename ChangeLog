@@ -1,3 +1,9 @@
+2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+
+        Suggestion from Hans Ulrich Niedermann <gp@n-dimensional.de>:
+
+        * autogen.sh: Remove the call to configure.
+
 2002-06-18  Christophe Barbé <christophe.barbe@ufies.org>
 
    po file from Fabian Mandelbaum <fabman@mandrakesoft.com>
