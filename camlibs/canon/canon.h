@@ -65,9 +65,15 @@ typedef enum {
 	CANON_PS_PRO90_IS
 } canonCamModel;
 
-#define CHECK_PARAM_NULL(param) \
+#define CAM_CHECK_PARAM_NULL(param) \
 	if (param == NULL) { \
 		gp_camera_set_error (camera, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
+		return GP_ERROR_BAD_PARAMETERS; \
+	}
+
+#define CHECK_PARAM_NULL(param) \
+	if (param == NULL) { \
+		GP_LOG (GP_LOG_ERROR, "NULL param \"%s\" in %s line %i", #param, __FILE__, __LINE__); \
 		return GP_ERROR_BAD_PARAMETERS; \
 	}
 
@@ -83,11 +89,6 @@ struct canonCamModelData
 };
 
 extern const struct canonCamModelData models[];
-
-#undef S10M
-#undef S2M
-#undef S1M
-#undef S32K
 
 struct _CameraPrivateLibrary
 {
@@ -154,16 +155,18 @@ struct _CameraPrivateLibrary
 /* These contain the default label for all the 
  * switch (camera->port->type) statements
  */
-#define GP_PORT_DEFAULT_RETURN(RETVAL) \
+#define GP_PORT_DEFAULT_RETURN_INTERNAL(return_statement) \
 		default: \
 			gp_camera_set_error (camera, "Don't know how to handle " \
 					     "camera->port->type value %i aka 0x%x" \
 					     "in %s line %i.", camera->port->type, \
 					     camera->port->type, __FILE__, __LINE__); \
-			return RETVAL; \
+			return_statement; \
 			break;
 
-#define GP_PORT_DEFAULT GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
+#define GP_PORT_DEFAULT_RETURN_EMPTY   GP_PORT_DEFAULT_RETURN_INTERNAL(return)
+#define GP_PORT_DEFAULT_RETURN(RETVAL) GP_PORT_DEFAULT_RETURN_INTERNAL(return RETVAL)
+#define GP_PORT_DEFAULT                GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
@@ -196,7 +199,7 @@ int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,
 int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const int flags);
 void canon_int_free_dir(Camera *camera, struct canon_dir *list);
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
-unsigned char *canon_int_get_thumbnail(Camera *camera, const char *name,int *length);
+int canon_int_get_thumbnail(Camera *camera, const char *name, unsigned char **retdata, int *length);
 int canon_int_put_file(Camera *camera, CameraFile *file, char *destname, char *destpath);
 int canon_int_set_file_attributes(Camera *camera, const char *file, const char *dir, unsigned char attrs);
 int canon_int_delete_file(Camera *camera, const char *name, const char *dir);
@@ -211,6 +214,8 @@ int canon_int_set_owner_name(Camera *camera, const char *name);
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 const char *canon2gphotopath(Camera *camera, const char *path);
 const char *gphoto2canonpath(Camera *camera, const char *path);
+
+const char *canon_int_filename2thumbname (Camera *camera, const char *filename);
 
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
