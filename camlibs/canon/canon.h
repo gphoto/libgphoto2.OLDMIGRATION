@@ -256,9 +256,9 @@ struct canonCamModelData
 	unsigned short usb_vendor;
 	unsigned short usb_product;
 	canonCaptureSupport usb_capture_support;
-	unsigned int max_picture_size;
 	unsigned int max_movie_size;
 	unsigned int max_thumbnail_size;
+	unsigned int max_picture_size;
 	char *serial_id_string; /* set to NULL if camera doesn't support serial connections */
 };
 
