@@ -181,15 +181,15 @@ static struct {
 	 * The very first PTP camera (with special firmware only), also
 	 * called "PTP Prototype", may report non PTP interface class
 	 */
-	{"Kodak DC240 (PTP)",  0x040a, 0x0121},
+	{"Kodak DC240 (PTP mode)",  0x040a, 0x0121},
 	/*
-	 * Old DC4800 firmware reported custom interface class, so we have
+	 * Old DC-4800 firmware reported custom interface class, so we have
 	 * to detect it by product/vendor IDs
 	 */
 	{"Kodak DC4800", 0x040a, 0x0160},
 	/* Below other camers known to be detected by interface class */
-
- 	{"Kodak DC3900", 0x040a, 0x0170},
+	
+	{"Kodak DC3900", 0x040a, 0x0170},
 	{"Kodak DX3215", 0x040a, 0x0525},
 	{"Kodak DX3500", 0x040a, 0x0500},
 	{"Kodak DX3600", 0x040a, 0x0510},
@@ -200,41 +200,45 @@ static struct {
 	{"Kodak DX4330", 0x040a, 0x0555},
 	{"Kodak DX4900", 0x040a, 0x0550},
 	{"Kodak MC3", 0x040a, 0x0400},
- 	{"Kodak LS420", 0x040a, 0x0540},
- 	{"Kodak CX4210", 0x040a, 0x0560},
- 	{"Kodak CX4230", 0x040a, 0x0535},
+	{"Kodak LS420", 0x040a, 0x0540},
+	{"Kodak CX4210", 0x040a, 0x0560},
+	{"Kodak CX4230", 0x040a, 0x0535},
 
 
 	/* HP PTP cameras */
-	{"HP PhotoSmart 318", 0x03f0, 0x6302},
-	{"HP PhotoSmart 612", 0x03f0, 0x6302},
-	{"HP PhotoSmart 715",  0x03f0, 0x6402},
+	{"HP PhotoSmart 318 (PTP mode)", 0x03f0, 0x6302},
+	{"HP PhotoSmart 612 (PTP mode)", 0x03f0, 0x6302},
+	{"HP PhotoSmart 715 (PTP mode)",  0x03f0, 0x6402},
 	/* I got information that all SONY PTP cameras use the same
 	   product/vendor IDs */
-	{"Sony DSC-P5", 0x054c, 0x004e},
-	{"Sony DSC-F707V", 0x054c, 0x004e},
-	{"Sony DSC-P30", 0x054c, 0x004e},
-	{"Sony DSC-P50",  0x054c, 0x004e},
-	{"Sony DSC-S75",  0x054c, 0x004e},
-	{"Sony DSC-S85",  0x054c, 0x004e},
-	{"Sony MVC-CD300",  0x054c, 0x004e},
+	{"Sony DSC-P5 (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-F707V (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-P30 (PTP mode)", 0x054c, 0x004e},
+	{"Sony DSC-P50 (PTP mode)",  0x054c, 0x004e},
+	{"Sony DSC-S75 (PTP mode)",  0x054c, 0x004e},
+	{"Sony DSC-S85 (PTP mode)",  0x054c, 0x004e},
+	{"Sony MVC-CD300 (PTP mode)",  0x054c, 0x004e},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon DSC D100 (PTP mode)", 0x04b0, 0x0402},
-	/* Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
+	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
 	{"Nikon Coolpix 5700 (PTP mode)", 0x04b0, 0x010d},
-	/* Coolpix 885: S. Anderson, 19 nov 2002 */
+	/* Nikon Coolpix 885: S. Anderson, 19 nov 2002 */
 	{"Nikon Coolpix 885 (PTP mode)", 0x04b0, 0x0112},
 
+
 	/* (at least some) newer Canon cameras can be switched between
-	 * PTP and "normal" (i.e. Canon) mode
-	 * IXUS v3 and S230 are identical, but both are listed for
-	 * user's convenience
+	 * PTP and "normal" (i.e. Canon) mode 
+	 * Canon PS G3: A. Marinichev, 20 nov 2002
 	 */
-	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d}, /* 0x306c is S45 in normal (canon) mode */
-	{"Canon PowerShot G3 (PTP mode)", 0x04a9, 0x306f}, /* 0x306e is G3 in normal (canon) mode */
-	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071}, /* 0x3070 is S230 in normal (canon) mode */
-	{"Canon Digital IXUS v3 (PTP mode)", 0x04a9, 0x3071}, /* 0x3070 is v3 in normal (canon) mode */
+	{"Canon PowerShot S45 (PTP mode)", 0x04a9, 0x306d},
+		/* 0x306c is S45 in normal (canon) mode */
+	{"Canon PowerShot G3 (PTP mode)", 0x04a9, 0x306f},
+		/* 0x306e is G3 in normal (canon) mode */
+	{"Canon PowerShot S230 (PTP mode)", 0x04a9, 0x3071},
+		/* 0x3070 is S230 in normal (canon) mode */
+	{"Canon Digital IXUS v3 (PTP mode)",  0x04a9, 0x3071},
+		/* it's the same as S230 */
 
 	/* more coming soon :) */
 	{NULL, 0, 0}
