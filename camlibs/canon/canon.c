@@ -1137,11 +1137,23 @@ canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **retda
  * in an extra file. Until then, we just replace .XXX by .THM
  * and return that string.
  **/
+
+/* simulate capabilities */
+#define thumbnail_jpeg_extra_file (0 == 1)
+#define thumbnail_crw_extra_file (0 == 0)
+
 const char *
 canon_int_thumbnail_file_name (Camera *camera, const char *filename)
 {
-	static char buf[300];
+	static char buf[1024];
 	char *p;
+
+	if (!thumbnail_jpeg_extra_file && is_jpeg(filename))
+		return NULL;
+	if (!thumbnail_crw_extra_file && is_crw(filename))
+		return NULL;
+	if (is_thumbnail(filename))
+		return filename;
 
 	if (strncpy (buf, filename, sizeof(buf)) < 0) {
 		GP_DEBUG ("Buffer too small in %s line %i.", 

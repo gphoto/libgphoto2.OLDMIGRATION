@@ -526,12 +526,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 							  &data, &buflen);
 			} else {
 				ret = canon_int_get_thumbnail (camera, canon_path, &data, &size);
-				if (ret != GP_OK) {
-					GP_DEBUG ("canon_get_picture: ",
-						  "canon_int_get_thumbnail() '%s' %d failed!",
-						  canon_path, size);
-					return GP_ERROR;
-				}
 			}
 			break;
 		default:
@@ -540,7 +534,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	if (ret != GP_OK) {
-		GP_DEBUG ("camera_file_get: " "canon_get_picture() failed, returned %i", ret);
+		GP_DEBUG ("get_file_func: "
+			  "getting image data failed, returned %i", ret);
+		/* XXX we should return a generic error image here 
+		 * and NOT return an error. This lets us handle
+		 * non-thumbnailed files MUCH better.
+		 */
 		return ret;
 	}
 
