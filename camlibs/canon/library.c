@@ -580,9 +580,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 /****************************************************************************/
 
-
+/**
+ * pretty_number:
+ * @number: integer number to format
+ * @buffer: string buffer where to store the result
+ *
+ * Format an integer number with "'" as the thousands separator.
+ * There should be a library routing which does that, like the
+ * "%'13u" directive for sprintf in the glibc.
+ **/
 static void
-pretty_number (int number, char *buffer)
+pretty_number (unsigned int number, char *buffer)
 {
 	int len, tmp, digits;
 	char *pos;
@@ -612,12 +620,12 @@ pretty_number (int number, char *buffer)
 static int
 camera_summary (Camera *camera, CameraText *summary)
 {
-	char a[20], b[20];
 	char *model;
 	int pwr_source, pwr_status;
 	char power_stats[48], cde[16];
 
 	unsigned int capacity, available;
+	char capacity_str[20], available_str[20];
 
 	GP_DEBUG ("camera_summary()");
 
@@ -628,9 +636,6 @@ camera_summary (Camera *camera, CameraText *summary)
 		camera->pl->cached_drive = canon_int_get_disk_name (camera);
 
 	canon_int_get_disk_name_info (camera, camera->pl->cached_drive, &capacity, &available);
-
-	pretty_number (capacity, a);
-	pretty_number (available, b);
 
 	model = "Canon PowerShot";
 	switch (camera->pl->model) {
@@ -704,9 +709,22 @@ camera_summary (Camera *camera, CameraText *summary)
 			break;
 	}
 
+	pretty_number (capacity, capacity_str);
+	pretty_number (available, available_str);
+
 	sprintf (summary->text,
-		 _("%s\n%s\n%s\nDrive %s\n%11s bytes total\n%11s bytes available\n"), model,
-		 camera->pl->owner, power_stats, camera->pl->cached_drive, a, b);
+		 _("%s\n"
+		   "%s\n"
+		   "%s\n"
+		   "Drive %s\n"
+		   "%13s bytes total\n"
+		   "%13s bytes available\n"),
+		 model,
+		 camera->pl->owner, 
+		 power_stats, 
+		 camera->pl->cached_drive, 
+		 capacity_str, available_str);
+
 	return GP_OK;
 }
 
@@ -999,7 +1017,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 
 	gp_widget_new (GP_WIDGET_WINDOW, "Canon PowerShot Configuration", window);
 
-	gp_widget_new (GP_WIDGET_SECTION, _("Configure"), &section);
+	gp_widget_new (GP_WIDGET_SECTION, _("Camera"), &section);
 	gp_widget_append (*window, section);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Camera Model"), &t);
@@ -1010,19 +1028,16 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_set_value (t, camera->pl->owner);
 	gp_widget_append (section, t);
 
-#ifdef TBD
-	gp_widget_new (GP_WIDGET_TEXT, "date", &t);
-	if (camera->pl->cached_ready == 1) {
-		camtime = canon_int_get_time (camera);
-		if (camtime != GP_ERROR) {
-			camtm = gmtime (&camtime);
-			gp_widget_set_value (t, asctime (camtm));
-		} else
-			gp_widget_set_value (t, _("Error"));
-	} else
-		gp_widget_set_value (t, _("Unavailable"));
+	if (check_readiness(camera) != 1) {
+		GP_DEBUG ("Camera not ready. Ignoring rest of settings");
+		return GP_OK;
+	}
+	gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &t);
 	gp_widget_append (section, t);
-#endif
+	camtime = canon_int_get_time (camera);
+	camtm = gmtime(&camtime);
+	camtime = mktime(camtm);
+	gp_widget_set_value (t, &camtime);
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _("Set camera date to PC date"), &t);
 	gp_widget_append (section, t);
@@ -1033,8 +1048,7 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_set_value (t, firm);
 	gp_widget_append (section, t);
 
-#ifdef TBD
-	if (camera->pl->cached_ready == 1) {
+	if (check_readiness(camera) == 1) {
 		canon_get_batt_status (camera, &pwr_status, &pwr_source);
 		if ((pwr_source & CAMERA_MASK_BATTERY) == 0) {
 			strcpy (power_stats, _("AC adapter "));
@@ -1062,10 +1076,19 @@ camera_get_config (Camera *camera, CameraWidget **window)
 	gp_widget_new (GP_WIDGET_TEXT, _("Power"), &t);
 	gp_widget_set_value (t, power_stats);
 	gp_widget_append (section, t);
-#endif
 
-	gp_widget_new (GP_WIDGET_SECTION, _("Debug"), &section);
+	gp_widget_new (GP_WIDGET_SECTION, _("Driver"), &section);
 	gp_widget_append (*window, section);
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _("List all files"), &t);
+	gp_widget_set_value (t, &camera->pl->list_all_files);
+	gp_widget_append (section, t);
+
+#ifdef CANON_FLATTEN
+	gp_widget_new (GP_WIDGET_TOGGLE, _("Flatten directory structure"), &t);
+	gp_widget_set_value (t, &camera->pl->flatten_folders);
+	gp_widget_append (section, t);
+#endif
 
 	return GP_OK;
 }
@@ -1105,6 +1128,22 @@ camera_set_config (Camera *camera, CameraWidget *window)
 		}
 	}
 
+	gp_widget_get_child_by_label (window, _("List all files"), &w);
+	if (gp_widget_changed (w)) {
+		/* XXX mark CameraFS as dirty */
+		gp_widget_get_value (w, &camera->pl->list_all_files);
+		GP_DEBUG ("New config value for tmb: %i", &camera->pl->list_all_files);
+	}
+
+#ifdef CANON_FLATTEN
+	gp_widget_get_child_by_label (window, _("Flatten directory structure"), &w);
+	if (gp_widget_changed (w)) {
+		/* XXX mark CameraFS as dirty */
+		gp_widget_get_value (w, &camera->pl->flatten_folders);
+		GP_DEBUG ("New config value for flatten: %i", &camera->pl->flatten_folders);
+	}
+#endif
+	
 	gp_debug_printf (GP_DEBUG_LOW, "canon", _("done configuring camera.\n"));
 
 	return GP_OK;
@@ -1212,6 +1251,11 @@ camera_init (Camera *camera)
 	camera->pl->first_init = 1;
 	camera->pl->seq_tx = 1;
 	camera->pl->seq_rx = 1;
+
+#ifdef CANON_FLATTEN
+	camera->pl->flatten_folders = (0 == 0);
+#endif
+	camera->pl->list_all_files = (0 == 0);
 
 	switch (camera->port->type) {
 		case GP_PORT_USB:
