@@ -193,9 +193,7 @@ camera_abilities (CameraAbilitiesList *list)
 void
 clear_readiness (Camera *camera)
 {
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_readiness()");
-
-	camera->pl->cached_ready = 0;
+	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_readiness() OBSOLETE DUMMY");
 }
 
 static int
@@ -256,34 +254,6 @@ canon_get_batt_status (Camera *camera, int *pwr_status, int *pwr_source)
 		return -1;
 
 	return canon_int_get_battery (camera, pwr_status, pwr_source);
-}
-
-static int
-update_disk_cache (Camera *camera)
-{
-	char root[10];		/* D:\ or such */
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_disk_cache()");
-
-	if (camera->pl->cached_disk)
-		return 1;
-	if (!check_readiness (camera))
-		return 0;
-	camera->pl->cached_drive = canon_int_get_disk_name (camera);
-	if (!camera->pl->cached_drive) {
-		gp_camera_status (camera, _("No response"));
-		return 0;
-	}
-	snprintf (root, sizeof (root), "%s\\", camera->pl->cached_drive);
-	if (!canon_int_get_disk_name_info (camera, root,
-					   &camera->pl->cached_capacity,
-					   &camera->pl->cached_available)) {
-		gp_camera_status (camera, _("No response"));
-		return 0;
-	}
-	camera->pl->cached_disk = 1;
-
-	return 1;
 }
 
 /* This function is only used by A5 */
@@ -436,6 +406,7 @@ update_dir_cache (Camera *camera)
 	switch (camera->pl->model) {
 		case CANON_PS_A5:
 		case CANON_PS_A5_ZOOM:
+			/* FIXME: This must be worked into canon_int_list_directory() */
 			if (recurse (camera, camera->pl->cached_drive)) {
 				gp_debug_printf (GP_DEBUG_LOW, "canon", _("Before sort:\n"));
 				for (i = 1; i < camera->pl->cached_images; i++) {
@@ -466,48 +437,13 @@ update_dir_cache (Camera *camera)
 }
 
 static int
-_canon_file_list (struct canon_dir *tree, const char *folder, CameraList *list)
-{
-
-	if (!tree) {
-		return GP_ERROR;
-	}
-
-	while (tree->name) {
-		if (is_image (tree->name) || is_movie (tree->name)) {
-			gp_list_append (list, (char *) tree->name, NULL);
-		} else if (!tree->is_file) {
-			_canon_file_list (tree->user, folder, list);
-		}
-		tree++;
-	}
-
-	return GP_OK;
-}
-
-static int
-canon_file_list (Camera *camera, const char *folder, CameraList *list)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_file_list()");
-
-	if (!update_dir_cache (camera)) {
-		gp_camera_status (camera, _("Could not obtain directory listing"));
-		return GP_ERROR;
-	}
-
-	_canon_file_list (camera->pl->cached_tree, folder, list);
-	return GP_OK;
-}
-
-
-static int
-file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data)
+file_list_func (CameraFilesystem *fs, const char *folder, CameraList *filelist, void *data)
 {
 	Camera *camera = data;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_list()");
+	GP_DEBUG("file_list()");
 
-	return canon_file_list (camera, folder, list);
+	return canon_int_list_directory(camera,fs,filelist,folder);
 }
 
 /****************************************************************************
