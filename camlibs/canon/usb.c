@@ -722,6 +722,9 @@ canon_usb_get_dirents (Camera *camera, unsigned char **dirent_data,
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	memset (payload, 0x00, sizeof (payload));
+#ifdef CANON_FLATTEN
+	payload[0] = (camera->pl->flatten_folders?20:0); /* XXX */
+#endif
 	memcpy (payload + 1, path, strlen (path));
 	payload_length = strlen (path) + 4;
 
