@@ -215,7 +215,7 @@ canon_serial_get_byte (GPPort *gdev)
 	}
 
 	recv = gp_port_read (gdev, cache, 1);
-	if (recv == GP_ERROR || recv == GP_ERROR_IO_TIMEOUT)
+	if (recv == GP_ERROR || recv == GP_ERROR_TIMEOUT)
 		return -1;
 
 	cachep = cache;
@@ -550,11 +550,16 @@ canon_serial_send_msg (Camera *camera, unsigned char mtype, unsigned char dir, v
 					     camera->pl->psa50_eot + PKT_HDR_LEN, 0))
 						return 0;
 					good_ack = canon_serial_wait_for_ack (camera);
-					if (good_ack == 0) {
+					if (good_ack == 0) { /* FALSE */
 						camera->pl->receive_error = FATAL_ERROR;
 						gp_debug_printf (GP_DEBUG_LOW, "canon",
 								 "ERROR: FATAL ERROR\n");
-						clear_readiness (camera);
+						/* clear_readiness (camera); */
+						/* clear_readiness
+						 * will be called
+						 * anyway - whether we
+						 * return an error
+						 * here or not */
 						return -1;
 					}
 				}
