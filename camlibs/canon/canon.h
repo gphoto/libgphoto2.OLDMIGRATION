@@ -203,7 +203,6 @@ int canon_int_get_file (Camera *camera, const char *name, unsigned char **data, 
 int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list,
 			      const int flags);
 int canon_int_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length);
-int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length);
 int canon_int_put_file (Camera *camera, CameraFile *file, char *destname, char *destpath);
 int canon_int_set_file_attributes (Camera *camera, const char *file, const char *dir,
 				   unsigned char attrs);

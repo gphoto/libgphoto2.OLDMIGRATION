@@ -45,6 +45,7 @@ int canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			      unsigned int *dirents_length, const char *path);
 
 int canon_serial_ready (Camera *camera);
+int canon_serial_get_thumbnail (Camera *camera, const char *name, unsigned char **data, int *length);
 
 #define MAX_TRIES 10
 
