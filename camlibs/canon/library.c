@@ -166,8 +166,7 @@ canon_int_switch_camera_off (Camera *camera)
 		case GP_PORT_USB:
 			GP_DEBUG ("Not trying to shut down USB camera...");
 			break;
-		case GP_PORT_NONE:
-		GP_PORT_DEFAULT
+		GP_PORT_DEFAULT_RETURN()
 	}
 	clear_readiness (camera);
 }
@@ -227,229 +226,32 @@ update_disk_cache (Camera *camera)
 	return 1;
 }
 
-/* This function is only used by A5 */
-
-static int
-recurse (Camera *camera, const char *name)
-{
-	struct canon_dir *dir, *walk;
-	char buffer[300];	/* longest path, etc. */
-	int count, curr, res;
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "recurse() name '%s'", name);
-
-	res = canon_int_list_directory (camera, &dir, name);
-	if (res != GP_OK)
-		return res;
-
-	if (dir == NULL)
-		return 1;
-
-	count = 0;
-	for (walk = dir; walk->name; walk++)
-		if (walk->size && (is_image (walk->name) || is_movie (walk->name)))
-			count++;
-	camera->pl->cached_paths =
-		realloc (camera->pl->cached_paths,
-			 sizeof (char *) * (camera->pl->cached_images + count + 1));
-	memset (camera->pl->cached_paths + camera->pl->cached_images + 1, 0,
-		sizeof (char *) * count);
-	if (!camera->pl->cached_paths) {
-		perror ("realloc");
-		return 0;
-	}
-	curr = camera->pl->cached_images;
-	camera->pl->cached_images += count;
-	for (walk = dir; walk->name; walk++) {
-		sprintf (buffer, "%s\\%s", name, walk->name);
-		if (!walk->size) {
-			if (!recurse (camera, buffer))
-				return 0;
-		} else {
-			if ((!is_image (walk->name)) && (!is_movie (walk->name)))
-				continue;
-			curr++;
-			camera->pl->cached_paths[curr] = strdup (buffer);
-			if (!camera->pl->cached_paths[curr]) {
-				perror ("strdup");
-				return 0;
-			}
-		}
-	}
-	free (dir);
-	return 1;
-}
-
-
-
-/* This function is only used by A50 */
-
-static struct canon_dir *
-dir_tree (Camera *camera, const char *path)
-{
-	struct canon_dir *dir, *walk;
-	char buffer[300];	/* longest path, etc. */
-	int res;
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "dir_tree() path '%s'", path);
-
-	res = canon_int_list_directory (camera, &dir, path);
-	if (res != GP_OK)
-		return NULL;
-
-	if (dir == NULL)
-		return NULL;	/* assume it's empty @@@ */
-	for (walk = dir; walk->name; walk++) {
-		if (walk->is_file) {
-			if (is_image (walk->name) || is_movie (walk->name)
-			    || is_thumbnail (walk->name))
-				camera->pl->cached_images++;
-		} else {
-			sprintf (buffer, "%s\\%s", path, walk->name);
-			walk->user = dir_tree (camera, buffer);
-		}
-	}
-	qsort (dir, walk - dir, sizeof (*dir), comp_dir);
-	return dir;
-}
-
-
-static void
-clear_dir_cache (Camera *camera)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "clear_dir_cache()");
-
-	canon_int_free_dir (camera, camera->pl->cached_tree);
-}
-
-
-/* A5 only: sort THB_ and AUT_ into their proper arrangement. */
-static int
-compare_a5_paths (const void *p1, const void *p2)
-{
-	const char *s1 = *((const char **) p1);
-	const char *s2 = *((const char **) p2);
-	const char *ptr, *base1, *base2;
-	int n1 = 0, n2 = 0;
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "compare_a5_paths()");
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", _("Comparing %s to %s\n"), s1, s2);
-
-	ptr = strrchr (s1, '_');
-	if (ptr)
-		n1 = strtol (ptr + 1, 0, 10);
-	ptr = strrchr (s2, '_');
-	if (ptr)
-		n2 = strtol (ptr + 1, 0, 10);
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", _("Numbers are %d and %d\n"), n1, n2);
-
-	if (n1 < n2)
-		return -1;
-	else if (n1 > n2)
-		return 1;
-	else {
-		base1 = strrchr (s1, '\\');
-		base2 = strrchr (s2, '\\');
-		gp_debug_printf (GP_DEBUG_LOW, "canon", _("Base 1 is %s and base 2 is %s\n"),
-				 base1, base2);
-		return strcmp (base1, base2);
-	}
-}
-
-
-static int
-update_dir_cache (Camera *camera)
-{
-	int i;
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "update_dir_cache() "
-			 "cached_dir = %i", camera->pl->cached_dir);
-
-	if (camera->pl->cached_dir)
-		return 1;
-	if (!update_disk_cache (camera))
-		return 0;
-	if (!check_readiness (camera))
-		return 0;
-	camera->pl->cached_images = 0;
-	switch (camera->pl->md->model) {
-		case CANON_PS_A5:
-		case CANON_PS_A5_ZOOM:
-			if (recurse (camera, camera->pl->cached_drive)) {
-				gp_debug_printf (GP_DEBUG_LOW, "canon", _("Before sort:\n"));
-				for (i = 1; i < camera->pl->cached_images; i++) {
-					gp_debug_printf (GP_DEBUG_LOW, "canon", "%d: %s\n", i,
-							 camera->pl->cached_paths[i]);
-				}
-				qsort (camera->pl->cached_paths + 1, camera->pl->cached_images,
-				       sizeof (char *), compare_a5_paths);
-				gp_debug_printf (GP_DEBUG_LOW, "canon", _("After sort:\n"));
-				for (i = 1; i < camera->pl->cached_images; i++) {
-					printf ("%d: %s\n", i, camera->pl->cached_paths[i]);
-				}
-				camera->pl->cached_dir = 1;
-				return 1;
-			}
-			clear_dir_cache (camera);
-			return 0;
-			break;
-
-		default:	/* A50 or S10 or other */
-			camera->pl->cached_tree = dir_tree (camera, camera->pl->cached_drive);
-			if (!camera->pl->cached_tree)
-				return 0;
-			camera->pl->cached_dir = 1;
-			return 1;
-			break;
-	}
-}
-
-static int
-_canon_file_list (struct canon_dir *tree, const char *folder, CameraList *list)
-{
-
-	if (!tree) {
-		return GP_ERROR;
-	}
-
-	while (tree->name) {
-		if (is_image (tree->name) || is_movie (tree->name)) {
-			gp_list_append (list, (char *) tree->name, NULL);
-		} else if (!tree->is_file) {
-			_canon_file_list (tree->user, folder, list);
-		}
-		tree++;
-	}
-
-	return GP_OK;
-}
-
-static int
-canon_file_list (Camera *camera, const char *folder, CameraList *list)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "canon_file_list()");
-
-	if (!update_dir_cache (camera)) {
-		gp_camera_status (camera, _("Could not obtain directory listing"));
-		return GP_ERROR;
-	}
-
-	_canon_file_list (camera->pl->cached_tree, folder, list);
-	return GP_OK;
-}
-
-
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data)
 {
 	Camera *camera = data;
 
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "camera_file_list()");
+	GP_DEBUG ("file_list_func()");
 
-	return canon_file_list (camera, folder, list);
+	if (!check_readiness (camera))
+		return GP_ERROR;
+
+	return canon_int_list_directory (camera, folder, list, CANON_LIST_FILES);
 }
+
+static int
+folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list, void *data)
+{
+	Camera *camera = data;
+
+	GP_DEBUG ("folder_list_func()");
+
+	if (!check_readiness (camera))
+		return GP_ERROR;
+
+	return canon_int_list_directory (camera, folder, list, CANON_LIST_FOLDERS);
+}
+
 
 /****************************************************************************
  *
@@ -501,11 +303,13 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 		default:
 			/* For A50 or others */
 			/* clear_readiness(); */
+#ifdef OBSOLETE
 			if (!update_dir_cache (camera)) {
 				gp_camera_status (camera,
 						  _("Could not obtain directory listing"));
 				return GP_ERROR;
 			}
+#endif
 
 			/* strip trailing backslash on path, if any */
 			if (path[strlen (path) - 1] == '\\')
@@ -575,92 +379,6 @@ canon_get_picture (Camera *camera, char *filename, char *path, int thumbnail,
 	return GP_ERROR;
 }
 
-/**
- * _get_file_path:
- * @camera: a #Camera to work with
- * @canon_dir: seems to be a reference to the current
- * @filename: seems to be the file name to look for
- * @path: returns (?!) the full path to the file given by @filename
- *
- * _get_file_path seems to find a given filename anywhere in the
- * directory tree and returns the complete path to the file in @path.
- *
- * _get_file_path is an internal function and is only called from #get_file_path.
- *
- * This function recursively looks for @filename in @tree and returns a concatenated
- * @path if the filename is found somewhere in @tree.
- *
- * Return value: a gphoto2 error code.
- **/
-int
-_get_file_path (Camera *camera, struct canon_dir *tree, const char *filename, char *path,
-		int recursively_entered)
-{
-	static char newpath[1024];
-	char *temp_ch;
-
-	GP_DEBUG ("_get_file_path() called: filename '%s' path '%s' recurs %i", filename, path,
-		  recursively_entered);
-
-	if (tree == NULL)
-		return GP_ERROR;
-
-	/* initiate newpath if we are not recursively entered */
-	if (!recursively_entered)
-		strcpy (newpath, path);
-
-	/* add trailing backslash if missing */
-	if (newpath[strlen (newpath) - 1] != '\\')
-		strcat (newpath, "\\");
-
-	while (tree->name) {
-		if (strcmp (tree->name, filename) == 0 &&
-		    (is_image (tree->name) || is_movie (tree->name) ||
-		     is_thumbnail (tree->name))) {
-			/* we've got a match! */
-			GP_DEBUG ("_get_file_path() returns with "
-				  "filename '%s' path '%s'", filename, path);
-			if (!recursively_entered)
-				strcpy (path, newpath);
-			return GP_OK;
-		}
-		if (!tree->is_file) {
-			/* remember where newpath ends */
-			temp_ch = strrchr (newpath, 0);
-
-			/* not a file, must be a directory. append name to newpath */
-			strncat (newpath, tree->name, sizeof (newpath) - strlen (newpath));
-			newpath[sizeof (newpath) - 1] = 0;
-
-			/* enter self recursively */
-			if (_get_file_path (camera, tree->user, filename, (char *) newpath, 1)
-			    == GP_OK) {
-				/* file found somewhere underneath */
-
-				if (!recursively_entered)
-					strcpy (path, newpath);
-
-				return GP_OK;
-			}
-			/* back out appending of this tree->name to newpath
-			 * since filename was not found in this newpath
-			 */
-			*temp_ch = 0;
-		}
-		tree++;
-	}
-
-	/* the requested file was not found */
-
-	return GP_ERROR;
-}
-
-static int
-get_file_path (Camera *camera, const char *filename, char *path)
-{
-	return _get_file_path (camera, camera->pl->cached_tree, filename, path, 0);
-}
-
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data)
@@ -678,6 +396,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	strncpy (path, camera->pl->cached_drive, sizeof (path) - 1);
 
+#ifdef OBSOLETE
 	/* update file cache (if necessary) first */
 	if (!update_dir_cache (camera)) {
 		gp_camera_status (camera, _("Could not obtain directory listing"));
@@ -693,6 +412,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				 "Filename '%s' path '%s' not found!", filename, path);
 		return GP_ERROR;
 	}
+#endif
 
 	gp_debug_printf (GP_DEBUG_HIGH, "canon", "camera_file_get: "
 			 "Found picture, '%s' '%s'", path, filename);
@@ -906,16 +626,20 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
+#ifdef OBSOLETE
 	if (!update_dir_cache (camera)) {
 		gp_camera_status (camera, _("Could not obtain directory listing"));
 		return GP_ERROR;
 	}
+#endif
 	strcpy (path, camera->pl->cached_drive);
 
+#ifdef OBSOLETE
 	if (get_file_path (camera, filename, path) != GP_OK) {
 		gp_debug_printf (GP_DEBUG_LOW, "canon", "Filename not found!\n");
 		return GP_ERROR;
 	}
+#endif
 
 	/* strip trailing backslash on path, if any */
 	if (path[strlen (path) - 1] == '\\')
@@ -939,104 +663,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder, const char *filename
 
 	return GP_OK;
 }
-
-/****************************************************************************/
-
-static int
-_get_last_dir (Camera *camera, struct canon_dir *tree, char *path, char *temppath)
-{
-
-	if (tree == NULL)
-		return GP_ERROR;
-
-	if (camera->port->type == GP_PORT_SERIAL) {
-		path = strchr (path, 0);
-		*path = '\\';
-	}
-
-	while (tree->name) {
-		if (!is_image (tree->name) && !is_movie (tree->name)
-		    && !is_thumbnail (tree->name)) {
-			switch (camera->port->type) {
-				case GP_PORT_USB:
-					strcpy (path, tree->name);
-					break;
-				case GP_PORT_SERIAL:
-					strcpy (path + 1, tree->name);
-					break;
-				GP_PORT_DEFAULT
-			}
-		}
-
-		if (!tree->is_file) {
-			if ((strcmp (path + 4, "CANON") == 0) && (strcmp (temppath, path) < 0))
-				strcpy (temppath, path);
-			_get_last_dir (camera, tree->user, path, temppath);
-		}
-		tree++;
-	}
-
-	strcpy (path, temppath);
-
-	return GP_OK;
-}
-
-/*
- * get from the cache the name of the highest numbered directory
- * 
- */
-static int
-get_last_dir (Camera *camera, char *path)
-{
-	char temppath[300];
-
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "get_last_dir()");
-
-	strncpy (temppath, path, sizeof (temppath));
-
-	return _get_last_dir (camera, camera->pl->cached_tree, path, temppath);
-}
-
-static int
-_get_last_picture (struct canon_dir *tree, char *directory, char *filename)
-{
-
-	if (tree == NULL)
-		return GP_ERROR;
-
-	while (tree->name) {
-
-		if (is_image (tree->name) || is_movie (tree->name)
-		    || is_thumbnail (tree->name)) {
-			if (strcmp (tree->name, filename) > 0)
-				strcpy (filename, tree->name);
-		}
-
-		if (!tree->is_file) {
-			if ((strcmp (tree->name, "DCIM") == 0)
-			    || (strcmp (tree->name, directory) == 0)) {
-				_get_last_picture (tree->user, directory, filename);
-			}
-		}
-
-		tree++;
-	}
-
-	return GP_OK;
-}
-
-/*
- * get from the cache the name of the highest numbered picture
- * 
- */
-static int
-get_last_picture (Camera *camera, char *directory, char *filename)
-{
-	gp_debug_printf (GP_DEBUG_LOW, "canon", "get_last_picture()");
-
-	return _get_last_picture (camera->pl->cached_tree, directory, filename);
-}
-
 
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void *data)
@@ -1072,22 +698,28 @@ put_file_func (CameraFilesystem *fs, const char *folder, CameraFile *file, void 
 		destname[j] = '\0';
 	}
 
+#ifdef OBSOLETE
 	if (!update_dir_cache (camera)) {
 		gp_camera_status (camera, _("Could not obtain directory listing"));
 		return GP_ERROR;
 	}
+#endif
 
 	sprintf (dcf_root_dir, "%s\\DCIM", camera->pl->cached_drive);
 
+#ifdef OBSOLETE
 	if (get_last_dir (camera, dir) == GP_ERROR)
 		return GP_ERROR;
+#endif
 
 	if (strlen (dir) == 0) {
 		sprintf (dir, "\\100CANON");
 		sprintf (destname, "AUT_0001.JPG");
 	} else {
+#ifdef OBSOLETE
 		if (get_last_picture (camera, dir + 1, destname) == GP_ERROR)
 			return GP_ERROR;
+#endif
 
 		if (strlen (destname) == 0) {
 			sprintf (destname, "AUT_%c%c01.JPG", dir[2], dir[3]);
@@ -1350,7 +982,7 @@ camera_init (Camera *camera)
 	camera->functions->about = camera_about;
 
 	/* Set up the CameraFilesystem */
-	gp_filesystem_set_list_funcs (camera->fs, file_list_func, NULL, camera);
+	gp_filesystem_set_list_funcs (camera->fs, file_list_func, folder_list_func, camera);
 	gp_filesystem_set_info_funcs (camera->fs, get_info_func, NULL, camera);
 	gp_filesystem_set_file_funcs (camera->fs, get_file_func, delete_file_func, camera);
 	gp_filesystem_set_folder_funcs (camera->fs, put_file_func, NULL,

@@ -31,7 +31,7 @@
 
 #define CAMERA_MASK_BATTERY  32
 
-
+#ifdef OBSOLETE
 struct canon_dir {
   const char *name; /* NULL if at end */
   unsigned int size;
@@ -40,6 +40,7 @@ struct canon_dir {
   int is_file;
   void *user;	/* user-specific data */
 };
+#endif
 
 
 /**
@@ -81,7 +82,7 @@ struct canonCamModelData
 	unsigned int max_thumbnail_size;
 };
 
-static const struct canonCamModelData models[];
+extern const struct canonCamModelData models[];
 
 #undef S10M
 #undef S2M
@@ -105,6 +106,11 @@ struct _CameraPrivateLibrary
 
 	unsigned char seq_tx;
 	unsigned char seq_rx;
+
+	/* driver settings
+	 * leave these as int, as gp_widget_get_value sets them as int!
+	 */
+	int list_all_files; /* whether to list all files, not just know types */
 
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */
@@ -132,12 +138,32 @@ struct _CameraPrivateLibrary
  */
 #define CANON_MINIMUM_DIRENT_SIZE	11
 
+/* offsets of fields of direntry in bytes */
+#define CANON_DIRENT_ATTRS 0
+#define CANON_DIRENT_SIZE  2
+#define CANON_DIRENT_TIME  4
+#define CANON_DIRENT_NAME 10
+
+/* what to list in canon_int_list_directory */
+#define CANON_LIST_FILES (1 << 1)
+#define CANON_LIST_FOLDERS (1 << 2)
 
 #define DIR_CREATE 0
 #define DIR_REMOVE 1
 
-/* abbreviation for default branch in switch (camera->port->type) statements */
-#define GP_PORT_DEFAULT	default: GP_DEBUG ("Unsupported port type %i = 0x%x", camera->port->type, camera->port->type); break;
+/* These contain the default label for all the 
+ * switch (camera->port->type) statements
+ */
+#define GP_PORT_DEFAULT_RETURN(RETVAL) \
+		default: \
+			gp_camera_set_error (camera, "Don't know how to handle " \
+					     "camera->port->type value %i aka 0x%x" \
+					     "in %s line %i.", camera->port->type, \
+					     camera->port->type, __FILE__, __LINE__); \
+			return RETVAL; \
+			break;
+
+#define GP_PORT_DEFAULT GP_PORT_DEFAULT_RETURN(GP_ERROR_BAD_PARAMETERS)
 
 /*
  * All functions returning a pointer have malloc'ed the data. The caller must
@@ -167,7 +193,7 @@ int canon_int_get_disk_name_info(Camera *camera, const char *name,int *capacity,
 /*
  *
  */
-int canon_int_list_directory (Camera *camera, struct canon_dir **result_dir, const char *path);
+int canon_int_list_directory (Camera *camera, const char *folder, CameraList *list, const int flags);
 void canon_int_free_dir(Camera *camera, struct canon_dir *list);
 int canon_int_get_file(Camera *camera, const char *name, unsigned char **data, int *length);
 unsigned char *canon_int_get_thumbnail(Camera *camera, const char *name,int *length);
@@ -184,7 +210,7 @@ int canon_int_set_owner_name(Camera *camera, const char *name);
 
 /* path conversion - needs drive letter, and can therefor not be moved to util.c */
 const char *canon2gphotopath(Camera *camera, const char *path);
-char *gphoto2canonpath(Camera *camera, char *path);
+const char *gphoto2canonpath(Camera *camera, const char *path);
 
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
