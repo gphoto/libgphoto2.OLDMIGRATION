@@ -248,8 +248,8 @@ camera_init (Camera *camera, GPContext *context)
 			break;
 		default:
 			gp_context_error (context,
-					  _("Unsupported port type: %d."
-					    "This driver only works with USB"
+					  _("Unsupported port type: %d. "
+					    "This driver only works with USB "
 					    "cameras.\n"), camera->port->type);
 			return (GP_ERROR);
 			break;
@@ -425,7 +425,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		gp_context_error (context,
 				  _
 				  ("Your camera does only support deleting the "
-				   "last file on the camera. In this case, this"
+				   "last file on the camera. In this case, this "
 				   "is file '%s'."), name);
 		return (GP_ERROR);
 	}

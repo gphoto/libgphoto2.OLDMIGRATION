@@ -212,9 +212,9 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 	GP_DEBUG ("camera_about()");
 
 	strcpy (about->text,
-		_("Ricoh / Philips driver by \n"
-		  "Lutz Müller <lutz@users.sourceforge.net>, \n"
-		  "Martin Fischer <martin.fischer@inka.de>, \n"
+		_("Ricoh / Philips driver by\n"
+		  "Lutz Mueller <lutz@users.sourceforge.net>,\n"
+		  "Martin Fischer <martin.fischer@inka.de>,\n"
 		  "based on Bob Paauwe's driver\n" )
 		);
 
@@ -436,7 +436,7 @@ camera_get_config (Camera *c, CameraWidget **window, GPContext *co)
 	/* Copyright */
 	CR (gp_widget_new (GP_WIDGET_TEXT, _("Copyright"), &w));
 	CR (gp_widget_set_name (w, "copyright"));
-	CR (gp_widget_set_info (w, _("Copyright (max. 20 characters")));
+	CR (gp_widget_set_info (w, _("Copyright (max. 20 characters)")));
 	CR (gp_widget_append (s, w));
 	CR (ricoh_get_copyright (c, co, &copyright));
 	CR (gp_widget_set_value (w, (void *) copyright));
