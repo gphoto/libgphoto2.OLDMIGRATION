@@ -211,12 +211,14 @@ const struct canonCamModelData models[] = {
         /* Optura 300/MVX 10i/IXY DV M2 video camera uses 3095 in PTP mode. */
 
         /* 0x3099 is the EOS 300D/Digital Rebel in PTP mode */
+        /* A80 seems to share the ID for PTP and Canon modes */
         {"Canon:PowerShot A80 (normal mode)",   CANON_CLASS_1,  0x04A9, 0x309A, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
         /* 0x309b is the SD10 Digital ELPH/Digital IXUS i/IXY Digital L
            in PTP mode; will it work in Canon mode? */
         {"Canon:PowerShot SD10 Digital ELPH (normal mode)",   CANON_CLASS_1,  0x04A9, 0x309B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:Digital IXUS i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x309C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
-        {"Canon:PowerShot IXY Digital L (normal mode)", CANON_CLASS_1,  0x04A9, 0x309C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:Digital IXUS i (normal mode)",  CANON_CLASS_1,  0x04A9, 0x309B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+        {"Canon:PowerShot IXY Digital L (normal mode)", CANON_CLASS_1,  0x04A9, 0x309B, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
+	/* Product ID shared between PTP and Canon mode */
         {"Canon:PowerShot S1 IS (normal mode)", CANON_CLASS_5,  0x04A9, 0x309C, CAP_SUP, SL_MOVIE_LARGE, SL_THUMB, SL_PICTURE, NULL},
 
         /* 30a0 is ZR90/MV750i camcorder */
