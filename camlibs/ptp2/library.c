@@ -234,7 +234,7 @@ static struct {
 	{"Kodak:DX4330", 0x040a, 0x0555, 0},
 	{"Kodak:CX4200", 0x040a, 0x0560, 0},
 	{"Kodak:CX4210", 0x040a, 0x0560, 0},
-	{"Kodak:LS473",  0x040a, 0x0565, 0},
+	{"Kodak:LS743",  0x040a, 0x0565, 0},
 	/* both above with different product IDs
 	   normal/retail versions of the same model */
 	{"Kodak:CX4300", 0x040a, 0x0566, 0},
@@ -421,7 +421,7 @@ static struct {
  	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, 0},
  	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, 0},
 	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, 0},
-	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, 0},
+	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, PTPBUG_DCIM_WRONG_PARENT},
  	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:EOS 350D (PTP mode)",           0x04a9, 0x30ef, PTPBUG_DCIM_WRONG_PARENT},
 	{"Canon:Digital IXUS 700 (PTP mode)",   0x04a9, 0x30f2, 0},
