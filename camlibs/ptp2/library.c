@@ -358,6 +358,9 @@ static struct {
 	/* Justin Case <justin_case@gmx.net> */
 	{"Nikon:D2X SLR (PTP mode)",      0x04b0, 0x0408, 0},
 
+ 	/* reported by Steve Drew <stevedrew@gmail.com> */
+ 	{"Nikon:D2Hs SLR (PTP mode)",     0x04b0, 0x040c, 0},
+
 	/* Thomas Luzat <thomas.luzat@gmx.net> */
 	{"Panasonic:DMC-FZ20 (alternate id)", 0x04da, 0x2372, 0},
 
