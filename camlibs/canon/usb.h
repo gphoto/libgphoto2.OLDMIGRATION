@@ -88,14 +88,17 @@
  * @CANON_USB_FUNCTION_CONTROL_CAMERA_2: Replacement for
  *   %CANON_USB_FUNCTION_CONTROL_CAMERA, with many similarities, first
  *   seen with EOS 20D.
- * @CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2: Same function as
+ * @CANON_USB_FUNCTION_RETRIEVE_CAPTURE_2: Same function as
  *   %CANON_USB_FUNCTION_RETRIEVE_CAPTURE, but first seen on EOS 20D.
- * @CANON_USB_FUNCTION_20D_UNKNOWN_4: First seen with EOS 20D, not yet
- *   understood.
- * @CANON_USB_FUNCTION_20D_UNKNOWN_5: First seen with EOS 20D, not yet
- *   understood.
+ * @CANON_USB_FUNCTION_LOCK_KEYS_2: Same as %CANON_USB_FUNCTION_EOS_LOCK_KEYS,
+ *   but for newer protocol.
+ * @CANON_USB_FUNCTION_UNLOCK_KEYS_2: Same as %CANON_USB_FUNCTION_EOS_UNLOCK_KEYS,
+ *   but for newer protocol.
  * @CANON_USB_FUNCTION_SET_ATTR_2: Presumed code to set attribute bits
  *   for a file on an EOS 20D and its ilk.
+ * @CANON_USB_FUNCTION_CAMERA_CHOWN_2: Same as %CANON_USB_FUNCTION_CAMERA_CHOWN,
+ *  but for newer protocol.
+ * @CANON_USB_FUNCTION_GET_OWNER: Gets just the owner name, in newer protocol.
  *
  * Codes to give to canon_usb_dialogue() or canon_usb_long_dialogue()
  * to select which command to issue to the camera. See the protocol
@@ -134,11 +137,13 @@ typedef enum {
 	CANON_USB_FUNCTION_EOS_GET_BODY_ID_2,
 	CANON_USB_FUNCTION_GET_PIC_ABILITIES_2,
 	CANON_USB_FUNCTION_CONTROL_CAMERA_2,
-	CANON_USB_FUNCTION_20D_RETRIEVE_CAPTURE_2,
-	CANON_USB_FUNCTION_20D_UNKNOWN_4,
-	CANON_USB_FUNCTION_20D_UNKNOWN_5,
+	CANON_USB_FUNCTION_RETRIEVE_CAPTURE_2,
+	CANON_USB_FUNCTION_LOCK_KEYS_2,
+	CANON_USB_FUNCTION_UNLOCK_KEYS_2,
 	CANON_USB_FUNCTION_DELETE_FILE_2,
 	CANON_USB_FUNCTION_SET_ATTR_2,
+	CANON_USB_FUNCTION_CAMERA_CHOWN_2,
+	CANON_USB_FUNCTION_GET_OWNER,
 } canonCommandIndex;
 
 /**

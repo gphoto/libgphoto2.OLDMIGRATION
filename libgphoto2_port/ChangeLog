@@ -1,3 +1,9 @@
+2005-05-05  Marcus Meissner  <marcus@jet.franken.de>
+
+	* usb/libusb.c: Fixed non-working USB for kernels >=2.6.12
+	  by releasing the interface before setting the configuration
+	  and reclaiming it afterwards.
+
 2005-03-04  Marcus Meissner  <marcus@jet.franken.de>
 
 	* serial/unix.c: make IUCLC check more generic.

@@ -689,7 +689,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 #ifdef HAVE_EXIF
 		case GP_FILE_TYPE_EXIF:
-			gp_file_set_mime_type (file, GP_MIME_JPEG);
+			if ( !is_cr2 ( filename ) )
+				gp_file_set_mime_type (file, GP_MIME_JPEG);
+			else
+				gp_file_set_mime_type (file, GP_MIME_EXIF);
 			gp_file_set_data_and_size (file, data, datalen);
 			break;
 #endif /* HAVE_EXIF */
@@ -804,8 +807,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		  (long)tmp_time, (long)local_time, (long)tm->tm_gmtoff);
 #else
 	local_time = tmp_time - timezone;
-	GP_DEBUG ("camera_summary: converted %i to localtime %i (timezone is %i)",
-		  tmp_time, local_time, timezone);
+	GP_DEBUG ("camera_summary: converted %ld to localtime %ld (timezone is %ld)",
+		  (long)tmp_time, (long)local_time, (long)timezone);
 #endif
 
 	if (res == GP_OK) {
@@ -1374,14 +1377,16 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (gp_widget_changed (w)) {
 		/* XXXXX mark CameraFS as dirty */
 		gp_widget_get_value (w, &camera->pl->list_all_files);
-		GP_DEBUG ("New config value for tmb: %i", camera->pl->list_all_files);
+		GP_DEBUG ("New config value for \"List all files\" %i",
+			  camera->pl->list_all_files);
 	}
-	
+
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 	gp_widget_get_child_by_label (window, _("Keep filename on upload"), &w);
 	if (gp_widget_changed (w)) {
 		gp_widget_get_value (w, &camera->pl->upload_keep_filename);
-		GP_DEBUG ("New config value for tmb: %i", camera->pl->upload_keep_filename);
+		GP_DEBUG ("New config value for \"Keep filename on upload\": %i",
+			  camera->pl->upload_keep_filename);
 	}
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
 
