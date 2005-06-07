@@ -1,3 +1,7 @@
+2005-05-18   Theodore Kilgore <kilgota@auburn.edu>
+
+	* library.c: bug in compressed photo routine fixed, found by Cedric Cellier.
+
 2005-04-06   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: fix sq_decompress() to handle Magpix B350
@@ -5,14 +9,9 @@
 	* sq905.h: fix sq_decompress() to handle Magpix B350
 	* sq905.h: fix sq_decompress() to handle Magpix B350	
 
-
-
-
 2005-04-12   Theodore Kilgore <kilgota@auburn.edu>
 
 	* postprocess.c: small oops repaired in sq_decompress()	
-
-
 
 2005-04-03   Theodore Kilgore <kilgota@auburn.edu>
 
@@ -20,14 +19,10 @@
 	* postprocess.c: improvements for compressed mode	
 	* sq905.h: improvements for compressed mode
 
-
 2005-01-17   Theodore Kilgore <kilgota@auburn.edu>
 
 	* library.c: added Shark SDC-513 and SDC-519
 	* postprocess.c: Code cleanup	
-
-
-
 
 2004-12-15   Theodore Kilgore <kilgota@auburn.edu>
 
