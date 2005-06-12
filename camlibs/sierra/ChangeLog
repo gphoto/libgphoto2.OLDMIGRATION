@@ -1,3 +1,8 @@
+2005-06-12  Marcus Meissner  <marcus@jet.franken.de>
+
+	* sierra.c: Added Nikon Coolpix 3500 (tested by me).
+	* sierra.c: Added Nikon Coolpix 4300 (guessed from krinicam).
+
 2005-05-30  Marcus Meissner  <marcus@jet.franken.de>
 
 	* sierra.c: Sanyo VPC G250 does not have register 51.
