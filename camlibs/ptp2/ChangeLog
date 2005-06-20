@@ -1,3 +1,7 @@
+2005-06-20  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon PowerShot S2 IS as reported.
+
 2005-05-25  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c: Hub reverted the Kodak LS473 -> 743 change,
