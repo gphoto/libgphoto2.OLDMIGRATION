@@ -1,3 +1,18 @@
+2005-06-12  Marcus Meissner  <marcus@jet.franken.de>
+
+	* sierra.c: Added Nikon Coolpix 3500 (tested by me).
+	* sierra.c: Added Nikon Coolpix 4300 (guessed from krinicam).
+
+2005-05-30  Marcus Meissner  <marcus@jet.franken.de>
+
+	* sierra.c: Sanyo VPC G250 does not have register 51.
+
+2005-05-08  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* sierra.c: The olympus c-420l does only like
+	  speeds up to 57600.
+	  The epson photopc 650 does only like up to 38400.
+
 2005-02-27  Marcus Meissner  <marcus@jet.franken.de>
 
 	Aurelien Jarno <aurelien@aurel32.net>

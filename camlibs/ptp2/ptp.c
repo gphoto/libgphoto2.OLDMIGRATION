@@ -187,6 +187,8 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp,
 		len=dtoh32(usbdata.length)-PTP_USB_BULK_HDR_LEN;
 		/* allocate memory for data */
 		*data=calloc(len,1);
+		if (readlen)
+			*readlen = len;
 		/* copy first part of data to 'data' */
 		memcpy(*data,usbdata.payload.data,
 			PTP_USB_BULK_PAYLOAD_LEN<len?
@@ -1370,6 +1372,35 @@ ptp_canon_getfolderentries (PTPParams* params, uint32_t store, uint32_t p2,
 	}
 	free(data);
 	return ret;
+}
+
+/**
+ * ptp_canon_theme_download:
+ *
+ * This command downloads the specified theme slot, including jpegs
+ * and wav files.
+ *  
+ * params:	PTPParams*
+ *      uint32_t themenr - nr of theme
+ *
+ * Return values: Some PTP_RC_* code.
+ *      unsigned char **data - pointer to data pointer
+ *      unsigned int  *size - size of data returned
+ *
+ **/
+uint16_t
+ptp_canon_theme_download (PTPParams* params, uint32_t themenr,
+		char **data, unsigned int *size)
+{
+	PTPContainer ptp;
+
+	*data = NULL;
+	*size = 0;
+	PTP_CNT_INIT(ptp);
+	ptp.Code	= PTP_OC_CANON_ThemeDownload;
+	ptp.Param1	= themenr;
+	ptp.Nparam	= 1;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size); 
 }
 
 

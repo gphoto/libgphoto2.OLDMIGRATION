@@ -1,19 +1,88 @@
 ----------------------------------------------------------------------------
-libgphoto2 CVS HEAD
+libgphoto2 2.1.6
 
 General libgphoto2 features:
 
+   * Small bugfixes.
+   * Works correctly with kernel 2.6.12
 
 Drivers (camlibs):
+
+   * ptp2 driver:
+     - Lots of new IDs added:
+	- Canon Digital IXUS 30, IXUS 50, IXUS 700, 
+	PowerShot A510, PowerShot A520, PowerShot S2 IS,
+	PowerShot S70, PowerShot SD200, PowerShot SD500,
+	EOS 1D Mark II
+	- Fuji FinePix A330
+	- HP Photosmart M307 and R707
+	- Kodak CX7525 and DX7590
+	- Minolta DIMage Z2 (PictBridge)
+	- Nikon CoolPix 4100, D2H SLR, D2Hs SLR
+        - Olympus mju500
+        - Panasonic
+	- Pentax Optio 43WR
+	- Sony DSC-F717, DSC-P120, DSC-P51, DSC-P73, DSC-T3, DSC-W1, DSC-W12
+
+     - Now supports Canon EOS 20D, EOS 350D, EOS 1D Mark II correctly.
+
+     - EXIF reading using GetPartialObject (making
+       EXIF extraction much faster).
+
+     - Enhanced property handling for Canon cameras.
+     - Download and upload of themes on Canon cameras.
+     - Enhanced property handling for Nikon cameras.
+
+     - Fixed timeout issues while downloading movies or big files.
+
 
    * sierra driver:
      - We now support the hidden Sierra Mode on Nikon and Pentax
        cameras (which are otherwise just USB Storage cameras).
 
        The USB Storage driver is automatically detached on open.
-       
-       This allows remote image capture with those cameras for
-       instance.
+
+       This allows remote image capture with those cameras.
+
+     - Better handling of Camedia C-420L and Epson PhotoPC 650
+       serial cameras.
+     - Better handling of Sanyo VPC G250
+     - Added Coopix 3500 and 4300.
+   
+   * canon driver:
+     - Added PowerShot SD200, S70, SD20, S330.
+
+     - Significant restructuring: there are now only 5 types of camera,
+       so we should be able to add new cameras without modifying canon.h.
+     - advancement in handling EOS 20D and 350D
+
+   * casio driver:
+     - Capture support added.
+ 
+   * mars driver:
+     - 'Precision Mini Model HA513A' and 'Haimei HE-501A' ids added.
+
+   * pdc230 driver:
+     - Minor fixes.
+
+   * ricoh g3 driver:
+     - Added Ricoh Caplio R1, R1v, RZ1 and Sea & Sea 5000G ids.
+     - Fixed crashes.
+
+   + sipix blink2 driver:
+     - Added capture and delete-last support.
+
+   * sq905 driver:
+     - Handle Magpix B350
+     - Some improvements.
+     - Crash fixes.
+
+   * stv0680 driver:
+     - Added Create Go Mini id.
+
+   * localization
+     - various updates
+     - added eu, 
 
 ----------------------------------------------------------------------------
 libgphoto2 2.1.5

@@ -1,3 +1,54 @@
+2005-06-20  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added Canon PowerShot S2 IS as reported.
+
+2005-05-25  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Hub reverted the Kodak LS473 -> 743 change,
+	  corrected again.
+
+	* library.c: EOS Mark II has the root bug too.
+
+2005-05-14  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added a /special folder for camera specific
+	  non ptp filesystem data.
+
+	  (Canon: theme data, Nikon: Whitebalance Curve, etc.)
+
+	  Implemented Canon theme download (but still as a blob
+	  file).
+
+2005-05-08  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Get removeobject events for canons on delete.
+
+2005-05-05  Marcus Meissner  <marcus@jet.franken.de>
+
+	* library.c: Added fix for movie downloads on
+	  libusb 0.10, the transfer was timing out for movies that
+	  took longer than 8 seconds to download (pretty
+	  common for USB 1 cameras).
+
+	* library.c: Added IXUS 700 / PowerShot 500
+
+2005-04-26  Marcus Meissner  <marcus@jet.franken.de>
+
+	* Added Canon PowerShot A520
+
+2005-04-22  Marcus Meissner  <marcus@jet.franken.de>
+
+	* Added IXUS 50 as reported, added Nikon D2x as reported.
+
+2005-04-11  Marcus Meissner  <marcus@jet.franken.de>
+	
+	* library.c: Added Nikon D2Hs SLR.
+
+2005-04-10  Marcus Meissner  <marcus@jet.franken.de>
+
+	* ptp.[ch]: 9010 and 9011 is Canon Theme
+	  Download and Upload.
+
 2005-04-05  Hubert Figuiere  <hfiguiere@teaser.fr>
 
 	* library.c: Added Pentax Optio 43WR (as reported)

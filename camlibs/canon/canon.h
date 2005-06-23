@@ -55,29 +55,40 @@ typedef enum {
  */
 typedef enum {
 	JPEG_ESC     = 0xFF,
-	JPEG_BEG     = 0xD8,
-	JPEG_SOS     = 0xDB,
 	JPEG_A50_SOS = 0xC4,
-	JPEG_END     = 0xD9
+	JPEG_BEG     = 0xD8,
+	JPEG_SOI     = 0xD8,
+	JPEG_END     = 0xD9,
+	JPEG_SOS     = 0xDB,
+	JPEG_APP1    = 0xE1,
 } canonJpegMarkerCode;
 
 /**
  * canonCamClass:
- * @CANON_CLASS_0: does not support key lock at all. Examples: G1,
- *                 Pro 90is, S100, S10, S20
+ * @CANON_CLASS_0: does not support key lock at all.
+ *                 Only known models: G1, Pro 90is, S100, S110, IXUS
+ *                 v, IXY DIGITAL, Digital IXUS, S10, S20
+ *
  * @CANON_CLASS_1: supports lock, but not unlock. Supports (and
  *                 requires) "get picture abilities" before capture.
  *                 Examples: A5, A5 Zoom, A50, S30, S40, S200, S300,
  *                 S330, G2, A10, A20, A30, A40, A100, A200,
  *                 Optura200/MVX2i.
- * @CANON_CLASS_2: like class 1, but doesn't support EXIF. Example: Pro 70.
- * @CANON_CLASS_3: like class 1, but can't delete image
+ *
+ * @CANON_CLASS_2: like class 1, but doesn't support EXIF. Pro 70
+ *		   is only known model.
+ *
+ * @CANON_CLASS_3: like class 1, but can't delete image. Only known models:
+ *		   A5, A5 Zoom.
+ *
  * @CANON_CLASS_4: supports lock/unlock. EOS D30 was first example; others
  *                 include D60, 10D, 300D, S230, S400. Doesn't support
  *		   "get picture abilities".
+ *
  * @CANON_CLASS_5: supports lock, no unlock, but not "get picture abilities".
  *                 Examples: S45, G3.
- * @CANON_CLASS_6: major protocol revision. 20D and 350D use this protocol.
+ *
+ * @CANON_CLASS_6: major protocol revision. Examples: EOS 20D and 350D.
  *
  * Enumeration of all camera types currently supported. Simplified so
  * that all cameras with similar behavior have the same code.
@@ -224,9 +235,15 @@ struct _CameraPrivateLibrary
 	char *cached_drive;	/* usually something like C: */
 	int cached_ready;       /* whether the camera is ready to rock */
 	long image_key, thumb_length, image_length; /* For immediate download of captured image */
-	int capture_step;		     /* To record progress in interrupt reads from capture */
-	int keys_locked; /* whether the keys are currently locked out */
-	unsigned int xfer_length;	     /* Length of max transfer for download */
+	int capture_step;	/* To record progress in interrupt
+				 * reads from capture */
+	int transfer_mode;	/* To remember what interrupt messages
+				   are expected during capture from
+				   newer cameras. */
+	int keys_locked;	/* whether the keys are currently
+				   locked out */
+	unsigned int xfer_length; /* Length of max transfer for
+				     download */
 
 /*
  * Directory access may be rather expensive, so we cached some information.

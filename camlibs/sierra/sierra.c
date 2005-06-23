@@ -85,7 +85,7 @@ static struct {
 	{"Epson", "PhotoPC 550", SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson", "PhotoPC 600", SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson", "PhotoPC 650", SIERRA_MODEL_EPSON,	0, 0,
-					SIERRA_NO_51 },
+					SIERRA_NO_51 | SIERRA_LOW_SPEED },
 	{"Epson", "PhotoPC 700", SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson", "PhotoPC 800", SIERRA_MODEL_EPSON,	0, 0, 0 },
 	{"Epson", "PhotoPC 850z", SIERRA_MODEL_EPSON,     0x4b8, 0x402, 0},
@@ -106,6 +106,12 @@ static struct {
 						SIERRA_WRAP_USB_OLYMPUS,
 							&cp995_cam_desc},
 	{"Nikon", "CoolPix 2500 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x0108,
+						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
+							&cp880_cam_desc},
+	{"Nikon", "CoolPix 4300 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x010e,
+						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
+							&cp880_cam_desc},
+	{"Nikon", "CoolPix 3500 (Sierra Mode)", SIERRA_MODEL_CAM_DESC, 0x04b0, 0x0110,
 						SIERRA_WRAP_USB_NIKON | SIERRA_NO_51,
 							&cp880_cam_desc},
 	{"Olympus", "D-100Z", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
@@ -129,7 +135,7 @@ static struct {
 	{"Olympus", "C-410", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-410L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
 	{"Olympus", "C-420", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
-	{"Olympus", "C-420L", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0 },
+	{"Olympus", "C-420L", 	SIERRA_MODEL_OLYMPUS,	0, 0, SIERRA_MID_SPEED },
 	{"Olympus", "C-700UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
 					SIERRA_WRAP_USB_OLYMPUS, &oly3040_cam_desc},
 	{"Olympus", "C-750UZ",	SIERRA_MODEL_CAM_DESC,	0x07b4, 0x105,
@@ -175,6 +181,7 @@ static struct {
 	{"Panasonic", "Coolshot NV-DCF5E", SIERRA_MODEL_DEFAULT, 0, 0, 0 },
 
 	{"Pentax", "Optio 450", SIERRA_MODEL_DEFAULT, 0x0a17,0x0007, SIERRA_WRAP_USB_PENTAX },
+	{"Pentax", "Optio 33WR", SIERRA_MODEL_DEFAULT, 0x0a17,0x0009, SIERRA_WRAP_USB_PENTAX },
 
 	{"Polaroid", "PDC 640", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Polaroid", "PDC 2300Z", SIERRA_MODEL_DEFAULT, 0x0546, 0x0daf,
@@ -184,7 +191,7 @@ static struct {
 	{"Sanyo", "VPC-G200", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo", "VPC-G200EX", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	{"Sanyo", "VPC-G210", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
-	{"Sanyo", "VPC-G250", 	SIERRA_MODEL_DEFAULT,	0, 0, 0 },
+	{"Sanyo", "VPC-G250", 	SIERRA_MODEL_DEFAULT,	0, 0, SIERRA_NO_51 },
 	{"Sierra Imaging", "SD640",SIERRA_MODEL_DEFAULT,	0, 0, 0 },
 	/*
 	 * Added by Sean Bruno on July 22, 2004 to support the Toshiba
