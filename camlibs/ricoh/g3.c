@@ -240,6 +240,11 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_product	= 0x2203;
 	gp_abilities_list_append(list, a);
 
+	strcpy(a.model, "Medion:MD 6126");
+	a.usb_vendor    = 0x5ca;
+	a.usb_product   = 0x2205;
+	gp_abilities_list_append(list, a);
+
 	strcpy(a.model, "Ricoh:Caplio G4");
 	a.usb_vendor	= 0x5ca;
 	a.usb_product	= 0x2208;
@@ -271,9 +276,9 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_product	= 0x2212;
 	gp_abilities_list_append(list, a);
 
-	strcpy(a.model, "Medion:MD 6126");
+	strcpy(a.model, "Ricoh:Caplio R2");
 	a.usb_vendor    = 0x5ca;
-	a.usb_product   = 0x2205;
+	a.usb_product   = 0x2213;
 	gp_abilities_list_append(list, a);
 
 	return (GP_OK);
