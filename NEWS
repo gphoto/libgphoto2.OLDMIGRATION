@@ -1,4 +1,4 @@
-libgphoto2 2.3.0.1 (will become 2.3.1 eventually)
+libgphoto2 2.3.1
 
 PTP:
    * Fixed a memory leak in continuous Nikon / Canon capture mode.
