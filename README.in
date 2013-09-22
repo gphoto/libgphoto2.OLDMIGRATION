@@ -22,12 +22,19 @@ For more information on gphoto, see
         @URL_GPHOTO_HOME@
 
 There, you can also get information on mailing lists, supported cameras,
-and availability of gphoto2. Another source of information is
+and availability of gphoto2.
+
+To get our sourcecode via git, use the Wiki or the issue tracker,
+visit our github page at
+
+        @URL_GPHOTO_GITHUB@
+
+Another source of information is
 
         @URL_GPHOTO_PROJECT@
 
-where you can access our SVN server to fetch the source code of
-gphoto2, gtkam and GnoCam (see below).
+where you can access our old SVN server to fetch the old source code
+of gphoto2, gtkam, libgphoto2.
 
 
 
@@ -92,7 +99,7 @@ It is available at the following places:
 
  - At the gphoto website: @URL_GPHOTO_HOME@
 
- - In the SVN module gphoto2-manual
+ - In the git repo gphoto2-manual.git
 
 The gPhoto2 Manual includes information about setting up USB
 hotplugging.
