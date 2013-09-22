@@ -14,8 +14,12 @@ patches
 
 ... are always welcome.
 
-We prefer patches against the current SVN trunk very much over
+We prefer patches against the current git master branch very much over
 patches against old released versions, but these are also welcome :-)
+
+The easiest way to integrate your patches is if you open a pull
+request on github.
+
 
 source files
 ------------

@@ -11,10 +11,10 @@ probably want to read The gPhoto2 Manual. It is available from the
 homepage:
 
     http://gphoto.org/
-    http://gphoto.com/
-    http://gphoto.sourceforge.net/
+    http://gphoto.github.io/
+    http://github.com/gphoto/
 
-At lease one of these should work at any time.
+At least one of these should work at any time.
 
 
 ===============================
@@ -24,7 +24,7 @@ Step 0: Preparing configuration
 If you have obtained your copy of gphoto2 packaged from a .tar.gz or
 .tar.bz2 tarball, SKIP THIS STEP. 
 
-If you have obtained libgphoto2 from SVN, then you will have to
+If you have obtained libgphoto2 via git, then you will have to
 prepare for step 1 (the configuration of the sources) by running
 the autoreconf program.
 
