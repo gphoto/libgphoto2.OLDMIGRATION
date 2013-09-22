@@ -462,7 +462,7 @@ AM_CPPFLAGS="$AM_CPPFLAGS -DCAMLIBS=\\\"\$(camlibdir)\\\""
 dnl ---------------------------------------------------------------------------
 dnl Camera drivers (camlibs)
 dnl ---------------------------------------------------------------------------
-dnl * See m4m/gp-camlibs.m4 for usage details, e.g. for marking camlibs as
+dnl * See m4/gp-camlibs.m4 for usage details, e.g. for marking camlibs as
 dnl   unlisted.
 dnl * Please add new camlibs in alphabetical order.
 dnl * Selective build:
