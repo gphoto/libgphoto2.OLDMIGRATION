@@ -1,6 +1,5 @@
-
-				   libgphoto2
-				   ----------
+libgphoto2
+==========
 
 Hello and welcome to the wonderful world of gphoto! This is libgphoto2, the 
 successor of gphoto with lots of new features and additional camera
@@ -97,9 +96,9 @@ The gPhoto2 Manual.
 
 It is available at the following places:
 
- - At the gphoto website: @URL_GPHOTO_HOME@
+* At the gphoto website: @URL_GPHOTO_HOME@
 
- - In the git repo gphoto2-manual.git
+* In the git repo gphoto2-manual.git
 
 The gPhoto2 Manual includes information about setting up USB
 hotplugging.
@@ -138,11 +137,11 @@ the following:
    set to English, so that the development team will understand the
    messages. You can do this by running:
 
-      env LC_ALL=C gtkam
+       env LC_ALL=C gtkam
 
    if you're using the gtkam frontend or running:
 
-      env LC_ALL=C gphoto2 --debug-logfile=logfile.log --debug <options>
+       env LC_ALL=C gphoto2 --debug-logfile=logfile.log --debug <options>
 
    using the gphoto2 command line interface.
 

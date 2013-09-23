@@ -620,8 +620,8 @@ fi
 # ---------------------------------------------------------------------------
 # Create output files
 # ---------------------------------------------------------------------------
+AC_CONFIG_FILES([README:README.md])
 AC_CONFIG_FILES([
-README
 Makefile
 gphoto2-config
 camlibs/Makefile
