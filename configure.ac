@@ -621,6 +621,7 @@ fi
 # Create output files
 # ---------------------------------------------------------------------------
 AC_CONFIG_FILES([README:README.md])
+AC_CONFIG_FILES([INSTALL:INSTALL.md])
 AC_CONFIG_FILES([
 Makefile
 gphoto2-config
@@ -680,6 +681,6 @@ would like to have. E.g. make sure that USB support is there if you
 intend to use USB cameras with $PACKAGE_NAME.
 
 Please also check that PKG_CONFIG_PATH contains
-    ${pkgconfigdir} 
+    ${pkgconfigdir}
 before compiling any libgphoto2 frontend.
 "

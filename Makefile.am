@@ -17,7 +17,10 @@ EXTRA_DIST += libgphoto2-uninstalled.pc.in
 noinst_DATA = libgphoto2-uninstalled.pc
 
 EXTRA_DIST += ChangeLog
-EXTRA_DIST += INSTALL
+
+EXTRA_DIST += INSTALL.md INSTALL
+# Installing the INSTALL instructions via doc_DATA does not make sense
+
 doc_DATA = AUTHORS COPYING NEWS
 doc_DATA += ABOUT-NLS ChangeLog
 

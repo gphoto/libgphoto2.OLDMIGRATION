@@ -1,20 +1,20 @@
 libgphoto2
 ==========
 
-Hello and welcome to the wonderful world of gphoto! This is libgphoto2, the 
-successor of gphoto with lots of new features and additional camera
-drivers. 
+Hello and welcome to the wonderful world of gphoto! This is
+libgphoto2, the successor of gphoto with lots of new features and
+additional camera drivers.
 
-If you miss a feature, would like to report success or failure, or have any
-questions, please don't hesitate to contact our mailing list.
+If you miss a feature, would like to report success or failure, or
+have any questions, please don't hesitate to contact our mailing list.
 
 
 
 What is libgphoto2?
 -------------------
 
-libgphoto2 is a library that can be used by applications to access various 
-digital cameras.  
+libgphoto2 is a library that can be used by applications to access
+various digital cameras.
 
 For more information on gphoto, see
 
@@ -44,55 +44,61 @@ libgphoto2 itself is not a GUI application, opposed to gphoto. There are
 GUI frontends for the gphoto2 library, however, such as gtkam for
 example.
 
-libgphoto2 can only talk to cameras the language of those it understands.
-That is, if you own a camera that speaks a language that isn't published
-anywhere and nobody has been able to figure out the meaning of the sentences,
-libgphoto2 cannot communicate with those cameras. 
+libgphoto2 can only talk to cameras the language of those it
+understands.  That is, if you own a camera that speaks a language that
+isn't published anywhere and nobody has been able to figure out the
+meaning of the sentences, libgphoto2 cannot communicate with those
+cameras.
 
-Then, there are cameras supporting the so-called USB Mass Storage protocol.
-This is a protocol that has been published and lets you access any storage
-device, be it a camera or a disk connected via USB to your computer. As there
-are already drivers for this protocol out there, you don't need an additional
-library like libgphoto2. The list of camera that use USB Mass Storage is getting
-longer everyday, so we won't publish it.
+Then, there are cameras supporting the so-called USB Mass Storage
+protocol.  This is a protocol that has been published and lets you
+access any storage device, be it a camera or a disk connected via USB
+to your computer. As there are already drivers for this protocol out
+there, you don't need an additional library like libgphoto2. The list
+of camera that use USB Mass Storage is getting longer everyday, so we
+won't publish it.
 
-For a more up to date list, you can consult 
+For a more up to date list, you can consult
 
 	@URL_DIGICAM_LIST@
 
-Your operating system will tell you about that because it is likely to recognise
-the device as a SCSI disk that you can mount (for Linux 'dmesg' will tell you).
-Again, those cameras *cannot* be accessed through libgphoto2. Some of them can
-be switched to use a different communication protocol and might be in that case
-useable with libgphoto2.
+Your operating system will tell you about that because it is likely to
+recognise the device as a SCSI disk that you can mount (for Linux
+'dmesg' will tell you).  Again, those cameras *cannot* be accessed
+through libgphoto2. Some of them can be switched to use a different
+communication protocol and might be in that case useable with
+libgphoto2.
 
-Other camera support a protocol called PTP or USB Imaging Devices that has
-been developped by Kodak and other. libgphoto2 does support PTP. Also working
-will be cameras labeled as "PictBridge", which is a extension to PTP.
+Other camera support a protocol called PTP or USB Imaging Devices that
+has been developped by Kodak and other. libgphoto2 does support
+PTP. Also working will be cameras labeled as "PictBridge", which is a
+extension to PTP.
 
-Almost all cameras that are not mass storage support it these days, including
-but not limited to all Nikon, Canon, Fuji, Sony, Panasonic, HP and more.
+Almost all cameras that are not mass storage support it these days,
+including but not limited to all Nikon, Canon, Fuji, Sony, Panasonic,
+HP and more.
 
-PTP camera unknown to libgphoto2 will be detected as a generic PTP camera and
-will work as-is without any changes.
+PTP camera unknown to libgphoto2 will be detected as a generic PTP
+camera and will work as-is without any changes.
 
-MTP (Microsoft Transfer Protocol) capable devices will also be accessible,
-since MTP is based on PTP.
+MTP (Microsoft Transfer Protocol) capable devices will also be
+accessible, since MTP is based on PTP.
 
 
 Platforms
 ---------
 
-libgphoto2 should compile and run on pretty much all Unix-like platforms.
-libgphoto2 has _not_ (yet?) been ported to any operating system from MicroSoft.
+libgphoto2 should compile and run on pretty much all Unix-like
+platforms.  libgphoto2 has _not_ (yet?) been ported to any operating
+system from MicroSoft.
 
 
 
 How to set up libgphoto2
 ------------------------
 
-For information on how to set up libgphoto2 and its frontends, see 
-The gPhoto2 Manual.
+For information on how to set up libgphoto2 and its frontends, see The
+gPhoto2 Manual.
 
 It is available at the following places:
 
@@ -111,14 +117,15 @@ in The gPhoto2 Manual).
 Frontends
 ---------
 
-gphoto2 is a command line frontend which is quite powerful, 
-especially in combination with scripts. See The gPhoto2 Manual 
-for a short description. 
+gphoto2 is a command line frontend which is quite powerful, especially
+in combination with scripts. See The gPhoto2 Manual for a short
+description.
 
-For the GUI lovers, there are for example digikam (KDE), gthumb (GNOME),
-f-spot (GNOME / Mono) and more. We also have a GTK2 reference GUI
-called gtkam, which is unmaintained, its only special features are
+For the GUI lovers, there are for example digikam (KDE), gthumb
+(GNOME), f-spot (GNOME / Mono) and more. We also have a GTK2 reference
+GUI called gtkam, which is unmaintained, its only special features are
 capture abilitiy.
+
 Additionally, there are plugins for other programs available like
 kio_camera (KDE - Konqueror) and a fuse plugin, gphotofs.
 
@@ -129,7 +136,7 @@ Reporting Bugs
 
 Every piece of software contains errors and flaws. So does
 libgphoto2. When you encounter something that does not work, please do
-the following: 
+the following:
 
 1. Find out whether this is a known problem.
 

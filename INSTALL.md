@@ -1,6 +1,5 @@
-########################################################################
-# This file describes how to compile and install libgphoto2.
-########################################################################
+How to compile and install libgphoto2
+=====================================
 
 Follow these steps to build and install libgphoto2 from the source
 code. You don't have to run most of these steps as root, except when
@@ -10,30 +9,29 @@ In order to get libgphoto2 running after installation, you will
 probably want to read The gPhoto2 Manual. It is available from the
 homepage:
 
-    http://gphoto.org/
-    http://gphoto.github.io/
-    http://github.com/gphoto/
+* [gphoto.org](http://gphoto.org/)
+* [gphoto.github.io](http://gphoto.github.io/)
+* [github.com/gphoto](http://github.com/gphoto/)
 
 At least one of these should work at any time.
 
 
-===============================
 Step 0: Preparing configuration
-===============================
+-------------------------------
 
 If you have obtained your copy of gphoto2 packaged from a .tar.gz or
-.tar.bz2 tarball, SKIP THIS STEP. 
+.tar.bz2 tarball, SKIP THIS STEP.
 
 If you have obtained libgphoto2 via git, then you will have to
 prepare for step 1 (the configuration of the sources) by running
 the autoreconf program.
 
-For autoreconf to succeed, you require the following tools:
+For autoreconf to succeed, you need the following tools
 
-	automake
-	autoconf
-	gettext  (possibly from -dev or -devel package)
-	libtool  (possibly from -dev or -devel package)
+* automake
+* autoconf
+* gettext  (possibly from -dev or -devel package)
+* libtool  (possibly from -dev or -devel package)
 
 in versions compatible with each other and with libgphoto2. Most
 combinations on current GNU/Linux systems work, whereas BSD systems
@@ -44,14 +42,12 @@ We recommend you call autoreconf like this:
     $ autoreconf --install --symlink
 
 
-=============================
 Step 1: Configure the sources
-=============================
+-----------------------------
 
-  $ ./configure --prefix=/usr/local
+    $ ./configure --prefix=/usr/local
 
-     to prepare a tarball source tree for installation in (e.g.) /usr/local
-
+to prepare a tarball source tree for installation in (e.g.) /usr/local
 or run ./configure --help in order to find out about more
 configuration parameters.
 
@@ -61,15 +57,16 @@ for certain platforms.
 The following software components are optional, and will improve the
 libraries' and/or command-line client's functionality if present:
 
-	libusb (ver. >= 0.1.6a) -- Universal Serial Bus camera support
-	    <URL:http://www.sourceforge.net/projects/libusb/>
+* [libusb](http://www.sourceforge.net/projects/libusb/) (ver. >=
+  0.1.6a) -- Universal Serial Bus camera support
 
-	gettext (ver. >= 0.10.40) -- internationalization using shared library
+* gettext (ver. >= 0.10.40) -- internationalization using shared
+  library
 
-	gtk-doc -- documentation built in doc/api/
+* gtk-doc -- documentation built in doc/api/
 
-	libexif - EXIF tag support
-	    <URL:http://www.sourceforge.net/projects/libexif>
+* [libexif](http://www.sourceforge.net/projects/libexif) - EXIF tag
+  support
 
 Please check the output of the configure script for whether all
 desired libraries have been detected correctly. E.g., you might
@@ -77,9 +74,8 @@ have to add the path where libusb-config resides to your PATH
 before running configure.
 
 
-===========================
 Step 2: Compile the program
-===========================
+---------------------------
 
 You will probably be best off running GNU make. On GNU/Linux linux
 systems, you can run "make", on other systems (such as *BSD), you
@@ -88,22 +84,24 @@ will have to run "gmake" or something similar.
 The classic way to compile the program is just to run
 
     $ make
- or
+
+or
+
     $ make -jN    (if you have N CPU cores)
 
 and wait until the source is built.
 
-If you want to compile only one or two specific camlibs, run something like
+If you want to compile only one or two specific camlibs, run something
+like
 
     $ make -C camlibs canon.la ptp2.la
 
 
-==============================
 Step 3: Installing the program
-==============================
+------------------------------
 
 To install the stuff you just compiled by running "make", you can just
-run 
+run
 
     $ make install
 
@@ -113,14 +111,14 @@ current user, you will have to run it as root.
 This installs the software and documentation into the proper
 directories on your system.
 
-If you want to install only one or two specific camlibs, run something like
+If you want to install only one or two specific camlibs, run something
+like
 
     $ make CAMLIBS="canon.la ptp2.la" install-camlibs
 
 
-====================================================
 Step 4: Installation is finished - now what do I do?
-====================================================
+----------------------------------------------------
 
 Note that libgphoto2 is not designed to be run by a setuid/setgid
 program. Running ANY libgphoto2 frontend as root or setuid root or in
@@ -137,9 +135,8 @@ new user group for the users that are to have camera access and change
 the permissions of the serial or USB device to match.
 
 
-===============================================
 Appendix A: Platform specific compilation hints
-===============================================
+-----------------------------------------------
 
 libgphoto2 has been successfully used on many system.  Some systems
 where it has been reported to successfully compile are listed
@@ -153,89 +150,102 @@ FreeBSD as those are the only systems on which libusb is available.
 
 General Hints:
 
-  - If you have build problems in the intl or po directories, try
-    re-running configure with the --disable-nls flag.
-  - If configure stops due to an error with 'test', try re-running
-    configure with the --without-usb flag.  
-  - If 'make' reports an error, try using GNU make (often called gmake
-    or gnumake) instead of the make that comes with your system.
-  - If one camera driver (camlib) has compilation errors, re-run
-    configure with an appropriate --with-camlibs= flag to prevent that
-    specific camlib from being compiled.
+* If you have build problems in the intl or po directories, try
+  re-running configure with the --disable-nls flag.
 
+* If configure stops due to an error with 'test', try re-running
+  configure with the --without-usb flag.
+
+* If 'make' reports an error, try using GNU make (often called gmake
+  or gnumake) instead of the make that comes with your system.
+
+* If one camera driver (camlib) has compilation errors, re-run
+  configure with an appropriate --with-camlibs= flag to prevent that
+  specific camlib from being compiled.
 
 The list of working systems is a little outdated as of 2002-11-20, but
 we have still left it here as a reference.
 
-i386:
-  Debian GNU/Linux 2.2
-  Red Hat Linux 7.1
-  Red Hat Linux 4.2
-  TurboLinux 6.5
-  Slackware Linux 8.0
-  FreeBSD 4.3
-	Try the following to configure the optional libraries:
-	  env CFLAGS="-I/usr/local/include" CPPFLAGS="-I/usr/local/include" \
-	  LDFLAGS="-I/usr/local/lib" ./configure
-	(you may also need to append the flag --disable-nls).
-	Use GNU make to build (gmake).
+* i386:
+  * Debian GNU/Linux 2.2
+  * Red Hat Linux 7.1
+  * Red Hat Linux 4.2
+  * TurboLinux 6.5
+  * Slackware Linux 8.0
+  * FreeBSD 4.3
+    Try the following to configure the optional libraries:
 
-Alpha:
-  Debian GNU/Linux 2.2
-  OpenBSD 3.0
-  NetBSD 1.5.1
-  	Configure with this command:
-  	  ./configure --disable-nls
-	Use GNU make to build (gmake).
-  Tru64 5.1A
-  	Configure with this command:
-  	  env CFLAGS='-D__STDC_VERSION__=0' ./configure --disable-nls
-	Use GNU make to build (gnumake).
+        ```
+        env CFLAGS="-I/usr/local/include" CPPFLAGS="-I/usr/local/include" \\
+            LDFLAGS="-I/usr/local/lib" ./configure
+        ```
 
-PowerPC:
-  Debian GNU/Linux 2.2
-  Apple Darwin/OS X
-  	Need dlcompat from <URL:http://fink.sourceforge.net>
-  	Configure with this command:
-  	  env CFLAGS="-I/path/to/dlcompat -no-cpp-precomp" \
-  	  LDFLAGS="-L/path/to/dlcompat" ./configure --disable-nls
-	Need libtool ver. >= 1.4.2a
+    (you may also need to append the flag --disable-nls).
+    Use GNU make to build (gmake).
 
-Sparc:
-  Debian GNU/Linux 2.2
-  Solaris 8 (gcc)
-  	Configure with this command:
-  		./configure --without-usb
-	and use GNU make to build (gmake).
+* Alpha:
+  * Debian GNU/Linux 2.2
+  * OpenBSD 3.0
+  * NetBSD 1.5.1
+    Configure with this command:
+        ```
+        ./configure --disable-nls
+        ```
+    Use GNU make to build (gmake).
+  * Tru64 5.1A
+    Configure with this command:
+        ```
+        env CFLAGS='-D__STDC_VERSION__=0' ./configure --disable-nls
+        ```
+    Use GNU make to build (gnumake).
 
-StrongARM:
-  Intimate+Debian iPAQ GNU/Linux (native gcc)
-  Linux (cross-compiled gcc)
+* PowerPC:
+  * Debian GNU/Linux 2.2
+  * Apple Darwin/OS X
+    Need dlcompat from [fink](http://fink.sourceforge.net).
+    Configure with this command:
+        ```
+        env CFLAGS="-I/path/to/dlcompat -no-cpp-precomp" \
+        LDFLAGS="-L/path/to/dlcompat" ./configure --disable-nls
+        ```
+    Need libtool ver. >= 1.4.2a
 
-Itanium:
-  Red Hat Linux 7.1 (gcc)
+* Sparc:
+  * Debian GNU/Linux 2.2
+  * Solaris 8 (gcc)
+    Configure with this command:
+        ```
+        ./configure --without-usb
+        ```
+    and use GNU make to build (gmake).
+
+* StrongARM:
+  * Intimate+Debian iPAQ GNU/Linux (native gcc)
+  * Linux (cross-compiled gcc)
+
+* Itanium:
+  * Red Hat Linux 7.1 (gcc)
 
 
 The following systems have some problems compiling, but may be made to
 work with some effort:
 
-Itanium:
-  Red Hat Linux 7.1 (Intel ecc)
-  	There is a bug in ver. 5.0.1 of this compiler tickled by gphoto2 that
-  	prevents full compilation.
-  	Need better libtool support (newer than version 1.4.2).
-  Red Hat Linux 7.1 (sgicc)
-  	Need better libtool support (newer than version 1.4.2).
+* Itanium:
+  * Red Hat Linux 7.1 (Intel ecc)
+    There is a bug in ver. 5.0.1 of this compiler tickled by gphoto2 that
+    prevents full compilation.
+    Need better libtool support (newer than version 1.4.2).
+  * Red Hat Linux 7.1 (sgicc)
+    Need better libtool support (newer than version 1.4.2).
 
-Sparc:
-  Solaris 8 (cc)
-  	Sun's cc doesn't support #warning or # or ## macro features, which
-  	occur several times in the code.
+* Sparc:
+  * Solaris 8 (cc)
+    Sun's cc doesn't support #warning or # or ## macro features, which
+    occur several times in the code.
 
-MIPS:
-  IRIX (cc)
+* MIPS:
+  * IRIX (cc)
     MIPSpro C doesn't support #warning.
-
 
 Thanks go to SourceForge for their compile farm, and Compaq for their
 TestDrive program which allowed gphoto2 to be tested on many of these
