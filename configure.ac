@@ -621,6 +621,7 @@ fi
 # Create output files
 # ---------------------------------------------------------------------------
 AC_CONFIG_FILES([README:README.md])
+AC_CONFIG_FILES([HACKING:HACKING.md])
 AC_CONFIG_FILES([INSTALL:INSTALL.md])
 AC_CONFIG_FILES([
 Makefile
