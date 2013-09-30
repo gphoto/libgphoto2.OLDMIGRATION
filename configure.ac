@@ -9,7 +9,7 @@ AC_INIT([libgphoto2 photo camera library], [2.5.2.1], [gphoto-devel@lists.source
 
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_MACRO_DIR([auto-m4])
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([auto-aux])
 dnl Working around bug in automake <= 1.9.6:
 dnl  - Please do not add filename-length-max=99 here.
@@ -632,6 +632,7 @@ libgphoto2/Makefile
 libgphoto2.pc
 libgphoto2-uninstalled.pc
 examples/Makefile
+gphoto-m4/Makefile
 tests/Makefile
 tests/ddb/Makefile
 tests/ddb/check-ddb.sh

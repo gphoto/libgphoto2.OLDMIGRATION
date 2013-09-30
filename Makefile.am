@@ -9,6 +9,7 @@ EXTRA_DIST = HACKING MAINTAINERS TESTERS installcheck.mk
 
 # Note: @subdirs@ lists all the directories from AC_CONFIG_SUBDIRS()
 SUBDIRS = @subdirs@ libgphoto2 camlibs tests examples po packaging doc
+SUBDIRS += gphoto-m4
 
 EXTRA_DIST    += libgphoto2.pc.in
 pkgconfig_DATA = libgphoto2.pc
@@ -82,7 +83,7 @@ install-camlibs:
 # are required in the top level Makefile.am for the automatic 
 # re-building of the build system files.
 
-ACLOCAL_AMFLAGS = -I auto-m4 -I m4
+ACLOCAL_AMFLAGS = -I m4 -I gphoto-m4
 
 
 ########################################################################

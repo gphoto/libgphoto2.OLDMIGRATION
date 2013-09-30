@@ -3,7 +3,7 @@ AC_PREREQ(2.59)
 AC_INIT([libgphoto2 port access library], [0.10.0], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
 AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port-version.c])
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_MACRO_DIR([auto-m4])
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([auto-aux])
 dnl Working around bug in automake <= 1.9.6:
 dnl  - Please do not add filename-length-max=99 here.
@@ -473,7 +473,7 @@ libgphoto2_port-uninstalled.pc
 gphoto2-port-config
 test/Makefile
 doc/Makefile
-m4/Makefile
+gphoto-m4/Makefile
 ])
 AC_OUTPUT
 

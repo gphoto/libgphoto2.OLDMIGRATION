@@ -3,10 +3,10 @@
 /INSTALL
 /aclocal.m4
 /auto-aux/
-/auto-m4/
 /autom4te.cache/
 /config.h.in
 /configure
+/m4/
 /po/Makefile.in.in
 /po/Makevars.template
 /po/Rules-quot
